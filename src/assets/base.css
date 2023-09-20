@@ -51,7 +51,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--vt-c-black);
+    --color-background: var(--vt-c-black-mute);
     --color-background-soft: var(--vt-c-black-soft);
     --color-background-mute: var(--vt-c-black-mute);
 
@@ -105,7 +105,12 @@ body {
     margin-top: 0;
 }
 
-.bg-dark-blur {
+.bg-gray-blur {
     background-color: rgba(255, 255, 255, 0.09);
     backdrop-filter: blur(4px);
+}
+
+.bg-dark-blur {
+    background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
 }

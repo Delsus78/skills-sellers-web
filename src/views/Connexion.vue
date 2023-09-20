@@ -1,5 +1,4 @@
 <template>
-    <background />
     <header>
         <HeaderComp />
     </header>
