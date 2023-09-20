@@ -96,3 +96,16 @@ body {
     line-height: 1.2;
     color: var(--color-heading);
 }
+
+.shadow-white {
+  filter: drop-shadow(0 0 4px var(--vt-c-white-2));
+}
+
+.top {
+    margin-top: 0;
+}
+
+.bg-dark-blur {
+    background-color: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(4px);
+}
