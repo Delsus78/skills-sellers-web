@@ -1,8 +1,11 @@
 <template>
+    <background />
+    <header>
+        <HeaderComp />
+    </header>
     <div class="ConnexionComp">
         <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
-        <!--<input type="password" v-model="password" placeholder="Mot de passe" />-->
-
+        <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
 
         <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" width="950" height="1000" class="playButton-planet"
             :onclick="login"/>
@@ -14,39 +17,58 @@
 
 <script setup>
 import {ref, watch} from 'vue';
-import ValidationButton from "@/components/utilities/ValidationButton.vue";
+import background from "@/components/utilities/background.vue";
 import TextBox from "@/components/utilities/TextBox.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
+import {toast} from "vue3-toastify";
+import HeaderComp from "@/components/utilities/HeaderComp.vue";
+import {useAuthStore} from "@/stores";
 
 const username = ref('');
+const password = ref('');
 const reRenderKey = ref(0);
 const error = ref('');
 
-watch(username, (newValue) => {
-    if (newValue !== '') {
-        error.value = '';
-    }
-
+watch(username, () => {
+    error.value = '';
     reRenderKey.value += 1;
 });
 
 const login = () => {
     if (username.value === '') {
         error.value = 'Veuillez entrer un nom d\'utilisateur';
-    } else {
-        error.value = '';
-        localStorage.setItem('username', username.value);
-        window.location.reload();
+        toast.error(error.value, {position: 'bottom-right', delay: 3000});
+        return;
     }
+    if (password.value === '') {
+        error.value = 'Veuillez entrer un mot de passe';
+        toast.error(error.value, {position: 'bottom-right', delay: 3000});
+        return;
+    }
+
+    error.value = '';
+    const authStore = useAuthStore();
+    authStore.login(username.value, password.value)
+        .catch(error => {
+            toast("Impossible de se connecter:\n" + error, {type: "error"});
+
+            console.error('Erreur lors de l\'appel API:', error);
+        });
+
 }
 </script>
 
 <style scoped>
-.error-msg {
-    color: var(--vt-c-red-1);
+
+header {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    pointer-events: none;
 }
 
 .ConnexionComp {
+    grid-column: 2;
+    grid-row: 2;
     padding: 7rem;
     margin: 3rem;
 }
@@ -80,6 +102,5 @@ const login = () => {
     text-shadow: 0 0 2rem var(--vt-c-white-1);
     transition: 1s;
 }
-
 
 </style>

@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import {computed, ref, watch} from 'vue';
+import {ref, watch} from 'vue';
 
 const { placeholder, title, isErrored, modelValue, isNumberOnly } = defineProps({
     placeholder: {
@@ -30,15 +30,14 @@ const { placeholder, title, isErrored, modelValue, isNumberOnly } = defineProps(
         required: false,
         default: ''
     },
-    isNumberOnly: {
-        type: Boolean,
+    inputType: {
+        type: String,
         required: false,
-        default: false
+        default: 'text'
     }
 });
 
 const emit = defineEmits(["update:modelValue"]);
-const inputType = computed(() => (isNumberOnly ? 'number' : 'text'));
 const value = ref(modelValue);
 
 watch(value, (newValue) => {
@@ -85,7 +84,7 @@ input {
 }
 
 
-input[type="text"] {
+input {
     padding: 0.5rem 1rem;
     color: var(--color-text);
     border: 0;
