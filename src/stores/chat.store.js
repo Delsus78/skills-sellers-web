@@ -37,6 +37,7 @@ export const useChatStore = defineStore({
             this.connection.start()
                 .then(() => {
                     this.isConnected = true;
+                    console.log('Connection started');
                 })
                 .catch(err => {
                     this.error = "Impossible de se connecter au chat";

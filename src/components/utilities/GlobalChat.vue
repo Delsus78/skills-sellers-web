@@ -5,7 +5,7 @@ import { useChatStore } from "@/stores";
 import {storeToRefs} from "pinia";
 
 const chatStore = useChatStore();
-const { messages } = storeToRefs(chatStore);
+const { messages, isConnected, error } = storeToRefs(chatStore);
 
 const messageToSend = ref("");
 
@@ -49,11 +49,11 @@ const handleSend = () => {
             </div>
         </div>
 
-        <div v-if="!chatStore.isConnected" class="ConnectingToChat">
-            <span>Connecting to chat...</span>
+        <div v-if="!isConnected && !error" class="ConnectingToChat">
+            <span>Connexion au chat...</span>
         </div>
-        <div v-else-if="chatStore.error" class="text-danger">
-            <span>Error: {{ chatStore.error }}</span>
+        <div v-else-if="error" class="ConnectingToChat text-danger">
+            <span>{{ error }}</span>
         </div>
         <div v-else class="TextBoxDiv">
             <input class="TextBox" v-model="messageToSend" placeholder="Un truc à dire ?"/>
