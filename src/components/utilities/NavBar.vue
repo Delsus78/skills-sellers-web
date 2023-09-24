@@ -27,7 +27,7 @@ const { pageName } = defineProps({
         <div class="navbar-nav">
             <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
             <a @click="authStore.logout()" class="nav-item"><svg-icon class="shadow-white" :fa-icon="leaveIcon" :size="36"/></a>
-            <RouterLink to="/cards" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/cards/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
         </div>
 
         <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>

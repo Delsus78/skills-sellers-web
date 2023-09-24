@@ -1,16 +1,18 @@
 <template>
-    <header>
-        <HeaderComp />
-    </header>
-    <div class="ConnexionComp">
-        <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
-        <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
+    <div class="ConnexionPage">
+        <header>
+            <HeaderComp />
+        </header>
+        <div class="ConnexionComp">
+            <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
+            <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
 
-        <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" width="950" height="1000" class="playButton-planet"
-            :onclick="login"/>
+            <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" width="950" height="1000" class="playButton-planet"
+                :onclick="login"/>
 
-        <p class="play-text" v-if="username">JOUER</p>
+            <p class="play-text" v-if="username">JOUER</p>
 
+        </div>
     </div>
 </template>
 
@@ -58,6 +60,14 @@ const login = () => {
 </script>
 
 <style scoped>
+
+.ConnexionPage {
+    max-width: 1280px;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    padding: 2rem;
+}
 
 header {
     grid-column: 1 / 4;

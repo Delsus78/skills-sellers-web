@@ -33,6 +33,9 @@ a,
   transition: 0.4s;
 }
 
+.js-tilt-glare {
+  border-radius: 18px !important;
+}
 
 @media (min-width: 1024px) {
   body {
