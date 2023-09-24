@@ -25,7 +25,7 @@ export const useChatStore = defineStore({
             }
 
             this.connection = new signalR.HubConnectionBuilder()
-                .withUrl(chatHubUrl)
+                .withUrl(chatHubUrl, { accessTokenFactory: () => user.token })
                 .build();
 
             // Gérer le message reçu

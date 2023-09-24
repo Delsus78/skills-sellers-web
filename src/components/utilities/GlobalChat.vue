@@ -28,13 +28,11 @@ onBeforeUpdate(() => {
 });
 
 const handleSend = () => {
-    console.log("Before " + messageToSend.value);
     const msgToSend = messageToSend.value.trim();
     if (msgToSend) {
         chatStore.sendMessage(msgToSend); // Remplacez "YourUsername" par le nom d'utilisateur actuel ou une autre logique appropriée
         messageToSend.value = "";
     }
-    console.log("After " + messageToSend.value);
 };
 
 </script>
@@ -59,10 +57,7 @@ const handleSend = () => {
         </div>
         <div v-else class="TextBoxDiv">
             <input class="TextBox" v-model="messageToSend" placeholder="Un truc à dire ?"/>
-            <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="() => {
-                handleSend();
-                messageToSend = '';
-            }"/>
+            <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
         </div>
     </div>
 </template>
