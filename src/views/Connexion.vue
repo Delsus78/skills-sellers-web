@@ -4,8 +4,10 @@
             <HeaderComp />
         </header>
         <div class="ConnexionComp">
-            <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
-            <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
+            <div class="connexionForm">
+                <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
+                <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
+            </div>
 
             <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" width="950" height="1000" class="playButton-planet"
                 :onclick="login"/>
@@ -69,6 +71,14 @@ const login = () => {
     padding: 2rem;
 }
 
+.connexionForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 7rem;
+}
+
 header {
     grid-column: 1 / 4;
     grid-row: 1;
@@ -78,15 +88,14 @@ header {
 .ConnexionComp {
     grid-column: 2;
     grid-row: 2;
-    padding: 7rem;
+    padding: 0 7rem;
     margin: 3rem;
 }
 
 .playButton-planet {
     position: fixed;
     /* Décaler la div de la moitié de sa largeur pour la centrer parfaitement */
-    transform: translateX(-25%);
-
+    transform: translateX(-25%) translateY(-10%);
 }
 
 .play-text {

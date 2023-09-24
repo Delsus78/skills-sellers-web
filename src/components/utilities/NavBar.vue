@@ -22,7 +22,9 @@ const { pageName } = defineProps({
 
 <template>
     <nav class="navbar top bg-dark-blur">
-        <TitleImage in-line class="nav-title"/>
+        <RouterLink class="nav-title" to="/">
+            <TitleImage in-line/>
+        </RouterLink>
         <h1>{{ pageName }}</h1>
         <div class="navbar-nav">
             <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
@@ -30,6 +32,7 @@ const { pageName } = defineProps({
             <RouterLink :to="`/cards/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
         </div>
 
+        <span class="PseudoText">{{authUser.pseudo}}</span>
         <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
     </nav>
 </template>
@@ -47,6 +50,11 @@ const { pageName } = defineProps({
     background-size: 100% 1px; /* 2px est l'épaisseur de la "bordure". Ajustez selon vos besoins */
     background-repeat: no-repeat;
     background-position: bottom;
+}
+
+h1 {
+    height: 4rem;
+    width: 5rem;
 }
 
 .navbar .nav-title {
@@ -79,5 +87,14 @@ const { pageName } = defineProps({
 
 .nav-item:hover {
     color: #3574f0;
+}
+
+.PseudoText {
+    position: fixed;
+    right: 15rem;
+    top: 1rem;
+    color: white;
+    font-size: 20px;
+    text-shadow: 0 0 1rem var(--vt-c-white-dark);
 }
 </style>

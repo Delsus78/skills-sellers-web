@@ -34,6 +34,11 @@ const { placeholder, title, isErrored, modelValue, isNumberOnly } = defineProps(
         type: String,
         required: false,
         default: 'text'
+    },
+    isNumberOnly: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
