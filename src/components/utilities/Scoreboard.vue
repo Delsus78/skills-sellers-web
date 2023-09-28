@@ -20,7 +20,7 @@
         </div>
 
         <ul class="player-list">
-            <li v-for="(player, index) in players" :key="player.id" class="player-item">
+            <li v-for="(player, index) in players" :key="player.id" class="player-item" @click="router.push('/stats/'+player.id);">
                 <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
                 <span>{{ player.nbCards }}</span>
@@ -34,6 +34,7 @@
 <script setup>
 import {defineProps, ref} from 'vue';
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
+import {router} from "@/helpers";
 
 const emit = defineEmits(['reload']);
 
@@ -129,6 +130,13 @@ const reload = () => {
 
 .player-item:last-child {
     border-bottom: none;  /* Supprimer le séparateur pour le dernier élément */
+}
+
+.player-item:hover {
+    background-color: rgba(70, 69, 69, 0.35);  /* Couleur de fond au survol */
+    box-shadow: inset 0 0 0.5rem #000000;  /* Ombre portée au survol */
+    border-radius: 0.5rem;
+    cursor: pointer;
 }
 
 .footer-scoreboard {
