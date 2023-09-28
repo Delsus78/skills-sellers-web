@@ -7,7 +7,8 @@ import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
     faHome as homeIcon,
-    faPeopleGroup as cardsIcon
+    faPeopleGroup as cardsIcon,
+    faChartSimple as statsIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const { user: authUser } = storeToRefs(authStore);
@@ -30,6 +31,7 @@ const { pageName } = defineProps({
             <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
             <a @click="authStore.logout()" class="nav-item"><svg-icon class="shadow-white" :fa-icon="leaveIcon" :size="36"/></a>
             <RouterLink :to="`/cards/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
         </div>
 
         <span class="PseudoText">{{authUser.pseudo}}</span>

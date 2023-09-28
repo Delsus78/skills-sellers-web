@@ -3,14 +3,21 @@ import {storeToRefs} from "pinia";
 import Scoreboard from "@/components/utilities/Scoreboard.vue";
 import { useUsersStore } from "@/stores";
 import GlobalChat from "@/components/utilities/GlobalChat.vue";
+import {computed} from "vue";
 const usersStore = useUsersStore();
 const { users } = storeToRefs(usersStore);
 usersStore.getAllUsers();
 
+const usersSorted = computed(() => {
+    return users.value.sort((a, b) => {
+        return b.nbCards - a.nbCards;
+    });
+});
+
 </script>
 <template>
   <div class="Home">
-      <Scoreboard class="Scoreboard" :players="users" @reload="usersStore.getAllUsers()"/>
+      <Scoreboard class="Scoreboard" :players="usersSorted" @reload="usersStore.getAllUsers()"/>
       <GlobalChat class="GlobalChat"/>
   </div>
 </template>

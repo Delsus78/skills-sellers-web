@@ -14,16 +14,16 @@
             </div>
         </div>
         <div class="headers-list">
+            <span></span>
             <span>Joueur</span>
             <span>Cartes</span>
-            <span>Score</span>
         </div>
 
         <ul class="player-list">
-            <li v-for="player in players" :key="player.id" class="player-item">
+            <li v-for="(player, index) in players" :key="player.id" class="player-item" @click="router.push('/stats/'+player.id);">
+                <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
-                <span>1999</span>
-                <span>{{ player.id }}</span>
+                <span>{{ player.nbCards }}</span>
             </li>
         </ul>
         <div class="footer-scoreboard">
@@ -34,22 +34,23 @@
 <script setup>
 import {defineProps, ref} from 'vue';
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
+import {router} from "@/helpers";
 
-    const emit = defineEmits(['reload']);
+const emit = defineEmits(['reload']);
 
-    const { players } = defineProps({
-        players: {
-        type: Object,
-        default: () => []
-        }
-    });
+const { players } = defineProps({
+    players: {
+    type: Object,
+    default: () => []
+    }
+});
 
-    const lastUpdate = ref(new Date().toLocaleString());
+const lastUpdate = ref(new Date().toLocaleString());
 
-    const reload = () => {
-        lastUpdate.value = new Date().toLocaleString();
-        emit('reload');
-    };
+const reload = () => {
+    lastUpdate.value = new Date().toLocaleString();
+    emit('reload');
+};
 
 </script>
 <style scoped>
@@ -91,11 +92,12 @@ import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 
 .headers-list {
     grid-area: headers;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 2rem; /* Padding pour espacer les en-têtes de la bordure */
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 1fr;
+    text-align: center;
     color: #ffffff; /* Nuance de blanc pour le texte des en-têtes */
-    font-weight: bold;
+    font-weight: bolder;
+    font-size: 1.3rem;
     border-bottom: 2px solid rgba(199, 175, 175, 0.35); /* Une bordure plus épaisse pour séparer les en-têtes de la liste */
     margin: 0 2rem; /* Marge pour aligner avec la liste des joueurs */
 }
@@ -108,12 +110,16 @@ import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 }
 
 .player-item {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 1fr;
     font-size: 1.2rem;
     color: #9d9d9d;  /* Nuance de gris foncé pour le texte */
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(199, 175, 175, 0.35);  /* Séparateur entre les éléments de la liste */
+}
+
+.player-item span:first-child {
+    border-right: 1px solid rgba(199, 175, 175, 0.35);  /* Séparateur pour le premier élément */
 }
 
 .headers span, .player-item span {
@@ -122,21 +128,15 @@ import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
     padding: 0 0.5rem; /* Espacement à l'intérieur de chaque span */
 }
 
-.headers span:nth-child(1), .player-item span:nth-child(1) {
-    flex: 1; /* Prend deux fois l'espace par rapport aux autres spans */
-}
-
-.headers span:nth-child(2), .player-item span:nth-child(2) {
-    flex: 3;
-}
-
-.headers span:nth-child(3), .player-item span:nth-child(3) {
-    flex: 1;
-}
-
-
 .player-item:last-child {
     border-bottom: none;  /* Supprimer le séparateur pour le dernier élément */
+}
+
+.player-item:hover {
+    background-color: rgba(70, 69, 69, 0.35);  /* Couleur de fond au survol */
+    box-shadow: inset 0 0 0.5rem #000000;  /* Ombre portée au survol */
+    border-radius: 0.5rem;
+    cursor: pointer;
 }
 
 .footer-scoreboard {
