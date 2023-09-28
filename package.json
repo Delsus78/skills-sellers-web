@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@microsoft/signalr": "^7.0.11",
     "pinia": "^2.1.6",
     "random-seed": "^0.3.0",
     "vue": "^3.3.4",
