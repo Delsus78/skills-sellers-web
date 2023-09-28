@@ -112,7 +112,7 @@ body {
 
 .bg-dark-blur {
     background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 .huge-text {
@@ -130,6 +130,12 @@ body {
     font-family: "Big John", sans-serif;
     color: #ffffff;  /* Nuance de gris foncé pour le texte */
     text-shadow: 0 0 0.5rem #ffffff;  /* Ombre portée du texte */
+}
+
+.left {
+    text-align: left;
+    left: 0;
+    margin-left: 0;
 }
 
 .text-danger {
