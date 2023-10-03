@@ -8,7 +8,14 @@ export const useUsersStore = defineStore({
     id: 'users',
     state: () => ({
         users: {},
-        stats: {}
+        stats: {},
+        actualUser: {
+            pseudo: '',
+            nbCards: 0,
+            creatium: 0,
+            or: 0,
+            nourriture: 0
+        }
     }),
     actions: {
         async getAllUsers() {
@@ -33,6 +40,18 @@ export const useUsersStore = defineStore({
                 .catch(error => {
                     console.log(error);
                     return this.stats = {error};
+                })
+        },
+        async getUser(id) {
+            this.actualUser = { loading: true };
+            let usedUrl = baseUrl + `Users/${id}`;
+            fetchWrapper.get(usedUrl)
+                .then(user => {
+                    return this.actualUser = user;
+                })
+                .catch(error => {
+                    console.log(error);
+                    return this.actualUser = {error};
                 })
         }
     }
