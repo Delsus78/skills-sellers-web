@@ -1,17 +1,27 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useAuthStore } from "@/stores";
+import { useAuthStore, useUsersStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
+import { ref } from 'vue';
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
     faHome as homeIcon,
     faPeopleGroup as cardsIcon,
-    faChartSimple as statsIcon
+    faChartSimple as statsIcon,
+    faBurger as foodIcon,
+    faCoins as moneyIcon,
+    faCubesStacked as creatiumIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
 const { user: authUser } = storeToRefs(authStore);
+const { actualUser: user } = storeToRefs(usersStore);
+
+usersStore.getUser(authUser.value.id);
+
+const isHovered = ref(false);
 
 const { pageName } = defineProps({
     pageName: {
@@ -34,8 +44,33 @@ const { pageName } = defineProps({
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
         </div>
 
-        <span class="PseudoText">{{authUser.pseudo}}</span>
-        <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
+        <div class="player-infos">
+            <span class="pseudoText">{{authUser.pseudo}}</span>
+            <span class="text food" :class="{ moved: isHovered }">
+                {{ user.nourriture }}
+                <span class="resource-name">{{ isHovered ? 'repas' : ''}}</span>
+                <svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
+            </span>
+
+            <div class="resources bg-dark-blur">
+
+            </div>
+            <span class="text or" :class="{ moved: isHovered }">
+                {{ user.or }}
+                <span class="resource-name">{{ isHovered ? 'or' : ''}}</span>
+                <svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
+            </span>
+
+            <span class="text creatium" :class="{ moved: isHovered }">
+                {{ user.creatium }}
+                <span class="resource-name">{{ isHovered ? 'creatium' : ''}}</span>
+                <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
+            </span>
+
+            <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"
+                          @mouseenter="isHovered = true"
+                          @mouseleave="isHovered = false"/>
+        </div>
     </nav>
 </template>
 <style scoped>
@@ -73,13 +108,6 @@ h1 {
     justify-content: center;
 }
 
-.navbar .planet {
-    position: fixed;
-    right: 0;
-    top: -100%;
-    z-index: 101;
-}
-
 .nav-item {
     color: white;
     font-size: 20px;
@@ -91,12 +119,96 @@ h1 {
     color: #3574f0;
 }
 
-.PseudoText {
+.navbar .player-infos {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.player-infos .planet {
+    position: fixed;
+    right: 0;
+    top: -100%;
+    z-index: 101;
+
+}
+
+.player-infos .pseudoText {
     position: fixed;
     right: 15rem;
-    top: 1rem;
+    top: 0.5rem;
     color: white;
     font-size: 20px;
+    font-weight: bold;
     text-shadow: 0 0 1rem var(--vt-c-white-dark);
+}
+
+.player-infos .resources {
+    position: fixed;
+    right: 9rem;
+    top: 5rem;
+    width: 18rem;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 90;
+    border-radius: 0 0 0 1rem;
+    box-shadow: 0 0 1rem black;
+
+}
+
+.player-infos .text {
+    position: fixed;
+    width: 2rem;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 0 0.5rem var(--vt-c-white-dark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-flow: column;
+    grid-gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    z-index: 102;
+}
+
+.player-infos .or {
+    right: 15rem;
+    top: 4.8rem;
+    color: yellow;
+}
+
+.player-infos .food {
+    right: 15rem;
+    top: 6rem;
+    color: yellowgreen;
+}
+
+.player-infos .creatium {
+    right: 15rem;
+    top: 7.2rem;
+    color: #2fc9e2;
+}
+
+.player-infos .moved {
+    transform: scale(1.2);
+}
+
+.player-infos .text .resource-name {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.player-infos .text.moved .resource-name {
+    opacity: 1;
 }
 </style>
