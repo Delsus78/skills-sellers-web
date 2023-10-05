@@ -12,8 +12,8 @@
             <span :class="['rarity', rarity + '-text']">{{ rarity }}</span>
             <h2>{{ name }}</h2>
             <p>{{ description }}</p>
-            <footer>#{{ id }}</footer>
         </div>
+        <footer class="actionText" :class="{actif: action, 'shadow-white': !action}">{{ action ? action.actionName.slice(O, -1) : 'ne fait rien' }}</footer>
         <div class="card-stats">
             <div class="stat">
                 <div class="value">{{ competences.cuisine }}</div>
@@ -37,6 +37,18 @@
             </div>
         </div>
     </div>
+    <div class="actionInfo bg-dark-blur" v-if="isActive">
+        <div class="actionInfoText">
+            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</h2>
+            <p class="date">{{ action ? 'termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
+            <div v-for="(val, actionKey ) in action || {}">
+                <p v-if="['cards', 'actionName', 'endTime'].indexOf(actionKey) === -1" class="infos">
+                    <span class="little_title">{{ actionKey }} : </span>
+                    <span> {{ val }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
 
 </template>
 
@@ -44,9 +56,10 @@
 import {VanillaTilt} from "./VanillaTilt";
 import {onMounted} from "vue";
 import { ref } from "vue";
+import moment from "moment/moment";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, Competences } = defineProps({
+const { id, name, imageUrl, description, competences } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -82,6 +95,11 @@ const { id, name, imageUrl, description, Competences } = defineProps({
             exploration: 0,
             intelligence: 0
         })
+    },
+    action: {
+        type: Object,
+        required: false,
+        default: () => {}
     }
 
 });
@@ -94,12 +112,19 @@ onMounted(() => {
     });
 });
 
+function getFormattedRemainingTime(endDateStr) {
+    moment.locale('fr');
+    const now = moment();
+    const endDate = moment(endDateStr);
+    const remainingTime = moment.duration(endDate.diff(now));
+    return remainingTime.locale('fr').humanize(true);
+}
+
 function toggleActive() {
     isActive.value = !isActive.value;
 }
 
 </script>
-
 <style scoped>
 
 .overlay {
@@ -123,7 +148,7 @@ function toggleActive() {
 .card {
     display: grid;
     grid-template-columns: 20rem;
-    grid-template-rows: 20rem 13rem 1rem 5rem;
+    grid-template-rows: 20rem 11rem 3rem 5rem;
     grid-template-areas: "image" "text" "footer" "stats";
     border-radius: 18px;
     background: #1d1d1d;
@@ -150,7 +175,42 @@ function toggleActive() {
     z-index: 10;
 }
 
+.little_title {
+    font-size: 2rem;
+    font-weight: bold;
+}
 
+.actionInfo {
+    z-index: 10;
+    position: fixed;
+    border: 1px solid white;
+    border-radius: 15px;
+    color:white;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+    text-align: justify;
+    padding:5vw;
+    display: grid;
+    grid-template-areas: "title" "date" "infos";
+    grid-template-rows: 10% 10% 80%;
+}
+
+.actionInfo .title {
+    grid-area: title;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.actionInfo .date {
+    grid-area: date;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.actionInfo .infos {
+    grid-area: infos;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 
 .card-image {
     grid-area: image;
@@ -171,6 +231,13 @@ function toggleActive() {
     font-family: "Big John", sans-serif;
 }
 
+.actif {
+    font-size:13px;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    color: #b60000;
+}
+
 .card-text p {
     font-weight: bold;
     color: var(--color-text);
@@ -183,11 +250,13 @@ function toggleActive() {
     font-weight: bolder;
 }
 
-.card-text .footerText {
+.actionText {
     grid-area: footer;
     font-size: 1rem;
-    color: var(--vt-c-red-1);
-    margin: 10px;
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-stats {

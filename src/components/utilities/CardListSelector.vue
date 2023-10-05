@@ -3,9 +3,15 @@
         <div class="Cards_header">
             <h1 class="DivTitle">{{ title }}</h1>
         </div>
+        <div class="filter-controls" v-if="withFilters">
+            <input type="text" v-model="searchText" placeholder="Rechercher..." />
+        </div>
+
         <div v-if="isDroppedZone && list.length === 0" class="items-list plus">+</div>
-        <draggable v-model="list" class="items-list"
-                   :class="{ dropZone: isDroppedZone, error: (maxCardAutorized !== -1 && list.length > maxCardAutorized) }" group="list" item-key="id"
+        <draggable :model-value="filteredList"  @update:model-value="updateList" class="items-list"
+                   :class="{ dropZone: isDroppedZone, error: (maxCardAutorized !== -1 && list.length > maxCardAutorized) }"
+                   group="list"
+                   item-key="id"
                    :animation="300" >
             <template #item="{ element: carte }">
                 <CardListElement :card="carte" :class="{ not_draggable: carte.action}"/>
@@ -20,7 +26,7 @@ import draggable from 'vuedraggable';
 import {computed, ref, watch} from "vue";
 import CardListElement from "@/components/utilities/CardListElement.vue";
 
-const { title, objects, isDroppedZone, maxCardAutorized } = defineProps({
+const { title, objects, isDroppedZone, maxCardAutorized, withFilters, selectedAction } = defineProps({
     title: {
         type: String,
         required: true,
@@ -37,6 +43,15 @@ const { title, objects, isDroppedZone, maxCardAutorized } = defineProps({
     maxCardAutorized: {
         type: Number,
         default: -1
+    },
+    withFilters: {
+        type: Boolean,
+        default: false
+    },
+    selectedAction: {
+        type: String,
+        required: false,
+        default: ""
     }
 });
 
@@ -45,10 +60,55 @@ const error = computed(() => {
 });
 
 const list = ref(objects);
-// TODO : ajouter des filtres pour trier les cartes
-// TODO : ajouter un système de recherche
 
+const searchText = ref('');
+// autres propriétés réactives pour les filtres
 
+const filteredList = computed(() => {
+    let result = list.value;
+    if (searchText.value) {
+        result = result.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()));
+    }
+    if (selectedAction) {
+
+        // appliquer d'autres filtres ici
+        // trier la liste ici par la competence la plus haute selon l'action selectionnée
+        if (selectedActionCompetence.value !== "") {
+            result = result.sort((a, b) => {
+                if (a.competences[selectedActionCompetence.value] > b.competences[selectedActionCompetence.value]) {
+                    return -1;
+                }
+                if (a.competences[selectedActionCompetence.value] < b.competences[selectedActionCompetence.value]) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+    }
+
+    return result;
+});
+
+// convertir l'action selectionnée en l'équivallent dans la liste des compétences
+const selectedActionCompetence = computed(() => {
+    switch (selectedAction) {
+        case "cuisiner":
+            return "cuisine";
+        case "ameliorer":
+            return "intelligence";
+        case "explorer":
+            return "exploration";
+        case "muscler":
+            return "force";
+        default:
+            return "";
+    }
+});
+
+const updateList = (newList) => {
+    searchText.value = "";
+    list.value = newList;
+}
 
 // TODO : afficher si la carte à une action ou non, et si oui, afficher son nom, et sa date de fin (tooltip)
 const emit = defineEmits(['ResultedList']);
@@ -60,8 +120,8 @@ watch(list, (newValue) => {
 <style scoped>
 .object-list {
     display: grid;
-    grid-template-rows: 15% 80% 5%;
-    grid-template-areas: "title" "cards" "footer";
+    grid-template-rows: 10% 10% 75% 5%;
+    grid-template-areas: "title" "filters" "cards" "footer";
     margin: 3rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
@@ -83,6 +143,7 @@ watch(list, (newValue) => {
     column-gap: 1rem;
     margin: 0 2rem;
     overflow-y: auto;
+    max-height: 40rem;
 }
 
 .plus {
@@ -122,5 +183,29 @@ watch(list, (newValue) => {
 .not_draggable {
     cursor: default;
     pointer-events: none;
+}
+
+.filter-controls {
+    grid-area: filters;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.filter-controls input {
+    width: 100%;
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgba(199, 175, 175, 0.35);
+    background: rgba(199, 175, 175, 0.1);
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
 }
 </style>

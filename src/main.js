@@ -8,6 +8,7 @@ import {updateGlobalOptions} from "vue3-toastify";
 import SvgIcon from "vue3-icon";
 import directives from "./directives/";
 import moment from "moment";
+import 'moment/locale/fr';
 const app = createApp(App);
 
 updateGlobalOptions({

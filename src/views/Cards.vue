@@ -7,7 +7,8 @@
                :description="card.description"
                :image-url="card.imageUrl"
                :competences="card.competences"
-               :rarity="card.rarity"/>
+               :rarity="card.rarity"
+               :action="card.action"/>
     </div>
     <div v-if="cards.loading">
         <p class="huge-text">Chargement des cartes...</p>

@@ -14,14 +14,13 @@ const actionsStore = useActionsStore();
 const { buildings } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { cards } = storeToRefs(cardsStore);
-const { estimatedAction } = storeToRefs(actionsStore);
 
 usersStore.getBuildingsOfUser(authUser.value.id);
 cardsStore.getAllCardsFromUser(authUser.value.id);
 
 const selectedAction = ref("");
 const selectedCards = ref([]);
-
+const estimatedAction = ref({});
 const SelectAction = (action) => {
     selectedAction.value = action;
 }
@@ -30,16 +29,32 @@ defineExpose({
     SelectAction,
 });
 
-const sendAction = () => {
-    console.log(selectedCards.value);
+const sendAction = async () => {
+    let cardsIds = selectedCards.value.map(card => card.id);
+    await actionsStore.postActionForCards(cardsIds, selectedAction.value, null);
+
+    await usersStore.getBuildingsOfUser(authUser.value.id);
+    await cardsStore.getAllCardsFromUser(authUser.value.id);
+
+    selectedCards.value = [];
+    estimatedAction.value = {};
+    selectedAction.value = "";
+
 }
 
-watch(selectedCards, (newValue) => {
-  console.log(newValue);
-  let cardsIds = newValue.map(card => card.id);
-  actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, null);
+const cancelAction = async () => {
+    await usersStore.getBuildingsOfUser(authUser.value.id);
+    await cardsStore.getAllCardsFromUser(authUser.value.id);
 
-  console.log(estimatedAction.value);
+    selectedCards.value = [];
+    estimatedAction.value = {};
+    selectedAction.value = "";
+}
+
+watch(selectedCards, async (newValue) => {
+    let cardsIds = newValue.map(card => card.id);
+    if (cardsIds.length === 0) return;
+    estimatedAction.value = await actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, null);
 });
 
 </script>
@@ -53,20 +68,25 @@ watch(selectedCards, (newValue) => {
         </div>
         <div v-else-if="selectedAction === ''" class="Batiments">
             <BatimentElement class="Cantine" :level="buildings.cuisineLevel" nom-batiment="CUISINE"
-                             @click="SelectAction('cuisiner');"/>
+                             @click="SelectAction('cuisiner');" direction="left"
+                             :info-supp="{ 'Cuisine utilisée(s) aujourd\'hui': buildings.nbCuisineUsedToday}"/>
             <BatimentElement class="SalleDeSport" :level="buildings.salleSportLevel" nom-batiment="SALLE DE SPORT"
-                             @click="SelectAction('muscler');"/>
+                             @click="SelectAction('muscler');" direction="right"
+                             :info-supp="{ 'Salle de sport utilisée(s)': buildings.actualSalleSportUsed}"/>
             <BatimentElement class="Labo" :level="buildings.laboLevel" nom-batiment="LABO"
-                             @click="SelectAction('ameliorer');"/>
+                             @click="SelectAction('ameliorer');" direction="left"
+                             :info-supp="{ 'Labo utilisé(s)': buildings.actualLaboUsed}"/>
             <BatimentElement class="SpatioPort" :level="buildings.spatioPortLevel" nom-batiment="SPATIOPORT"
-                             @click="SelectAction('explorer');"/>
+                             @click="SelectAction('explorer');" direction="right"
+                             :info-supp="{ 'SpatioPort utilisé(s)': buildings.actualSpatioPortUsed}"/>
         </div>
         <div v-if="selectedAction !== ''" class="ActionFormDiv">
-            <ListSelector class="cardsList" :objects="cards" title="Cartes"/>
+            <ListSelector class="cardsList" :objects="cards" title="Cartes"
+                          withFilters :selected-action="selectedAction"/>
             <ListSelector v-if="selectedAction !== ''" class="selectedCardsList" :objects="[]" title="Cartes selectionnees"
                           @resulted-list="selectedCards = $event" is-dropped-zone :max-card-autorized="1"/>
             <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards" :estimated-action="estimatedAction"
-                @cancel="selectedAction = ''" @validate="sendAction" :key="estimatedAction"/>
+                @cancel="cancelAction" @validate="sendAction" :key="estimatedAction"/>
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
     </div>

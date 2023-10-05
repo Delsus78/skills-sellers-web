@@ -1,9 +1,10 @@
 <script setup>
-import {computed, ref, watch} from "vue";
+import {ref} from "vue";
 import {
   faSquareXmark as leaveIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import 'moment/locale/fr';
 const emit = defineEmits(['validate', 'cancel']);
 
 const { actionName, selectedCards, estimatedAction } = defineProps({
@@ -25,8 +26,6 @@ const { actionName, selectedCards, estimatedAction } = defineProps({
 });
 
 const error = ref(estimatedAction.error);
-
-
 
 const validate = () => {
     if (selectedCards.length === 0) {
@@ -56,28 +55,34 @@ function getFormattedRemainingTime(endDateStr) {
           <div>{{ estimatedAction.endTime ? getFormattedRemainingTime(estimatedAction.endTime) : "" }}</div>
         </div>
         <div class="info">
-          <span class="little_title">Gains éstimés</span>
-          <div class="resources">
-            <div class="resource">
-              <span>0</span>
-              <span> Or</span>
+          <span class="little_title">Gains estimés</span>
+            <div v-if="Object.keys(estimatedAction.gains || {}).length === 0">
+                <span>
+                    <strong>RIEN</strong>
+                </span>
             </div>
-            <div class="resource">
-              <span>0</span>
-              <span> Repas</span>
+            <div v-else v-for="(key, val) in estimatedAction.gains" class="resource">
+                <span>
+                    <strong>{{ key }}</strong> {{ val }}
+                </span>
             </div>
-            <div class="resource">
-              <span>0</span>
-              <span> Creatium</span>
-            </div>
-          </div>
         </div>
         <div class="info">
-          <span class="little_title">Coût éstimé</span>
+          <span class="little_title">Coût estimé</span>
+            <div v-if="Object.keys(estimatedAction.couts || {}).length === 0">
+                <span>
+                    <strong>RIEN</strong>
+                </span>
+            </div>
+            <div v-else v-for="(key, val) in estimatedAction.couts" class="resource">
+                <span>
+                    <strong>{{ key }}</strong> {{ val }}
+                </span>
+            </div>
         </div>
       </div>
       <div class="buttons">
-          <button class="validate swipe-overlay-out" @click="">Valider</button>
+          <button class="validate swipe-overlay-out" @click="validate()">Valider</button>
           <div class="leave leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
       <div class="errorInfo">

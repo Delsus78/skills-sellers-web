@@ -1,5 +1,12 @@
 <script setup>
 import moment from "moment/moment";
+import {
+    faBurger as cuisiIcon,
+    faDumbbell as forceIcon,
+    faGraduationCap as intelIcon,
+    faStar as chariIcon,
+    faCompass as exploIcon,
+} from "@fortawesome/free-solid-svg-icons";
 
 const { card } = defineProps({
     card: {
@@ -27,23 +34,33 @@ function getFormattedRemainingTime(endDateStr) {
       <div class="competences">
           <div class="stat">
             <div class="value">{{ card.competences.cuisine }}</div>
-            <div class="type">CUISI</div>
+            <div class="type">
+                <svg-icon  :fa-icon="cuisiIcon" :size="28"/>
+            </div>
           </div>
           <div class="stat">
               <div class="value">{{ card.competences.charisme }}</div>
-              <div class="type">CHARI</div>
+              <div class="type">
+                  <svg-icon  :fa-icon="chariIcon" :size="28"/>
+              </div>
           </div>
           <div class="stat">
               <div class="value">{{ card.competences.force }}</div>
-              <div class="type">FORCE</div>
+              <div class="type">
+                  <svg-icon  :fa-icon="forceIcon" :size="28"/>
+              </div>
           </div>
           <div class="stat">
               <div class="value">{{ card.competences.exploration }}</div>
-              <div class="type">EXPLO</div>
+              <div class="type">
+                  <svg-icon  :fa-icon="exploIcon" :size="28"/>
+              </div>
           </div>
           <div class="stat">
               <div class="value">{{ card.competences.intelligence }}</div>
-              <div class="type">INTEL</div>
+              <div class="type">
+                  <svg-icon  :fa-icon="intelIcon" :size="28"/>
+              </div>
           </div>
       </div>
 
@@ -116,7 +133,7 @@ function getFormattedRemainingTime(endDateStr) {
     align-items: center;
     font-weight: bold;
     font-size: 1rem;
-    border-right: 1px solid var(--vt-c-green-2);
+    padding: 0.5rem;
 }
 
 .stat:last-child {
