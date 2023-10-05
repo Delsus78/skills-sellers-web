@@ -20,7 +20,7 @@ function getFormattedRemainingTime(endDateStr) {
   <div class="cardListElement">
       <div class="action" :class="{ occuped: card.action }">
           <span><strong>{{ card.action ? card.action.actionName.slice(0, -1) : 'Libre'}}</strong></span>
-          <span>{{ card.action ? 'termine(e) ' + getFormattedRemainingTime("2023-10-08T12:16:24.938154") : ''}}</span>
+          <span>{{ card.action ? 'termine(e) ' + getFormattedRemainingTime(card.action.endTime) : ''}}</span>
       </div>
       <img class="image" :src="card.imageUrl" alt="Card Image" width="100"/>
       <span :class="['name', card.rarity + '-text']">{{ card.name }}</span>

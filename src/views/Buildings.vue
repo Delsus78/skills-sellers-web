@@ -1,18 +1,21 @@
 <script setup>
-import {useUsersStore, useAuthStore, useCardsStore} from "@/stores";
+import {useUsersStore, useAuthStore, useCardsStore, useActionsStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import BatimentElement from "@/components/utilities/BatimentElement.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import ListSelector from "@/components/utilities/CardListSelector.vue";
 import ActionForm from "@/components/utilities/ActionForm.vue";
 const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const cardsStore = useCardsStore();
+const actionsStore = useActionsStore();
 
 const { buildings } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { cards } = storeToRefs(cardsStore);
+const { estimatedAction } = storeToRefs(actionsStore);
+
 usersStore.getBuildingsOfUser(authUser.value.id);
 cardsStore.getAllCardsFromUser(authUser.value.id);
 
@@ -27,7 +30,17 @@ defineExpose({
     SelectAction,
 });
 
+const sendAction = () => {
+    console.log(selectedCards.value);
+}
 
+watch(selectedCards, (newValue) => {
+  console.log(newValue);
+  let cardsIds = newValue.map(card => card.id);
+  actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, null);
+
+  console.log(estimatedAction.value);
+});
 
 </script>
 <template>
@@ -52,8 +65,8 @@ defineExpose({
             <ListSelector class="cardsList" :objects="cards" title="Cartes"/>
             <ListSelector v-if="selectedAction !== ''" class="selectedCardsList" :objects="[]" title="Cartes selectionnees"
                           @resulted-list="selectedCards = $event" is-dropped-zone :max-card-autorized="1"/>
-            <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards"
-                @cancel="selectedAction = ''"/>
+            <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards" :estimated-action="estimatedAction"
+                @cancel="selectedAction = ''" @validate="sendAction" :key="estimatedAction"/>
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
     </div>

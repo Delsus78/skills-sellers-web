@@ -1,6 +1,6 @@
 @import './base.css';
 @import "tooltip.css";
-
+@import "simpleHover.css";
 body::-webkit-scrollbar,
 html::-webkit-scrollbar {
   display: none;
