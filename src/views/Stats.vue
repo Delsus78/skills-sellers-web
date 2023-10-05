@@ -2,7 +2,6 @@
 import {storeToRefs} from "pinia";
 import { useUsersStore } from "@/stores";
 import {useRoute} from "vue-router";
-import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {ref, watch} from "vue";
 
 const route = useRoute();

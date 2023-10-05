@@ -9,6 +9,7 @@ const { users } = storeToRefs(usersStore);
 usersStore.getAllUsers();
 
 const usersSorted = computed(() => {
+    if (users.value.loading || users.value.error) return [];
     return users.value.sort((a, b) => {
         return b.nbCards - a.nbCards;
     });
@@ -29,7 +30,7 @@ const usersSorted = computed(() => {
     height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 5rem 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 8rem 1fr 1fr 1fr 1fr 1fr 0.5fr;
     overflow: hidden;
 }
 

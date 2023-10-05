@@ -15,6 +15,13 @@ export const useUsersStore = defineStore({
             creatium: 0,
             or: 0,
             nourriture: 0
+        },
+        buildings: {
+            cuisineLevel: 1,
+            nbCuisineUsedToday: 0,
+            salleSportLevel: 1,
+            laboLevel: 1,
+            spatioPortLevel: 1
         }
     }),
     actions: {
@@ -52,6 +59,18 @@ export const useUsersStore = defineStore({
                 .catch(error => {
                     console.log(error);
                     return this.actualUser = {error};
+                })
+        },
+        async getBuildingsOfUser(id) {
+            this.buildings = { loading: true };
+            let usedUrl = baseUrl + `Users/${id}/batiments`;
+            fetchWrapper.get(usedUrl)
+                .then(buildings => {
+                    return this.buildings = buildings;
+                })
+                .catch(error => {
+                    console.log(error);
+                    return this.buildings = {error};
                 })
         }
     }

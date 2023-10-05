@@ -20,7 +20,10 @@
         </div>
 
         <ul class="player-list">
-            <li v-for="(player, index) in players" :key="player.id" class="player-item" @click="router.push('/stats/'+player.id);">
+            <li v-for="(player, index) in players"
+                :key="player.id"
+                class="player-item"
+                @click="router.push('/stats/'+player.id);">
                 <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
                 <span>{{ player.nbCards }}</span>
@@ -104,7 +107,7 @@ const reload = () => {
 
 .player-list {
     grid-area: stats;
-    list-style-type: none;  /* Supprimer les puces de la liste */
+    list-style-type: none;
     padding: 0;
     margin: 0 2rem;
 }
