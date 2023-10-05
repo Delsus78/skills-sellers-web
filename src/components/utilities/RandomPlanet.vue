@@ -1,10 +1,11 @@
 <template>
     <div class="random-planet">
         <svg
-                xmlns="http://www.w3.org/2000/svg"
-                :width="width"
-                :height="height"
-        >
+            ref="svgWrapper"
+            xmlns="http://www.w3.org/2000/svg"
+            :width="width"
+            :height="height">
+
             <!-- This element will store our graphics -->
             <g class="svg-planet-graphics">
             </g>
@@ -12,10 +13,11 @@
     </div>
 </template>
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import randomSeed from "random-seed";
+const svgWrapper = ref(null);
 
-const { modelValue, width, height } = defineProps({
+const { modelValue, width, height, planetId } = defineProps({
     modelValue: {
         type: String,
         default: "0"
@@ -27,6 +29,10 @@ const { modelValue, width, height } = defineProps({
     height: {
         type: Number,
         default: 850
+    },
+    planetId: {
+        type: Number,
+        default: 0
     }
 });
 
@@ -40,8 +46,7 @@ function draw(seed) {
     const starSize = width / 2.5;  // Adjusted to take the full width of the div
     const markup = drawPlanet(starSize, seed);
 
-    const svgWrapper = document.querySelector('.svg-planet-graphics');
-    svgWrapper.innerHTML = markup;
+    svgWrapper.value.innerHTML = markup;
 }
 
 function drawPlanet(size, seed) {
@@ -69,14 +74,14 @@ function drawPlanet(size, seed) {
     // We'll use those random values to create our filter:
 
     const defs = `
-      <clipPath id="${seed}-shadow-clip-path">
+      <clipPath id="${seed}-${planetId}-shadow-clip-path">
       <circle cx="${cx}" cy="${cy}" r="${size + 2}" />
     </clipPath>
-    <radialGradient id="${seed}-shadow">
+    <radialGradient id="${seed}-${planetId}-shadow">
       <stop offset="0%" stop-color="hsla(0, 0%, 0%, 0)"></stop>
       <stop offset="90%" stop-color="hsla(0, 0%, 0%, 1)"></stop>
     </radialGradient>
-    <filter id="${seed}-texture">
+    <filter id="${seed}-${planetId}-texture">
       <feTurbulence
         type="${turbulenceType}"
         baseFrequency="${baseFrequencyX} ${baseFrequencyY}"
@@ -89,7 +94,7 @@ function drawPlanet(size, seed) {
       <feComposite operator="in" in2="SourceGraphic"/>
     </filter>
     <filter
-          id="star-secondary-glow"
+          id="${seed}-${planetId}-star-secondary-glow"
           filterUnits="userSpaceOnUse"
           x="${width/2 - size * blurFilterSize}"
           y="${height/2 - size * blurFilterSize}"
@@ -99,7 +104,7 @@ function drawPlanet(size, seed) {
           <feGaussianBlur stdDeviation="${size / 5}"/>
         </filter>
     <filter
-          id="star-glow"
+          id="${seed}-${planetId}-star-glow"
           filterUnits="userSpaceOnUse"
           x="0"
           y="0"
@@ -126,12 +131,12 @@ function drawPlanet(size, seed) {
         r="${size}"
         cx="${cx}"
         cy="${cy}"
-        filter="url(#${seed}-texture)"
+        filter="url(#${seed}-${planetId}-texture)"
       />
-      <circle r="${size}" cx="${cx}" cy="${cy}" filter="url(#star-glow)" fill="${backGlowColor}" opacity="0.7"/ class="star-glow"/>
+      <circle r="${size}" cx="${cx}" cy="${cy}" filter="url(#${seed}-${planetId}-star-glow)" fill="${backGlowColor}" opacity="0.7"/ class="star-glow"/>
       <circle cx="${cx - size}" cy="${cy}" r="${size * 2 + 2}"
-       fill="url(#${seed}-shadow)" clip-path="url(#${seed}-shadow-clip-path)"/>
-       <circle r="${size * 0.74}" cx="${cx}" cy="${cy}" filter="url(#star-secondary-glow)" fill="${frontGlowColor}" opacity="0.7" class="inner-glow"/>
+       fill="url(#${seed}-${planetId}-shadow)" clip-path="url(#${seed}-${planetId}-shadow-clip-path)"/>
+       <circle r="${size * 0.74}" cx="${cx}" cy="${cy}" filter="url(#${seed}-${planetId}-star-secondary-glow)" fill="${frontGlowColor}" opacity="0.7" class="inner-glow"/>
     </g>
   `;
     return defs + planet;
@@ -146,9 +151,6 @@ function generateColor(rand,
 
 </script>
 <style scoped>
-.random-planet {
-    pointer-events: none;
-}
 
 .random-planet svg * {
     pointer-events: visible;

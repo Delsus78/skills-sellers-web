@@ -12,8 +12,8 @@
             <span :class="['rarity', rarity + '-text']">{{ rarity }}</span>
             <h2>{{ name }}</h2>
             <p>{{ description }}</p>
-            <footer>#{{ id }}</footer>
         </div>
+        <footer class="actionText" :class="{actif: action, 'shadow-white': !action}">{{ action ? action.actionName.slice(O, -1) : 'ne fait rien' }}</footer>
         <div class="card-stats">
             <div class="stat">
                 <div class="value">{{ competences.cuisine }}</div>
@@ -37,6 +37,18 @@
             </div>
         </div>
     </div>
+    <div class="actionInfo bg-dark-blur" v-if="isActive">
+        <div class="actionInfoText">
+            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</h2>
+            <p class="date">{{ action ? 'termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
+            <div v-for="(val, actionKey ) in action || {}">
+                <p v-if="['cards', 'actionName', 'endTime'].indexOf(actionKey) === -1" class="infos">
+                    <span class="little_title">{{ actionKey }} : </span>
+                    <span> {{ val }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
 
 </template>
 
@@ -44,9 +56,10 @@
 import {VanillaTilt} from "./VanillaTilt";
 import {onMounted} from "vue";
 import { ref } from "vue";
+import moment from "moment/moment";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, Competences } = defineProps({
+const { id, name, imageUrl, description, competences } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -82,6 +95,11 @@ const { id, name, imageUrl, description, Competences } = defineProps({
             exploration: 0,
             intelligence: 0
         })
+    },
+    action: {
+        type: Object,
+        required: false,
+        default: () => {}
     }
 
 });
@@ -94,12 +112,19 @@ onMounted(() => {
     });
 });
 
+function getFormattedRemainingTime(endDateStr) {
+    moment.locale('fr');
+    const now = moment();
+    const endDate = moment(endDateStr);
+    const remainingTime = moment.duration(endDate.diff(now));
+    return remainingTime.locale('fr').humanize(true);
+}
+
 function toggleActive() {
     isActive.value = !isActive.value;
 }
 
 </script>
-
 <style scoped>
 
 .overlay {
@@ -123,7 +148,7 @@ function toggleActive() {
 .card {
     display: grid;
     grid-template-columns: 20rem;
-    grid-template-rows: 20rem 13rem 1rem 5rem;
+    grid-template-rows: 20rem 11rem 3rem 5rem;
     grid-template-areas: "image" "text" "footer" "stats";
     border-radius: 18px;
     background: #1d1d1d;
@@ -150,99 +175,41 @@ function toggleActive() {
     z-index: 10;
 }
 
-.legendaire::after {
-    content:"";
-    background: linear-gradient(45deg,
-    #ff0000 0%,
-    #ff9a00 10%,
-    #d0de21 20%,
-    #4fdc4a 30%,
-    #3fdad8 40%,
-    #2fc9e2 50%,
-    #1c7fee 60%,
-    #5f15f2 70%,
-    #ba0cf8 80%,
-    #fb07d9 90%,
-    #ff0000 100%  )
-    repeat 0% 0% / 300% 100%;
-    position: absolute;
-    inset: -3px;
-    border-radius: 16px;
-    filter: blur(8px);
-    transform: translateZ(-1px);
-    animation: rgb 6s linear infinite;
+.little_title {
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-.commun::after {
-    content:"";
-    background: linear-gradient(45deg,
-    #c5c5c5 0%,
-    #ffffff 20%,
-    #fffbdc 40%,
-    #838383 60%,
-    #b4b4b4 80%
-    )
-    repeat 0% 0% / 300% 100%;
-    position: absolute;
-    inset: -3px;
-    border-radius: 16px;
-    filter: blur(8px);
-    transform: translateZ(-1px);
-    animation: rgb 6s linear infinite;
+.actionInfo {
+    z-index: 10;
+    position: fixed;
+    border: 1px solid white;
+    border-radius: 15px;
+    color:white;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+    text-align: justify;
+    padding:5vw;
+    display: grid;
+    grid-template-areas: "title" "date" "infos";
+    grid-template-rows: 10% 10% 80%;
 }
 
-.epic::after {
-    content:"";
-    background: linear-gradient(45deg,
-    #94009d 0%,
-    #ff33fb 20%,
-    #7a0070 40%,
-    #ff3ded 60%,
-    #590064 80%
-    )
-    repeat 0% 0% / 300% 100%;
-    position: absolute;
-    inset: -3px;
-    border-radius: 16px;
-    filter: blur(8px);
-    transform: translateZ(-1px);
-    animation: rgb 6s linear infinite;
-}
-@keyframes rgb {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
+.actionInfo .title {
+    grid-area: title;
+    font-size: 3rem;
+    font-weight: bold;
 }
 
-@keyframes legendaire-color-change {
-    0% { color: #ff0000; }
-    10% { color: #ff9a00; }
-    20% { color: #d0de21; }
-    30% { color: #4fdc4a; }
-    40% { color: #3fdad8; }
-    50% { color: #2fc9e2; }
-    60% { color: #1c7fee; }
-    70% { color: #5f15f2; }
-    80% { color: #ba0cf8; }
-    90% { color: #fb07d9; }
-    100% { color: #ff0000; }
+.actionInfo .date {
+    grid-area: date;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-@keyframes epic-color-change {
-    0% { color: #94009d; }
-    20% { color: #ff33fb; }
-    40% { color: #7a0070; }
-    60% { color: #ff3ded; }
-    80% { color: #590064; }
-    100% { color: #94009d; }
-}
-
-@keyframes commun-color-change {
-    0% { color: #c5c5c5; }
-    20% { color: #ffffff; }
-    40% { color: #fffbdc; }
-    60% { color: #838383; }
-    80% { color: #b4b4b4; }
+.actionInfo .infos {
+    grid-area: infos;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .card-image {
@@ -264,16 +231,11 @@ function toggleActive() {
     font-family: "Big John", sans-serif;
 }
 
-.epic-text {
-    animation: epic-color-change 6s linear infinite;
-}
-
-.legendaire-text {
-    animation: legendaire-color-change 6s linear infinite;
-}
-
-.commun-text {
-    animation: commun-color-change 6s linear infinite;
+.actif {
+    font-size:13px;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    color: #b60000;
 }
 
 .card-text p {
@@ -288,11 +250,13 @@ function toggleActive() {
     font-weight: bolder;
 }
 
-.card-text .footerText {
+.actionText {
     grid-area: footer;
     font-size: 1rem;
-    color: var(--vt-c-red-1);
-    margin: 10px;
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card-stats {

@@ -13,6 +13,7 @@ import {
     faBurger as foodIcon,
     faCoins as moneyIcon,
     faCubesStacked as creatiumIcon,
+    faEarthEurope as planetIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -39,22 +40,26 @@ const { pageName } = defineProps({
         <h1>{{ pageName }}</h1>
         <div class="navbar-nav">
             <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
-            <a @click="authStore.logout()" class="nav-item"><svg-icon class="shadow-white" :fa-icon="leaveIcon" :size="36"/></a>
+
             <RouterLink :to="`/cards/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
         </div>
 
         <div class="player-infos">
             <span class="pseudoText">{{authUser.pseudo}}</span>
+            <a @click="authStore.logout()"><svg-icon class="logout shadow-white" :fa-icon="leaveIcon" :size="26"/></a>
+            <div class="resources bg-dark-blur"
+                 @mouseenter="isHovered = true"
+                 @mouseleave="isHovered = false">
+            </div>
+
             <span class="text food" :class="{ moved: isHovered }">
                 {{ user.nourriture }}
                 <span class="resource-name">{{ isHovered ? 'repas' : ''}}</span>
                 <svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
             </span>
 
-            <div class="resources bg-dark-blur">
-
-            </div>
             <span class="text or" :class="{ moved: isHovered }">
                 {{ user.or }}
                 <span class="resource-name">{{ isHovered ? 'or' : ''}}</span>
@@ -67,9 +72,7 @@ const { pageName } = defineProps({
                 <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
             </span>
 
-            <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"
-                          @mouseenter="isHovered = true"
-                          @mouseleave="isHovered = false"/>
+            <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
         </div>
     </nav>
 </template>
@@ -149,6 +152,19 @@ h1 {
     text-shadow: 0 0 1rem var(--vt-c-white-dark);
 }
 
+.player-infos .logout {
+    position: fixed;
+    right: 15rem;
+    top: 2.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.player-infos .logout:hover  {
+    color: var(--vt-c-red-1);
+    cursor: pointer;
+    filter: drop-shadow(0 0 4px var(--vt-c-black));
+}
+
 .player-infos .resources {
     position: fixed;
     right: 9rem;
@@ -176,9 +192,10 @@ h1 {
     grid-auto-flow: column;
     grid-gap: 0.5rem;
     align-items: center;
-    justify-items: center;
+    justify-content: end;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 102;
+    pointer-events: none;
 }
 
 .player-infos .or {

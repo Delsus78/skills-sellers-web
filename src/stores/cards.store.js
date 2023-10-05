@@ -15,7 +15,6 @@ export const useCardsStore = defineStore({
             let usedUrl = baseUrl + `Users/${id}/Cards`;
             fetchWrapper.get(usedUrl)
                 .then(cards => {
-                    console.log(cards);
                     return this.cards = cards;
                 })
                 .catch(error => {

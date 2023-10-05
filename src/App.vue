@@ -4,6 +4,7 @@ import NavBar from "@/components/utilities/NavBar.vue";
 import { useAuthStore } from '@/stores';
 import {computed} from "vue";
 import Background from "@/components/utilities/background.vue";
+import 'moment/locale/fr';
 const authStore = useAuthStore();
 const route=useRoute();
 const path = computed(() =>route.path.split('/')[1]);
