@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {useAuthStore} from '@/stores';
+import {useAuthStore, useUsersStore} from '@/stores';
 
 import {fetchWrapper} from '@/helpers';
 
@@ -13,18 +13,22 @@ export const useActionsStore = defineStore({
         async postActionForCards(cardsIds, actionName, params) {
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/actions`;
-
-            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, params})
+            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
                 .catch(error => {
                     console.log(error);
                     return {error};
+                }).then(response => {
+                    // refresh user ressources
+                    useUsersStore().getUser(user.id);
+                    return response;
                 });
         },
         async postEstimatedActionForCards(cardsIds, actionName, params) {
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/estimate/actions`;
 
-            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, params})
+            console.log(params);
+            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
                 .catch(error => {
                     console.log(error);
                     return {error: error};

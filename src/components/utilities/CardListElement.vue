@@ -1,5 +1,4 @@
 <script setup>
-import moment from "moment/moment";
 import {
     faBurger as cuisiIcon,
     faDumbbell as forceIcon,
@@ -7,6 +6,7 @@ import {
     faStar as chariIcon,
     faCompass as exploIcon,
 } from "@fortawesome/free-solid-svg-icons";
+import {getFormattedRemainingTime} from "./DateFormator";
 
 const { card } = defineProps({
     card: {
@@ -15,13 +15,7 @@ const { card } = defineProps({
         default: () => {}
     }
 });
-function getFormattedRemainingTime(endDateStr) {
-    moment.locale('fr');
-    const now = moment();
-    const endDate = moment(endDateStr);
-    const remainingTime = moment.duration(endDate.diff(now));
-    return remainingTime.locale('fr').humanize(true);
-}
+
 </script>
 <template>
   <div class="cardListElement">

@@ -56,7 +56,7 @@
 import {VanillaTilt} from "./VanillaTilt";
 import {onMounted} from "vue";
 import { ref } from "vue";
-import moment from "moment/moment";
+import {getFormattedRemainingTime} from "./DateFormator";
 
 const isActive = ref(false);
 const { id, name, imageUrl, description, competences } = defineProps({
@@ -111,14 +111,6 @@ onMounted(() => {
         "max-glare": 0.15
     });
 });
-
-function getFormattedRemainingTime(endDateStr) {
-    moment.locale('fr');
-    const now = moment();
-    const endDate = moment(endDateStr);
-    const remainingTime = moment.duration(endDate.diff(now));
-    return remainingTime.locale('fr').humanize(true);
-}
 
 function toggleActive() {
     isActive.value = !isActive.value;
