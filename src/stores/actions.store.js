@@ -15,7 +15,7 @@ export const useActionsStore = defineStore({
             let usedUrl = baseUrl + `${user.id}/actions`;
             return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return {error};
                 }).then(response => {
                     // refresh user ressources
@@ -27,10 +27,9 @@ export const useActionsStore = defineStore({
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/estimate/actions`;
 
-            console.log(params);
             return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return {error: error};
                 });
         }

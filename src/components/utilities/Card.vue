@@ -13,7 +13,7 @@
             <h2>{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
-        <footer class="actionText" :class="{actif: action, 'shadow-white': !action}">{{ action ? action.actionName.slice(O, -1) : 'ne fait rien' }}</footer>
+        <footer class="actionText" :class="{actif: action, 'shadow-white': !action}">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</footer>
         <div class="card-stats">
             <div class="stat">
                 <div class="value">{{ competences.cuisine }}</div>

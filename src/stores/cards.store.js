@@ -18,7 +18,7 @@ export const useCardsStore = defineStore({
                     return this.cards = cards;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return this.cards = {error};
                 })
 

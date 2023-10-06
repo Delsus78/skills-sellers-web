@@ -33,7 +33,7 @@ export const useUsersStore = defineStore({
                     return this.users = users;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return this.users = {error};
                 })
         },
@@ -45,7 +45,7 @@ export const useUsersStore = defineStore({
                     return this.stats = stats;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return this.stats = {error};
                 })
         },
@@ -57,7 +57,7 @@ export const useUsersStore = defineStore({
                     return this.actualUser = user;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return this.actualUser = {error};
                 })
         },
@@ -69,7 +69,7 @@ export const useUsersStore = defineStore({
                     return this.buildings = buildings;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     return this.buildings = {error};
                 })
         }

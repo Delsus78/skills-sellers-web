@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import {
   faSquareXmark as leaveIcon,
 } from "@fortawesome/free-solid-svg-icons";
@@ -40,10 +40,6 @@ const validate = () => {
     }
     emit('validate', selectedCards);
 }
-
-onMounted(() => {
-    console.log(batToUpDisplay.value);
-});
 
 const handleUpdateOption = (option) => {
     batToUpDisplay.value = option;
@@ -96,7 +92,8 @@ const handleUpdateOption = (option) => {
                 :selected="batimentToUpgrade"
                 v-on:updateOption="handleUpdateOption"></dropdown>
       <div class="buttons">
-          <button class="validate swipe-overlay-out" @click="validate()">Valider</button>
+          <button class="validate swipe-overlay-out" @click="validate()"
+                  :disabled="error" :class="{disabled: error}">Valider</button>
           <div class="leave leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
       <div class="errorInfo">
@@ -226,5 +223,20 @@ const handleUpdateOption = (option) => {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+.disabled {
+    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
+    color: var(--vt-c-black-soft);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disabled:hover {
+    transform: scale(1);
+    color: var(--vt-c-black-soft);
+    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
+    cursor: not-allowed;
+    pointer-events: none;
 }
 </style>

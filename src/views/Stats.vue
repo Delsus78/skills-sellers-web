@@ -14,7 +14,6 @@ usersStore.getStatsOfUser(userId);
 usersStore.getAllUsers();
 
 watch(users, (newValue) => {
-    console.log(newValue);
     if (newValue) {
         user.value = newValue.find((u) => u.id.toString() === userId);
     }
