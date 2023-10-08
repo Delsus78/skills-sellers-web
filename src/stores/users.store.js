@@ -8,7 +8,25 @@ export const useUsersStore = defineStore({
     id: 'users',
     state: () => ({
         users: {},
-        stats: {},
+        stats: {
+            "totalCards": 0,
+            "totalCardsByRarity": {
+                "legendaire": 0,
+                "epic": 0,
+                "commune": 0
+            },
+            "totalFailedCardsCauseOfCharisme": 0,
+            "totalMessagesSent": 0,
+            "totalResourcesMined": {
+                "Creatium": 0,
+                "Or": 0
+            },
+            "totalPlanetDiscovered": 0,
+            "totalCardWithAStatMaxed": 0,
+            "totalBuildingsUpgraded": 0,
+            "totalRocketLaunched": 0,
+            "totalMealCooked": 0
+        },
         actualUser: {
             pseudo: '',
             nbCards: 0,
@@ -52,7 +70,7 @@ export const useUsersStore = defineStore({
         async getUser(id) {
             this.actualUser = { loading: true };
             let usedUrl = baseUrl + `Users/${id}`;
-            fetchWrapper.get(usedUrl)
+            return fetchWrapper.get(usedUrl)
                 .then(user => {
                     return this.actualUser = user;
                 })

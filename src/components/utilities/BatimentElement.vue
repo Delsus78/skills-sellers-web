@@ -1,4 +1,8 @@
 <script setup>
+
+import {computed} from "vue";
+const imagesImports = import.meta.glob('../../assets/images/*.png', {eager: true});
+
 const { level, nomBatiment, infoSupp, direction } = defineProps({
     level: {
         type: Number,
@@ -20,12 +24,22 @@ const { level, nomBatiment, infoSupp, direction } = defineProps({
     }
 
 });
+
+const imageUrl = computed(() => {
+    const imageName = nomBatiment.toLowerCase();
+    const matchedPath = Object.keys(imagesImports).find(path =>
+        path.includes(`${imageName}.png`)
+    );
+    return matchedPath ? imagesImports[matchedPath].default : '';
+});
+
 </script>
 <template>
 <div class="BatimentElement">
     <p class="BatimentElementName">{{nomBatiment}}</p>
     <div class="BatimentElementImage">
-        <img src="../../assets/images/maison.png" alt="maison">
+        <img :src="imageUrl" class="shadow-black"
+             :alt="nomBatiment.toLowerCase()">
         <div v-for="(key, info) in infoSupp" :class="['BatimentElementInfo', direction]">
             <p>{{info}} : <strong>{{key}}</strong></p>
         </div>
@@ -54,6 +68,7 @@ const { level, nomBatiment, infoSupp, direction } = defineProps({
 
 .BatimentElementImage {
     grid-area: image;
+    z-index: 101;
 }
 
 .BatimentElementImage img {

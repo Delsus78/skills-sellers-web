@@ -1,0 +1,47 @@
+.legendaire::after {
+    content:"";
+    background: linear-gradient(45deg,
+    #ff0000 0%,
+    #ff9a00 10%,
+    #d0de21 20%,
+    #4fdc4a 30%,
+    #3fdad8 40%,
+    #2fc9e2 50%,
+    #1c7fee 60%,
+    #5f15f2 70%,
+    #ba0cf8 80%,
+    #fb07d9 90%,
+    #ff0000 100%  )
+    repeat 0% 0% / 300% 100%;
+    position: absolute;
+    inset: -3px;
+    border-radius: 16px;
+    filter: blur(8px);
+    transform: translateZ(-1px);
+    animation: rgb 6s linear infinite;
+}
+
+.legendaire {
+    background-image: url("https://assets.codepen.io/13471/sparkles.gif");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.legendaire img {
+    opacity: 0.8;
+}
+
+@keyframes legendaire-color-change {
+    0% { color: #ff0000; }
+    10% { color: #ff9a00; }
+    20% { color: #d0de21; }
+    30% { color: #4fdc4a; }
+    40% { color: #3fdad8; }
+    50% { color: #2fc9e2; }
+    60% { color: #1c7fee; }
+    70% { color: #5f15f2; }
+    80% { color: #ba0cf8; }
+    90% { color: #fb07d9; }
+    100% { color: #ff0000; }
+}

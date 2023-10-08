@@ -32,6 +32,25 @@ export const useActionsStore = defineStore({
                     console.error(error);
                     return {error: error};
                 });
+        },
+        async postOpenCard() {
+            const { user } = useAuthStore();
+            let usedUrl = baseUrl + `${user.id}/actions/opencard`;
+            return await fetchWrapper.post(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                }).then(response => {
+                    // refresh user ressources
+                    useUsersStore().getUser(user.id);
+
+                    // if the response is null
+                    if (response === '') {
+                        return {doublon: true};
+                    }
+
+                    return response;
+                });
         }
     }
 });

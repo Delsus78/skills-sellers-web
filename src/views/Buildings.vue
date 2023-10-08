@@ -32,7 +32,7 @@ defineExpose({
 
 const sendAction = async () => {
     let cardsIds = selectedCards.value.map(card => card.id);
-    let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
+    let params = selectedAction.value === "améliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
     await actionsStore.postActionForCards(cardsIds, selectedAction.value, params);
 
     await usersStore.getBuildingsOfUser(authUser.value.id);

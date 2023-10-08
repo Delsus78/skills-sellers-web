@@ -43,6 +43,7 @@ onMounted(() => {
 
 // Our draw function is where the ✨ magic ✨ happens
 function draw(seed) {
+    console.log(seed);
     const starSize = width / 2.5;  // Adjusted to take the full width of the div
     const markup = drawPlanet(starSize, seed);
 

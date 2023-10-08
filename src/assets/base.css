@@ -98,7 +98,11 @@ body {
 }
 
 .shadow-white {
-  filter: drop-shadow(0 0 4px var(--vt-c-white-2));
+    filter: drop-shadow(0 0 4px var(--vt-c-white-2));
+}
+
+.shadow-black {
+    filter: drop-shadow(0 0 1rem var(--vt-c-black));
 }
 
 .top {
