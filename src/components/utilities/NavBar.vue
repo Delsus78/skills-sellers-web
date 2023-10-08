@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore, useUsersStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
@@ -14,6 +14,8 @@ import {
     faCoins as moneyIcon,
     faCubesStacked as creatiumIcon,
     faEarthEurope as planetIcon,
+    faGift as giftIcon,
+    faAnglesUp as upgradeIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -30,17 +32,27 @@ const { pageName } = defineProps({
         required: true
     }
 });
+
 </script>
 
 <template>
-    <nav class="navbar top bg-dark-blur">
+    <nav class="navbar top bg-dark-blur" v-if="pageName !== 'opening'">
         <RouterLink class="nav-title" to="/">
             <TitleImage in-line/>
         </RouterLink>
         <h1>{{ pageName }}</h1>
         <div class="navbar-nav">
+            <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening" class="nav-item">
+                <span class="colored">
+                    {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="40" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.cardsDoubledIds?.length > 0" to="/upgrade" class="nav-item">
+                <span class="colored">
+                    {{ user.cardsDoubledIds?.length }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
-
             <RouterLink :to="`/cards/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
@@ -62,7 +74,7 @@ const { pageName } = defineProps({
 
             <span class="text or" :class="{ moved: isHovered }">
                 {{ user.or }}
-                <span class="resource-name">{{ isHovered ? 'or' : ''}}</span>
+                 <span class="resource-name">{{ isHovered ? 'or' : ''}}</span>
                 <svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
             </span>
 
@@ -104,18 +116,24 @@ h1 {
 
 .navbar-nav {
     box-sizing: border-box;
-    width: 100%;
+    width: 65%;
     height: 100%;
     display: flex;
+    margin-right: 18rem;
     align-items: center;
     justify-content: center;
 }
 
 .nav-item {
     color: white;
-    font-size: 20px;
+    font-size: 2rem;
+    font-weight: bold;
     margin: 0 10px;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .nav-item:hover {
@@ -132,6 +150,16 @@ h1 {
     justify-content: center;
     align-items: center;
     margin: 0 10px;
+}
+
+.colored {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2rem;
+    font-weight: bold;
+    margin:  2rem;
+    animation: colorChange 6s linear infinite;
 }
 
 .player-infos .planet {

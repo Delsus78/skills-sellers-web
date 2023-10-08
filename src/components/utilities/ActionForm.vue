@@ -3,11 +3,11 @@ import {ref} from "vue";
 import {
   faSquareXmark as leaveIcon,
 } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
-import 'moment/locale/fr';
-const emit = defineEmits(['validate', 'cancel']);
+import dropdown from 'vue-dropdowns';
+import {getFormattedRemainingTime} from './DateFormator';
+const emit = defineEmits(['validate', 'cancel', 'updateBatimentToUpgrade']);
 
-const { actionName, selectedCards, estimatedAction } = defineProps({
+const { actionName, selectedCards, estimatedAction, batimentToUpgrade } = defineProps({
     actionName: {
         type: String,
         required: true,
@@ -22,10 +22,16 @@ const { actionName, selectedCards, estimatedAction } = defineProps({
         type: Object,
         required: false,
         default: () => {}
+    },
+    batimentToUpgrade: {
+        type: Object,
+        required: false,
+        default: () => {}
     }
 });
 
 const error = ref(estimatedAction.error);
+const batToUpDisplay = ref(batimentToUpgrade);
 
 const validate = () => {
     if (selectedCards.length === 0) {
@@ -35,13 +41,12 @@ const validate = () => {
     emit('validate', selectedCards);
 }
 
-function getFormattedRemainingTime(endDateStr) {
-  moment.locale('fr');
-  const now = moment();
-  const endDate = moment(endDateStr);
-  const remainingTime = moment.duration(endDate.diff(now));
-  return remainingTime.locale('fr').humanize(true);
+const handleUpdateOption = (option) => {
+    batToUpDisplay.value = option;
+    emit('updateBatimentToUpgrade', batToUpDisplay.value.name);
 }
+
+
 
 </script>
 <template>
@@ -51,7 +56,7 @@ function getFormattedRemainingTime(endDateStr) {
       </div>
       <div class="estimations">
         <div class="info">
-          <span class="little_title">Temps éstimé</span>
+          <span class="little_title">Temps estimé</span>
           <div>{{ estimatedAction.endTime ? getFormattedRemainingTime(estimatedAction.endTime) : "" }}</div>
         </div>
         <div class="info">
@@ -81,8 +86,14 @@ function getFormattedRemainingTime(endDateStr) {
             </div>
         </div>
       </div>
+      <dropdown v-if='actionName === "ameliorer"' class="dropdown-batiments"
+                :options="[{name: 'cuisine'},{name: 'spatioport'},{name: 'salledesport'}]"
+                placeholder="Choisissez un batiment à améliorer"
+                :selected="batimentToUpgrade"
+                v-on:updateOption="handleUpdateOption"></dropdown>
       <div class="buttons">
-          <button class="validate swipe-overlay-out" @click="validate()">Valider</button>
+          <button class="validate swipe-overlay-out" @click="validate()"
+                  :disabled="error" :class="{disabled: error}">Valider</button>
           <div class="leave leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
       <div class="errorInfo">
@@ -121,6 +132,7 @@ function getFormattedRemainingTime(endDateStr) {
     cursor: pointer;
 }
 
+
 .leave {
   transition: all 0.2s ease-in-out;
 }
@@ -131,10 +143,69 @@ function getFormattedRemainingTime(endDateStr) {
   filter: drop-shadow(0 0 4px var(--vt-c-red-2));
 }
 
+.validate {
+  transition: all 0.2s ease-in-out;
+    z-index: 100;
+}
+
 .validate:hover {
   transform: scale(1.2);
   color: var(--vt-c-green-1);
   filter: drop-shadow(0 0 4px var(--vt-c-green-1));
+}
+
+.dropdown-batiments {
+    grid-area: estimations;
+    grid-column: 2;
+    grid-row: 2 / 4;
+    margin: 1rem auto;
+}
+
+:deep(.btn-group) {
+    width: 80%;
+}
+
+:deep(.dropdown-toggle) {
+    filter: drop-shadow(0 0 4px var(--vt-c-green-1));
+    border-radius: 6px;
+    border-width: 2px;
+    border-style: solid;
+    color: var(--vt-c-green-1);
+    transition: all 0.2s ease-in-out;
+    font-size: 1.2rem;
+    font-weight: 800;
+    z-index: 300;
+}
+
+:deep(.dropdown-toggle:hover) {
+    text-shadow: 0 0 10px var(--vt-c-black-soft);
+    background: transparent;
+    transform: scale(1.2);
+}
+
+:deep(.dropdown-toggle-placeholder) {
+    color: #c4c4c4;
+}
+
+:deep(.dropdown-menu) {
+    border: 1px solid var(--vt-c-white-1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    background: transparent;
+    backdrop-filter: blur(5px);
+}
+
+:deep(.dropdown-menu li a) {
+    color: var(--vt-c-white-1);
+    font-size: 0.8rem;
+    font-weight: 800;
+    z-index: 300;
+}
+
+:deep(.dropdown-menu li a:hover) {
+    transform: scale(1.2);
+    background: transparent;
+    color: var(--vt-c-green-1);
 }
 
 .estimations {
@@ -152,5 +223,20 @@ function getFormattedRemainingTime(endDateStr) {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+.disabled {
+    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
+    color: var(--vt-c-black-soft);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.disabled:hover {
+    transform: scale(1);
+    color: var(--vt-c-black-soft);
+    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
+    cursor: not-allowed;
+    pointer-events: none;
 }
 </style>

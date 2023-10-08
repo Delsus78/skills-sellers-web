@@ -3,3 +3,5 @@ export { default as LoginView } from './Connexion.vue';
 export { default as CardsView } from './Cards.vue';
 export { default as StatsView } from './Stats.vue';
 export { default as BuildingsView } from './Buildings.vue';
+export { default as OpeningView } from './PackOpeningPage.vue';
+export { default as UpgradeView } from './UpgradeCard.vue';

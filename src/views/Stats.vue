@@ -14,7 +14,6 @@ usersStore.getStatsOfUser(userId);
 usersStore.getAllUsers();
 
 watch(users, (newValue) => {
-    console.log(newValue);
     if (newValue) {
         user.value = newValue.find((u) => u.id.toString() === userId);
     }
@@ -41,7 +40,7 @@ watch(users, (newValue) => {
             </li>
             <li class="stat-item">
                 <span>Nombre de cartes communes</span>
-                <span class="stat-item-value">{{ stats.totalCardsByRarity.commun ?? "0" }}</span>
+                <span class="stat-item-value">{{ stats.totalCardsByRarity.commune ?? "0" }}</span>
             </li>
             <li class="stat-item">
                 <span>Nombre de cartes épiques</span>

@@ -21,6 +21,7 @@ cardsStore.getAllCardsFromUser(authUser.value.id);
 const selectedAction = ref("");
 const selectedCards = ref([]);
 const estimatedAction = ref({});
+const batimentToUpgrade = ref("cuisine");
 const SelectAction = (action) => {
     selectedAction.value = action;
 }
@@ -31,7 +32,8 @@ defineExpose({
 
 const sendAction = async () => {
     let cardsIds = selectedCards.value.map(card => card.id);
-    await actionsStore.postActionForCards(cardsIds, selectedAction.value, null);
+    let params = selectedAction.value === "améliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
+    await actionsStore.postActionForCards(cardsIds, selectedAction.value, params);
 
     await usersStore.getBuildingsOfUser(authUser.value.id);
     await cardsStore.getAllCardsFromUser(authUser.value.id);
@@ -51,11 +53,20 @@ const cancelAction = async () => {
     selectedAction.value = "";
 }
 
-watch(selectedCards, async (newValue) => {
-    let cardsIds = newValue.map(card => card.id);
-    if (cardsIds.length === 0) return;
-    estimatedAction.value = await actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, null);
+watch(selectedCards, async () => {
+    await refreshEstimatedAction();
 });
+
+watch(batimentToUpgrade, async () => {
+    await refreshEstimatedAction();
+});
+
+const refreshEstimatedAction = async () => {
+    let cardsIds = selectedCards.value.map(card => card.id);
+    if (cardsIds.length === 0) return;
+    let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
+    estimatedAction.value = await actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, params);
+}
 
 </script>
 <template>
@@ -84,9 +95,11 @@ watch(selectedCards, async (newValue) => {
             <ListSelector class="cardsList" :objects="cards" title="Cartes"
                           withFilters :selected-action="selectedAction"/>
             <ListSelector v-if="selectedAction !== ''" class="selectedCardsList" :objects="[]" title="Cartes selectionnees"
-                          @resulted-list="selectedCards = $event" is-dropped-zone :max-card-autorized="1"/>
-            <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards" :estimated-action="estimatedAction"
-                @cancel="cancelAction" @validate="sendAction" :key="estimatedAction"/>
+                          @resulted-list="selectedCards = $event" is-dropped-zone :max-card-autorized="selectedAction === 'ameliorer' ? -1 : 1"/>
+            <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards"
+                        :estimated-action="estimatedAction" :batiment-to-upgrade="{name: batimentToUpgrade}"
+                        @cancel="cancelAction" @validate="sendAction" :key="estimatedAction"
+                        @updateBatiment-to-upgrade="batimentToUpgrade = $event"/>
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
     </div>

@@ -8,7 +8,7 @@
         </div>
 
         <div v-if="isDroppedZone && list.length === 0" class="items-list plus">+</div>
-        <draggable :model-value="filteredList"  @update:model-value="updateList" class="items-list"
+        <draggable :model-value="filteredList" @update:model-value="updateList" class="items-list"
                    :class="{ dropZone: isDroppedZone, error: (maxCardAutorized !== -1 && list.length > maxCardAutorized) }"
                    group="list"
                    item-key="id"
@@ -135,12 +135,18 @@ watch(list, (newValue) => {
     align-items: center;
 }
 
+.Cards_header .DivTitle {
+    font-size: 150%;
+    font-weight: bold;
+}
+
 .items-list {
     grid-area: cards;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: min-content;
     column-gap: 1rem;
+    row-gap: 1rem;
     margin: 0 2rem;
     overflow-y: auto;
     max-height: 40rem;
