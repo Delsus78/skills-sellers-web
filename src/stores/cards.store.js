@@ -24,7 +24,6 @@ export const useCardsStore = defineStore({
                     console.error(error);
                     return this.cards = {error};
                 })
-
         },
         async getCardById(id) {
             this.card = { loading: true };

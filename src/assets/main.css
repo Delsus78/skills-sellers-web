@@ -37,17 +37,6 @@ a,
   border-radius: 18px !important;
 }
 
-.commune {
-  backdrop-filter: blur(3px);
-}
-
-.epic {
-  background-image: url("https://media3.giphy.com/media/cjojgtiigyloyCg3r9/giphy.gif?cid=ecf05e47zxj41xlhylwljzf8ytqsgikja4utfvracih2xddn&ep=v1_gifs_related&rid=giphy.gif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 .epic img {
   opacity: 0.8;
 }
@@ -65,9 +54,10 @@ a,
   position: absolute;
   inset: -3px;
   border-radius: 16px;
-  filter: blur(8px);
+  filter: blur(8px) brightness(0.5);
   transform: translateZ(-1px);
   animation: rgb 6s linear infinite;
+  opacity: 0.8;
 }
 @keyframes rgb {
   0% {background-position: 0% 50%;}

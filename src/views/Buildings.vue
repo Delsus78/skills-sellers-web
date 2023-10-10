@@ -32,7 +32,7 @@ defineExpose({
 
 const sendAction = async () => {
     let cardsIds = selectedCards.value.map(card => card.id);
-    let params = selectedAction.value === "améliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
+    let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
     await actionsStore.postActionForCards(cardsIds, selectedAction.value, params);
 
     await usersStore.getBuildingsOfUser(authUser.value.id);
@@ -57,15 +57,17 @@ watch(selectedCards, async () => {
     await refreshEstimatedAction();
 });
 
-watch(batimentToUpgrade, async () => {
-    await refreshEstimatedAction();
-});
-
 const refreshEstimatedAction = async () => {
     let cardsIds = selectedCards.value.map(card => card.id);
     if (cardsIds.length === 0) return;
     let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
     estimatedAction.value = await actionsStore.postEstimatedActionForCards(cardsIds, selectedAction.value, params);
+}
+
+const setBatimentToUpgrade = async (batiment) => {
+    batimentToUpgrade.value = batiment;
+    await refreshEstimatedAction();
+    console.log(batimentToUpgrade.value);
 }
 
 </script>
@@ -99,7 +101,7 @@ const refreshEstimatedAction = async () => {
             <ActionForm class="actionForm" :action-name="selectedAction" :selected-cards="selectedCards"
                         :estimated-action="estimatedAction" :batiment-to-upgrade="{name: batimentToUpgrade}"
                         @cancel="cancelAction" @validate="sendAction" :key="estimatedAction"
-                        @updateBatiment-to-upgrade="batimentToUpgrade = $event"/>
+                        @updateBatiment-to-upgrade="setBatimentToUpgrade"/>
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
     </div>

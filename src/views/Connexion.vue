@@ -9,7 +9,7 @@
                 <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
             </div>
 
-            <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" width="950" height="1000" class="playButton-planet"
+            <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" :width="950" :height="1000" class="playButton-planet"
                 :onclick="login"/>
 
             <p class="play-text" v-if="username">JOUER</p>

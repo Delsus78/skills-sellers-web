@@ -45,7 +45,7 @@ const imageUrl = computed(() => {
         </div>
     </div>
 
-    <p class="BatimentElementLevel">Niveau {{level}}</p>
+    <p v-if="nomBatiment !== 'LABO'" class="BatimentElementLevel">Niveau {{level}}</p>
 </div>
 </template>
 <style scoped>
