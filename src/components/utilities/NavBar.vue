@@ -112,6 +112,10 @@ h1 {
 .navbar .nav-title {
     width: 40rem;
     margin: 0 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
 }
 
 .navbar-nav {

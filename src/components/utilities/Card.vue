@@ -54,7 +54,7 @@
                                   :model-value="val.charAt(0).toUpperCase() + val.slice(1)" :height="200" :width="200" :planet-id="3"/>
                 </p>
                 <p v-if="actionKey === 'isReturningToHome'">
-                    <span class="little_title">Retour : </span>
+                    <span class="little_title">Trajet : </span>
                     <span class="value">
                         <svg-icon class="shadow-white icon" :fa-icon="homeIcon" :size="36"/>
                         <svg-icon v-if="val" class="shadow-white icon" :fa-icon="rightArrowIcon" :size="36"/>
@@ -196,7 +196,8 @@ function toggleActive() {
 
 .actionInfo {
     z-index: 10;
-    position: fixed;
+    position: absolute;
+    left: 2rem;
     border: 1px solid white;
     border-radius: 15px;
     color:white;

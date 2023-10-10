@@ -1,23 +1,22 @@
 <script setup>
 import {storeToRefs} from "pinia";
-import { useUsersStore } from "@/stores";
+import { useUsersStore, useAuthStore } from "@/stores";
 import {useRoute} from "vue-router";
 import {ref, watch} from "vue";
+import Notifications from "@/components/utilities/Notifications.vue";
+import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 
 const route = useRoute();
 const userId = route.params.id;
 
 const usersStore = useUsersStore();
+const authStore = useAuthStore();
 const { stats, users } = storeToRefs(usersStore);
-const user = ref(null);
+const { user: authUser } = storeToRefs(authStore);
+
 usersStore.getStatsOfUser(userId);
 usersStore.getAllUsers();
 
-watch(users, (newValue) => {
-    if (newValue) {
-        user.value = newValue.find((u) => u.id.toString() === userId);
-    }
-});
 
 </script>
 <template>
@@ -91,10 +90,13 @@ watch(users, (newValue) => {
       <div class="User_info bg-dark-blur">
           <div class="User_header">
               <h1 class="DivTitle">
-                  {{ user?.pseudo ?? "Chargement..." }}
+                  {{ authUser?.pseudo ?? "Chargement..." }}
               </h1>
           </div>
       </div>
+      <Notifications v-if='userId === authUser.id.toString()'
+                     class="Notifications"/>
+      <RandomPlanet class="planetBuilding" :model-value="authUser?.pseudo" :width="850" :height="850" :planet-id='1'/>
   </div>
 </template>
 <style scoped>
@@ -104,6 +106,15 @@ watch(users, (newValue) => {
     margin: 0;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 25% 75%;
+}
+
+.planetBuilding {
+    grid-column: 1 / 3;
+    grid-row: 1 / 3;
+    pointer-events: none;
+    z-index: 0;
+    align-self: center;
+    justify-self: center;
 }
 
 .Stats_content {
@@ -117,6 +128,7 @@ watch(users, (newValue) => {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+    z-index: 1;
 }
 
 .Stats_header {
@@ -124,6 +136,7 @@ watch(users, (newValue) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1;
 }
 
 .stats-list {
@@ -163,12 +176,27 @@ watch(users, (newValue) => {
 }
 
 .User_info {
+    grid-column: 1;
+    grid-row: 1 / 2;
     display: grid;
     padding: 1rem;
     margin: 3rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
+    z-index: 1;
+}
+
+.Notifications {
+    grid-column: 1;
+    grid-row: 2 / 3;
+    display: grid;
+    padding: 1rem;
+    margin: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    max-height: 35rem;
+    width: 34.5rem;
+    z-index: 1;
 }
 
 .User_header {
