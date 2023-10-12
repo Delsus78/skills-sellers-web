@@ -3,7 +3,7 @@ import {useUsersStore, useAuthStore, useCardsStore, useActionsStore} from "@/sto
 import {storeToRefs} from "pinia";
 import BatimentElement from "@/components/utilities/BatimentElement.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
-import {onMounted, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import ListSelector from "@/components/utilities/CardListSelector.vue";
 import ActionForm from "@/components/utilities/ActionForm.vue";
 const usersStore = useUsersStore();
@@ -16,7 +16,6 @@ const { user: authUser } = storeToRefs(authStore);
 const { cards } = storeToRefs(cardsStore);
 
 usersStore.getBuildingsOfUser(authUser.value.id);
-cardsStore.getAllCardsFromUser(authUser.value.id);
 
 const selectedAction = ref("");
 const selectedCards = ref([]);

@@ -55,7 +55,7 @@ const validate = async () => {
     if (confirm) {
         await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
-        await router.push('/cards/' + authUser.value.id);
+        await router.push('/cards');
     }
 }
 
