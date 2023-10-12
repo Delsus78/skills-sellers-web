@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {useAuthStore, useUsersStore} from '@/stores';
 
-import {fetchWrapper} from '@/helpers';
+import {fetchWrapper, fetchWrapperJpeg} from '@/helpers';
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/Users/`;
 
@@ -40,13 +40,16 @@ export const useActionsStore = defineStore({
                 .catch(error => {
                     console.error(error);
                     return {error};
-                }).then(response => {
+                }).then(async response => {
                     // refresh user ressources
-                    useUsersStore().getUser(user.id);
+                    await useUsersStore().getUser(user.id);
 
                     // if the response is null
                     if (response === '') {
                         return {doublon: true};
+                    } else {
+                        const imgRep = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${response.id}`);
+                        response.imageUrl = URL.createObjectURL(imgRep);
                     }
 
                     return response;

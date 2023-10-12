@@ -9,11 +9,14 @@
          data-tilt-scale="1">
         <img :src="imageUrl" class="card-image" alt="Game Card" />
         <div class="card-text card2">
-            <span :class="['rarity', rarity + '-text']">{{ rarity }}</span>
-            <h2>{{ name }}</h2>
+            <div class="top-text">
+                <span :class="['rarity', rarity + '-text']">{{ rarity }}</span>
+                <span class="collection-text">{{ collection }}</span>
+            </div>
+            <h2 class="shadow-black">{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
-        <footer class="actionText" :class="{actif: action, 'shadow-white': !action}">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</footer>
+        <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</footer>
         <div class="card-stats">
             <div class="stat">
                 <div class="value">{{ competences.cuisine }}</div>
@@ -42,7 +45,7 @@
             <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</h2>
             <p class="date">{{ action ? 'termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
             <div v-for="(val, actionKey ) in action || {}">
-                <p v-if="['cards', 'actionName', 'endTime', 'isReturningToHome', 'planetName'].indexOf(actionKey) === -1" class="infos">
+                <p v-if="['cards', 'actionName', 'endTime', 'isReturningToHome', 'planetName', 'batimentToUpgrade'].indexOf(actionKey) === -1" class="infos">
                     <span class="little_title">{{ actionKey }} : </span>
                     <span> {{ val }}</span>
                 </p>
@@ -52,6 +55,12 @@
                     <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
                     <RandomPlanet class="planetArrival"
                                   :model-value="val.charAt(0).toUpperCase() + val.slice(1)" :height="200" :width="200" :planet-id="3"/>
+                </p>
+                <p v-if="actionKey === 'batimentToUpgrade'">
+                    <span class="little_title">Bâtiment : </span>
+                    <span class="value" v-if="val === 'salledesport'">Salle de Sport</span>
+                    <span class="value" v-else-if="val === 'cuisine'">Cuisine</span>
+                    <span class="value" v-else-if="val === 'spatioport'">Spatioport</span>
                 </p>
                 <p v-if="actionKey === 'isReturningToHome'">
                     <span class="little_title">Trajet : </span>
@@ -82,7 +91,7 @@ import {
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, competences } = defineProps({
+const { id, name, imageUrl, description, collection, rarity, competences, action } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -95,13 +104,17 @@ const { id, name, imageUrl, description, competences } = defineProps({
     },
     imageUrl: {
         type: String,
-        required: true,
-        default: 'https://i.imgur.com/5yUZC8k.png'
+        required: true
     },
     description: {
         type: String,
         required: true,
         default: 'Skills Sellers super description.\n Allez écouter la série audio sur Spotify !\n(ps : si tu vois ca c\'est que ta une co pourrie ou que le site est down)\nRip hihi'
+    },
+    collection: {
+        type: String,
+        required: true,
+        default: 'skills-sellers'
     },
     rarity: {
         type: String,
@@ -196,8 +209,9 @@ function toggleActive() {
 
 .actionInfo {
     z-index: 10;
-    position: absolute;
+    position: fixed;
     left: 2rem;
+    top: 10rem;
     border: 1px solid white;
     border-radius: 15px;
     color:white;
@@ -274,7 +288,8 @@ function toggleActive() {
 
 .card-text p {
     font-weight: bold;
-    color: var(--color-text);
+    color: yellow;
+    opacity: 0.6;
     text-shadow: black 0.1em 0.1em 0.2em;
     font-size:14px;
 }
@@ -326,5 +341,17 @@ function toggleActive() {
     font-size:11px;
     font-weight: 300;
     text-transform: uppercase;
+}
+
+.top-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.collection-text {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--color-text);
 }
 </style>

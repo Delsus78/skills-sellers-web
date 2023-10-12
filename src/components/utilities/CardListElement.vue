@@ -67,6 +67,7 @@ const { card } = defineProps({
             "action action action"
             "image image name"
             "image image competences";
+    grid-template-rows: 5rem 4rem 5.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
@@ -94,17 +95,21 @@ const { card } = defineProps({
     background-color: #d04c4c;
 }
 
+/*noinspection CssInvalidPropertyValue*/
 .image {
     grid-area: image;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 0 0 0 1rem;
+    height: -webkit-fill-available;
 }
 
 .name {
     grid-area: name;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     font-size: 1rem;
     margin-left: 0.4rem;
     font-weight: bold;

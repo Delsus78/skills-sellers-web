@@ -14,7 +14,7 @@
                    item-key="id"
                    :animation="300" >
             <template #item="{ element: carte }">
-                <CardListElement :card="carte" :class="{ not_draggable: carte.action}"/>
+                <CardListElement :card="carte" />
             </template>
         </draggable>
 
@@ -120,7 +120,7 @@ watch(list, (newValue) => {
 <style scoped>
 .object-list {
     display: grid;
-    grid-template-rows: 10% 10% 75% 5%;
+    grid-template-rows: 4rem 10% 75% 5%;
     grid-template-areas: "title" "filters" "cards" "footer";
     margin: 3rem;
     border-radius: 1rem;
@@ -133,6 +133,7 @@ watch(list, (newValue) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 2rem;
 }
 
 .Cards_header .DivTitle {

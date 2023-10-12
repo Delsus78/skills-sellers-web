@@ -17,12 +17,7 @@ export const useChatStore = defineStore({
         initConnection() {
             if (this.connection) return;
 
-            const { user, logout } = useAuthStore();
-            if (!user?.token)
-            {
-                logout();
-                return;
-            }
+            const { user } = useAuthStore();
 
             this.connection = new signalR.HubConnectionBuilder()
                 .withUrl(chatHubUrl, { accessTokenFactory: () => user.token })

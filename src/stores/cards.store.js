@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
-import { fetchWrapper } from '@/helpers';
+import {fetchWrapper, fetchWrapperJpeg} from '@/helpers';
 import {useAuthStore} from "@/stores/auth.store";
 import {useUsersStore} from "@/stores/users.store";
 
@@ -15,21 +15,32 @@ export const useCardsStore = defineStore({
     actions: {
         async getAllCardsFromUser(id) {
             this.cards = { loading: true };
-            let usedUrl = baseUrl + `Users/${id}/Cards`;
-            fetchWrapper.get(usedUrl)
-                .then(cards => {
-                    return this.cards = cards;
-                })
-                .catch(error => {
-                    console.error(error);
-                    return this.cards = {error};
-                })
+            const usedUrl = baseUrl + `Users/${id}/Cards`;
+
+            try {
+                const cards = await fetchWrapper.get(usedUrl);
+                const imagePromises = cards.map(async card => {
+                    try {
+                        const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
+                        card.imageUrl = URL.createObjectURL(response);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                    return card;
+                });
+                this.cards = await Promise.all(imagePromises);
+            } catch (error) {
+                console.error(error);
+                this.cards = { error };
+            }
         },
-        async getCardById(id) {
-            this.card = { loading: true };
+        getCardById: async function (id) {
+            this.card = {loading: true};
             let usedUrl = baseUrl + `Cards/${id}`;
             fetchWrapper.get(usedUrl)
-                .then(card => {
+                .then(async card => {
+                    const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
+                    card.imageUrl = URL.createObjectURL(response);
                     return this.card = card;
                 })
                 .catch(error => {
@@ -40,7 +51,9 @@ export const useCardsStore = defineStore({
         async getUserCard(id, cardId) {
             let usedUrl = baseUrl + `Users/${id}/Cards/${cardId}`;
             return fetchWrapper.get(usedUrl)
-                .then(card => {
+                .then(async card => {
+                    const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
+                    card.imageUrl = URL.createObjectURL(response);
                     return card;
                 })
                 .catch(error => {

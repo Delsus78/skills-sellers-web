@@ -35,6 +35,14 @@ const handleSend = () => {
     }
 };
 
+window.addEventListener('keydown', globalKeyHandler);
+
+function globalKeyHandler(e) {
+    if (e.key === 'Enter') {
+        handleSend();
+    }
+}
+
 </script>
 
 <template>

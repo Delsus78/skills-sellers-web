@@ -8,6 +8,7 @@
                :image-url="card.imageUrl"
                :competences="card.competences"
                :rarity="card.rarity"
+               :collection="card.collection"
                :action="card.action"/>
     </div>
     <div v-if="cards.loading">
@@ -41,6 +42,7 @@ cardsStore.getAllCardsFromUser(userId);
     align-items: center;
     width: 100%;
     height: 100%;
+    margin-top: 8rem;
 }
 
 </style>

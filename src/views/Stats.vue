@@ -70,10 +70,6 @@ usersStore.getAllUsers();
                 <span class="stat-item-value">{{ stats.totalResourcesMined.Or ?? "0" }}</span>
             </li>
             <li class="stat-item">
-                <span>Nombre de planètes découvertes</span>
-                <span class="stat-item-value">{{ stats.totalPlanetDiscovered }}</span>
-            </li>
-            <li class="stat-item">
                 <span>Nombre d'améliorations de bâtiments effectuées</span>
                 <span class="stat-item-value">{{ stats.totalBuildingsUpgraded }}</span>
             </li>

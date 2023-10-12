@@ -58,6 +58,7 @@ watch(selectedCards, async () => {
 });
 
 const refreshEstimatedAction = async () => {
+    console.log("refreshing estimated action");
     let cardsIds = selectedCards.value.map(card => card.id);
     if (cardsIds.length === 0) return;
     let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
@@ -67,7 +68,6 @@ const refreshEstimatedAction = async () => {
 const setBatimentToUpgrade = async (batiment) => {
     batimentToUpgrade.value = batiment;
     await refreshEstimatedAction();
-    console.log(batimentToUpgrade.value);
 }
 
 </script>
@@ -110,12 +110,13 @@ const setBatimentToUpgrade = async (batiment) => {
 <style scoped>
 .BuildingsWrapper {
     width: 100%;
-    height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 6rem 1fr;
     align-items: center;
     justify-items: center;
+    height: 100vh;
+    overflow-y: hidden;
 }
 
 .Batiments {
@@ -123,7 +124,7 @@ const setBatimentToUpgrade = async (batiment) => {
     grid-row: 2;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     width: 100%;
     height: 100%;
     z-index: 101;
@@ -155,6 +156,7 @@ const setBatimentToUpgrade = async (batiment) => {
     grid-gap: 1rem;
     width: 100%;
     height: 100%;
+    max-height: 65rem;
     justify-items: center;
     align-items: center;
     padding: 4rem;
@@ -182,5 +184,13 @@ const setBatimentToUpgrade = async (batiment) => {
     z-index: 100;
     height: 100%;
     width: 90%;
+}
+
+.huge-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
 }
 </style>

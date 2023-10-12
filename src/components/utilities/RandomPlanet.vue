@@ -126,6 +126,7 @@ function drawPlanet(size, seed) {
         cx="${cx - 1}"
         cy="${cy}"
         fill="#fff"
+        class="non-transparent"
       />
       <circle
         r="${size}"

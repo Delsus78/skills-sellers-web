@@ -11,7 +11,9 @@ const route=useRoute();
 const path = computed(() =>route.path.split('/')[1]);
 
 onMounted(() => {
-    notifStore.initConnection();
+    if (authStore.user) {
+        notifStore.initConnection();
+    }
 })
 
 </script>

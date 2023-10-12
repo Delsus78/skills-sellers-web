@@ -52,4 +52,43 @@ function handleResponse(response) {
 
         return data;
     });
-}    
+}
+
+// request for jpeg
+export const fetchWrapperJpeg = {
+    get: requestJpeg('GET'),
+
+};
+
+function requestJpeg(method) {
+    return (url, body) => {
+        const requestOptions = {
+            method,
+            headers: authHeader(url)
+        };
+        if (body) {
+            requestOptions.headers['Content-Type'] = 'image/jpeg';
+            requestOptions.body = JSON.stringify(body);
+        }
+        return fetch(url, requestOptions).then(handleResponseJpeg);
+    }
+}
+
+function handleResponseJpeg(response) {
+    return response.blob().then(blob => {
+        const data = blob;
+
+        if (!response.ok) {
+            const { user, logout } = useAuthStore();
+            if ([401, 403].includes(response.status) && user) {
+                // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+                logout();
+            }
+
+            const error = (data && data.error) || blob;
+            return Promise.reject(error);
+        }
+
+        return data;
+    });
+}

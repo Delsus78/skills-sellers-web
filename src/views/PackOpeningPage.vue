@@ -17,6 +17,7 @@
                :image-url="cardInfo.imageUrl"
                :competences="cardInfo.competences"
                :rarity="cardInfo.rarity"
+               :collection="cardInfo.collection"
                :action="cardInfo.action"/>
           </div>
       </ScratchEffect>
@@ -36,7 +37,9 @@ const cardInfo = ref({});
 
 onMounted(async () => {
     cardInfo.value = await actionsStore.postOpenCard();
-    await router.push('/upgrade');
+    if (cardInfo.value?.doublon) {
+        await router.push('/upgrade');
+    }
 });
 
 </script>
