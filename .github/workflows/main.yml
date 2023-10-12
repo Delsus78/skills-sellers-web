@@ -21,6 +21,17 @@ jobs:
     - name: Modify .env file
       run: |
         sed -i 's|https://localhost:44306|https://api.skills-sellers.fr|g' .env
+
+    - name: Create .htaccess file
+      run: |
+        echo '<IfModule mod_rewrite.c>' >> ./public/.htaccess
+        echo '  RewriteEngine On' >> ./public/.htaccess
+        echo '  RewriteBase /' >> ./public/.htaccess
+        echo '  RewriteRule ^index\.html$ - [L]' >> ./public/.htaccess
+        echo '  RewriteCond %{REQUEST_FILENAME} !-f' >> ./public/.htaccess
+        echo '  RewriteCond %{REQUEST_FILENAME} !-d' >> ./public/.htaccess
+        echo '  RewriteRule . /index.html [L]' >> ./public/.htaccess
+        echo '</IfModule>' >> ./public/.htaccess
         
     - name: Install dependencies and build
       run: |
