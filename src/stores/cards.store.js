@@ -10,9 +10,25 @@ export const useCardsStore = defineStore({
     id: 'cards',
     state: () => ({
         cards: {},
-        card: {}
+        card: {},
+        imageCache: {}
     }),
     actions: {
+        async getImage(cardId) {
+            if (this.imageCache[cardId]) {
+                return this.imageCache[cardId];  // Retourner l'image du cache si elle est présente
+            }
+
+            try {
+                const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${cardId}`);
+                const imageUrl = URL.createObjectURL(response);
+                this.imageCache = { ...this.imageCache, [cardId]: imageUrl };  // Mettre en cache l'image
+                return imageUrl;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        },
         async getAllCardsFromUser(id) {
             this.cards = { loading: true };
             const usedUrl = baseUrl + `Users/${id}/Cards`;
@@ -20,12 +36,7 @@ export const useCardsStore = defineStore({
             try {
                 const cards = await fetchWrapper.get(usedUrl);
                 const imagePromises = cards.map(async card => {
-                    try {
-                        const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
-                        card.imageUrl = URL.createObjectURL(response);
-                    } catch (error) {
-                        console.error(error);
-                    }
+                    card.imageUrl = await this.getImage(card.id);
                     return card;
                 });
                 this.cards = await Promise.all(imagePromises);
@@ -34,19 +45,18 @@ export const useCardsStore = defineStore({
                 this.cards = { error };
             }
         },
-        getCardById: async function (id) {
-            this.card = {loading: true};
-            let usedUrl = baseUrl + `Cards/${id}`;
-            fetchWrapper.get(usedUrl)
-                .then(async card => {
-                    const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
-                    card.imageUrl = URL.createObjectURL(response);
-                    return this.card = card;
-                })
-                .catch(error => {
-                    console.error(error);
-                    return this.card = {error};
-                })
+        async getCardById(id) {
+            this.card = { loading: true };
+            const usedUrl = baseUrl + `Cards/${id}`;
+
+            try {
+                const card = await fetchWrapper.get(usedUrl);
+                card.imageUrl = await this.getImage(card.id);  // Utiliser la nouvelle méthode getImage
+                this.card = card;
+            } catch (error) {
+                console.error(error);
+                this.card = { error };
+            }
         },
         async getUserCard(id, cardId) {
             let usedUrl = baseUrl + `Users/${id}/Cards/${cardId}`;
