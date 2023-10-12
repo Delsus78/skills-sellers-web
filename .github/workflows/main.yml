@@ -20,7 +20,7 @@ jobs:
         
     - name: Modify .env file
       run: |
-        sed -i 's|https://localhost:44306|https://146.59.158.8:5002|g' .env
+        sed -i 's|https://localhost:44306|https://api.skills-sellers.fr|g' .env
         
     - name: Install dependencies and build
       run: |
