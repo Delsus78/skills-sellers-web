@@ -21,7 +21,7 @@
                :action="cardInfo.action"/>
           </div>
       </ScratchEffect>
-      <button class="validateOpening swipe-overlay-out" @click="router.push('/cards/' + 1);">Passer</button>
+      <button class="validateOpening swipe-overlay-out" @click="router.push('/cards/');">Passer</button>
     </div>
 </template>
 

@@ -68,8 +68,9 @@ export const useCardsStore = defineStore({
 
             return await fetchWrapper.post(usedUrl, competences)
                 .then(card => {
-                    // refresh user ressources
+                    // refresh user ressources and cards
                     useUsersStore().getUser(user.id);
+                    useCardsStore().getAllCardsFromUser(user.id);
 
                     return this.card = card;
                 })

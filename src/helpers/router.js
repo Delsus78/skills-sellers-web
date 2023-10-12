@@ -19,7 +19,7 @@ export const router = createRouter({
         { path: '/', component: HomeView },
         { path: '/login', component: LoginView },
         { path: '/register', component: RegisterView },
-        { path: '/cards/:id', component: CardsView },
+        { path: '/cards', component: CardsView },
         { path: '/stats/:id', component: StatsView },
         { path: '/batiments', component: BuildingsView },
         { path: '/opening', component: OpeningView },

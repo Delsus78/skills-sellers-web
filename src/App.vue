@@ -1,18 +1,22 @@
 <script setup>
 import {RouterView, useRoute} from "vue-router";
 import NavBar from "@/components/utilities/NavBar.vue";
-import {useAuthStore, useNotificationStore} from '@/stores';
+import {useAuthStore, useCardsStore, useNotificationStore} from '@/stores';
 import {computed, onMounted} from "vue";
 import Background from "@/components/utilities/background.vue";
 import 'moment/locale/fr';
+import {storeToRefs} from "pinia";
 const authStore = useAuthStore();
 const notifStore = useNotificationStore();
+const cardsStore = useCardsStore();
 const route=useRoute();
 const path = computed(() =>route.path.split('/')[1]);
+const { user } = storeToRefs(authStore);
 
 onMounted(() => {
-    if (authStore.user) {
+    if (user.value) {
         notifStore.initConnection();
+        cardsStore.getAllCardsFromUser(user.value.id);
     }
 })
 

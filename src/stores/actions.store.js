@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {useAuthStore, useUsersStore} from '@/stores';
+import {useAuthStore, useUsersStore, useCardsStore} from '@/stores';
 
 import {fetchWrapper, fetchWrapperJpeg} from '@/helpers';
 
@@ -18,8 +18,9 @@ export const useActionsStore = defineStore({
                     console.error(error);
                     return {error};
                 }).then(response => {
-                    // refresh user ressources
+                    // refresh user ressources and cards
                     useUsersStore().getUser(user.id);
+                    useCardsStore().getAllCardsFromUser(user.id);
                     return response;
                 });
         },
@@ -41,8 +42,10 @@ export const useActionsStore = defineStore({
                     console.error(error);
                     return {error};
                 }).then(async response => {
-                    // refresh user ressources
+
+                    // refresh user ressources and cards
                     await useUsersStore().getUser(user.id);
+                    await useCardsStore().getAllCardsFromUser(user.id);
 
                     // if the response is null
                     if (response === '') {

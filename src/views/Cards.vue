@@ -21,16 +21,11 @@
 </template>
 <script setup>
 import Card from "@/components/utilities/Card.vue";
-import { useRoute } from 'vue-router';
 import { useCardsStore } from "@/stores";
 import {storeToRefs} from "pinia";
 
-const route = useRoute();
-const userId = route.params.id;
-
 const cardsStore = useCardsStore();
 const { cards } = storeToRefs(cardsStore);
-cardsStore.getAllCardsFromUser(userId);
 
 </script>
 <style scoped>
