@@ -1,13 +1,20 @@
 <script setup>
 import {RouterView, useRoute} from "vue-router";
 import NavBar from "@/components/utilities/NavBar.vue";
-import { useAuthStore } from '@/stores';
-import {computed} from "vue";
+import {useAuthStore, useNotificationStore} from '@/stores';
+import {computed, onMounted} from "vue";
 import Background from "@/components/utilities/background.vue";
+import 'moment/locale/fr';
 const authStore = useAuthStore();
+const notifStore = useNotificationStore();
 const route=useRoute();
 const path = computed(() =>route.path.split('/')[1]);
 
+onMounted(() => {
+    if (authStore.user) {
+        notifStore.initConnection();
+    }
+})
 
 </script>
 <template>

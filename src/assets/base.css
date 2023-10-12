@@ -98,7 +98,11 @@ body {
 }
 
 .shadow-white {
-  filter: drop-shadow(0 0 4px var(--vt-c-white-2));
+    filter: drop-shadow(0 0 4px var(--vt-c-white-2));
+}
+
+.shadow-black {
+    filter: drop-shadow(0 0 1rem var(--vt-c-black));
 }
 
 .top {
@@ -112,7 +116,7 @@ body {
 
 .bg-dark-blur {
     background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 .huge-text {
@@ -122,4 +126,45 @@ body {
     padding: 0;
     line-height: 1.2;
     color: var(--color-heading);
+}
+
+.DivTitle {
+    margin: 1rem auto;
+    font-size: 2rem;
+    font-family: "Big John", sans-serif;
+    color: #ffffff;  /* Nuance de gris foncé pour le texte */
+    text-shadow: 0 0 0.5rem #ffffff;  /* Ombre portée du texte */
+}
+
+.left {
+    text-align: left;
+    left: 0;
+    margin-left: 0;
+}
+
+.text-danger {
+    color: #dc3545;  /* Nuance de rouge pour le texte */
+}
+
+.text-loading {
+    color: #8f8b8b;  /* Nuance de bleu pour le texte */
+}
+
+/* Style pour la barre de défilement */
+*::-webkit-scrollbar {
+    width: 10px; /* Largeur de la barre de défilement */
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2); /* Couleur de fond de la piste de la barre de défilement */
+    border-radius: 5px; /* Rayon de la bordure pour la piste */
+}
+
+*::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4); /* Couleur de la barre de défilement elle-même */
+    border-radius: 5px; /* Rayon de la bordure pour la barre de défilement */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6); /* Couleur de la barre de défilement au survol */
 }

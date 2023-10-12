@@ -1,14 +1,25 @@
 <script setup>
-import { useAuthStore } from "@/stores";
 import {storeToRefs} from "pinia";
 import Scoreboard from "@/components/utilities/Scoreboard.vue";
-const authStore = useAuthStore();
-const { user: authUser } = storeToRefs(authStore);
+import { useUsersStore } from "@/stores";
+import GlobalChat from "@/components/utilities/GlobalChat.vue";
+import {computed} from "vue";
+const usersStore = useUsersStore();
+const { users } = storeToRefs(usersStore);
+usersStore.getAllUsers();
+
+const usersSorted = computed(() => {
+    if (users.value.loading || users.value.error) return [];
+    return users.value.sort((a, b) => {
+        return b.nbCards - a.nbCards;
+    });
+});
 
 </script>
 <template>
   <div class="Home">
-      <Scoreboard class="Scoreboard"/>
+      <Scoreboard class="Scoreboard" :players="usersSorted" @reload="usersStore.getAllUsers()"/>
+      <GlobalChat class="GlobalChat"/>
   </div>
 </template>
 
@@ -18,15 +29,23 @@ const { user: authUser } = storeToRefs(authStore);
     width: 100%;
     height: 100vh;
     display: grid;
-    grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr 1fr 0.5fr;
-    grid-template-rows: 5rem 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 8rem 1fr 1fr 1fr 1fr 1fr 0.5fr;
     overflow: hidden;
 }
 
 .Scoreboard {
-    grid-column: 4 / 5;
-    grid-row: 3 / 6;
-    pointer-events: none;
+    transform: perspective(1000px) rotateX(0deg) rotateY(-12.5deg);
+    grid-column: 6 / 8;
+    grid-row: 2 / 7;
+    width: 40rem;
+}
+
+.GlobalChat {
+    grid-column: 1 / 5;
+    grid-row: 2 / 7;
+    width: 40rem;
+    z-index: 10000;
 }
 
 </style>
