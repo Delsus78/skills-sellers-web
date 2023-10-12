@@ -17,7 +17,11 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14' # Or your Node.js version
-      
+        
+    - name: Modify .env file
+      run: |
+        sed -i 's|https://localhost:44306|https://146.59.158.8:5002/|g' .env
+        
     - name: Install dependencies and build
       run: |
         npm install
