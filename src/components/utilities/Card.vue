@@ -295,7 +295,7 @@ function toggleActive() {
 }
 .card-text h2 {
     margin-top: 0;
-    font-size: 28px;
+    font-size: 23px;
     font-weight: bolder;
 }
 
