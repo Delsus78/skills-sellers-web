@@ -30,7 +30,7 @@ export const useAuthStore = defineStore({
             notifStore.initConnection();
 
             // redirect to previous url or default to home page
-            router.push(this.returnUrl || '/');
+            await router.push(this.returnUrl || '/');
         },
         async register(pseudo, password, confirmPassword, link) {
             await fetchWrapper.post(`${baseUrl}/register`, { pseudo, password, confirmPassword, link })

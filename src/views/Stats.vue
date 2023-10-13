@@ -2,7 +2,7 @@
 import {storeToRefs} from "pinia";
 import { useUsersStore, useAuthStore } from "@/stores";
 import {useRoute} from "vue-router";
-import {ref, watch} from "vue";
+import {computed} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 
@@ -14,20 +14,24 @@ const authStore = useAuthStore();
 const { stats, users } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 
-usersStore.getStatsOfUser(userId);
 usersStore.getAllUsers();
+usersStore.getStatsOfUser(userId);
+
+const user = computed(() => {
+    if (users.value.loading || users.value.error) return null;
+    return users.value.find(u => u.id.toString() === userId);
+});
 
 
 </script>
 <template>
-  <div v-if="stats.loading">
+  <div v-if="stats.loading || !user">
       <p class="huge-text">Chargement des statistiques...</p>
   </div>
   <div v-else-if="stats.error" class="huge-text text-danger">
       Erreur lors du chargement des statistiques: {{stats.error}}
   </div>
   <div v-else class="Stats">
-
       <div class="Stats_content bg-dark-blur">
         <div class="Stats_header">
             <h1 class="DivTitle">Statistiques</h1>
@@ -86,13 +90,12 @@ usersStore.getAllUsers();
       <div class="User_info bg-dark-blur">
           <div class="User_header">
               <h1 class="DivTitle">
-                  {{ authUser?.pseudo ?? "Chargement..." }}
+                  {{ user?.pseudo ?? "Chargement..." }}
               </h1>
           </div>
       </div>
-      <Notifications v-if='userId === authUser.id.toString()'
-                     class="Notifications"/>
-      <RandomPlanet class="planetBuilding" :model-value="authUser?.pseudo" :width="850" :height="850" :planet-id='1'/>
+      <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
+      <RandomPlanet class="planetBuilding" :model-value="user?.pseudo" :width="850" :height="850" :planet-id='1'/>
   </div>
 </template>
 <style scoped>

@@ -46,7 +46,7 @@ export const useUsersStore = defineStore({
         async getAllUsers() {
             this.users = { loading: true };
             let usedUrl = baseUrl + `Users`;
-            fetchWrapper.get(usedUrl)
+            await fetchWrapper.get(usedUrl)
                 .then(users => {
                     return this.users = users;
                 })

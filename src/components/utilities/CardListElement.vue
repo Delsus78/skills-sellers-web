@@ -20,7 +20,7 @@ const { card } = defineProps({
 <template>
   <div class="cardListElement">
       <div class="action" :class="{ occuped: card.action }">
-          <span><strong>{{ card.action ? card.action.actionName.slice(0, -1) : 'Libre'}}</strong></span>
+          <span><strong>{{ card.action ? card.action.actionName.slice(0, -1).charAt(0).toUpperCase() + card.action.actionName.slice(0, -1).slice(1) : 'Libre'}}</strong></span>
           <span>{{ card.action ? 'termine ' + getFormattedRemainingTime(card.action.endTime) : ''}}</span>
       </div>
       <img class="image" :src="card.imageUrl" alt="Card Image" width="100"/>

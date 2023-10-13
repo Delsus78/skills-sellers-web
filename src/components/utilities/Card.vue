@@ -42,8 +42,8 @@
     </div>
     <div class="actionInfo bg-dark-blur" v-if="isActive">
         <div class="actionInfoText">
-            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1) : 'ne fait rien' }}</h2>
-            <p class="date">{{ action ? 'termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
+            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
+            <p class="date">{{ action ? 'Termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
             <div v-for="(val, actionKey ) in action || {}">
                 <p v-if="['cards', 'actionName', 'endTime', 'isReturningToHome', 'planetName', 'batimentToUpgrade'].indexOf(actionKey) === -1" class="infos">
                     <span class="little_title">{{ actionKey }} : </span>
