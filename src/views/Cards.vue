@@ -23,9 +23,17 @@
 import Card from "@/components/utilities/Card.vue";
 import { useCardsStore } from "@/stores";
 import {storeToRefs} from "pinia";
+import {onMounted} from "vue";
 
 const cardsStore = useCardsStore();
 const { cards } = storeToRefs(cardsStore);
+
+onMounted(() => {
+    // sort cards by id
+    if (cards.value) {
+        cards.value.sort((a, b) => a.id - b.id);
+    }
+});
 
 </script>
 <style scoped>
