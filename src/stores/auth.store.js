@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
 import { fetchWrapper, router } from '@/helpers';
-import { useNotificationStore } from '@/stores';
+import { useNotificationStore, useCardsStore } from '@/stores';
 import {toast} from "vue3-toastify";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/users`;
@@ -23,6 +23,9 @@ export const useAuthStore = defineStore({
 
             // store user details and jwt in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
+
+            // reload cards
+            await useCardsStore().getAllCardsFromUser(user.id);
 
             notifStore.initConnection();
 
