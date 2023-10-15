@@ -16,6 +16,7 @@ import {
     faEarthEurope as planetIcon,
     faGift as giftIcon,
     faAnglesUp as upgradeIcon,
+    faDice as gamesIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -56,6 +57,7 @@ const { pageName } = defineProps({
             <RouterLink :to="`/cards`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/games`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></RouterLink>
         </div>
 
         <div class="player-infos">
@@ -87,6 +89,9 @@ const { pageName } = defineProps({
             <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
         </div>
     </nav>
+    <div class="version">
+        <span class="version-text">Version 0.20 - BETA</span>
+    </div>
 </template>
 <style scoped>
 .navbar {
@@ -138,10 +143,11 @@ h1 {
     align-items: center;
     justify-content: center;
     height: 100%;
+    transition: transform 0.1s ease-in-out;
 }
 
 .nav-item:hover {
-    color: #3574f0;
+    transform: scale(1.3);
 }
 
 .navbar .player-infos {
@@ -259,5 +265,14 @@ h1 {
 
 .player-infos .text.moved .resource-name {
     opacity: 1;
+}
+
+.version {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: gray;
+    font-size: 1rem;
+    margin: 0 10px;
 }
 </style>

@@ -1,12 +1,20 @@
 <script setup>
 
 import NotificationElement from "@/components/utilities/NotificationElement.vue";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import { useNotificationStore } from "@/stores";
 import {storeToRefs} from "pinia";
 const notifStore = useNotificationStore();
 const { notifications } = storeToRefs(notifStore);
 notifStore.getNotifications();
+
+const notificationsSorted = computed(() => {
+    if (notifications.value.loading || notifications.value.error) return [];
+    return notifications.value.sort((a, b) => {
+        // sort by date (newest first)
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+});
 
 const deleteNotification = (id) => {
     notifStore.deleteNotification(id);
@@ -23,7 +31,7 @@ const deleteNotification = (id) => {
             <p class="DivTitle">Notifications</p>
         </div>
         <div class="Notifications_content">
-            <NotificationElement v-for="notification in notifications"
+            <NotificationElement v-for="notification in notificationsSorted"
                                  :key="notification.id"
                                  :id="notification.id"
                                  :title="notification.title"

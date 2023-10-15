@@ -35,7 +35,6 @@ export const useAuthStore = defineStore({
         async register(pseudo, password, confirmPassword, link) {
             await fetchWrapper.post(`${baseUrl}/register`, { pseudo, password, confirmPassword, link })
                 .then(async response => {
-                    console.log(response)
 
                     // update pinia state
                     await this.login(pseudo, password);
@@ -44,7 +43,7 @@ export const useAuthStore = defineStore({
                     router.push('/');
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.error(error);
                     // pars regex error.errors.ConfirmPassword[0]
                     const regex = /"ConfirmPassword":\["(.*?)"/;
                     const match = error.match(regex);

@@ -3,7 +3,7 @@
 import {computed} from "vue";
 const imagesImports = import.meta.glob('../../assets/images/*.png', {eager: true});
 
-const { level, nomBatiment, infoSupp, direction } = defineProps({
+const { level, nomBatiment, infoSupp, direction, borderColor } = defineProps({
     level: {
         type: Number,
         required: true
@@ -21,8 +21,12 @@ const { level, nomBatiment, infoSupp, direction } = defineProps({
         type: String,
         required: false,
         default: 'left'
+    },
+    borderColor: {
+        type: String,
+        required: false,
+        default: 'black'
     }
-
 });
 
 const imageUrl = computed(() => {
@@ -35,7 +39,7 @@ const imageUrl = computed(() => {
 
 </script>
 <template>
-<div class="BatimentElement">
+<div class="BatimentElement" :style="'border: 0.2rem dashed '+ borderColor +';'">
     <p class="BatimentElementName">{{nomBatiment}}</p>
     <div class="BatimentElementImage">
         <img :src="imageUrl" class="shadow-black"
@@ -57,7 +61,6 @@ const imageUrl = computed(() => {
     justify-items: center;
     width: 23rem;
     height: 23rem;
-    border: 0.2rem dashed #000;
     border-radius: 10px;
     margin: 10px;
     backdrop-filter: blur(3px);

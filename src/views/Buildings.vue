@@ -64,7 +64,6 @@ watch(selectedCards, async () => {
 });
 
 const refreshEstimatedAction = async () => {
-    console.log("refreshing estimated action");
     let cardsIds = selectedCards.value.map(card => card.id);
     if (cardsIds.length === 0) return;
     let params = selectedAction.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
@@ -95,17 +94,25 @@ const tradeWithBonnBouff = () => {
         </div>
         <div v-else-if="selectedAction === ''" class="Batiments">
             <BatimentElement class="Cantine" :level="buildings.cuisineLevel" nom-batiment="CUISINE"
+                             :border-color="buildings.cuisineLevel === buildings.nbCuisineUsedToday ? 'red' : 'black'"
                              @click="SelectAction('cuisiner');" direction="left"
                              :info-supp="{ 'Cuisine utilisée(s) aujourd\'hui': buildings.nbCuisineUsedToday}"/>
+
             <BatimentElement class="SalleDeSport" :level="buildings.salleSportLevel" nom-batiment="SALLE DE SPORT"
+                              :border-color="buildings.salleSportLevel === buildings.actualSalleSportUsed ? 'red' : 'black'"
                              @click="SelectAction('muscler');" direction="right"
                              :info-supp="{ 'Salle de sport utilisée(s)': buildings.actualSalleSportUsed}"/>
+
             <BatimentElement class="Labo" :level="buildings.laboLevel" nom-batiment="LABO"
+                              :border-color="buildings.laboLevel === buildings.actualLaboUsed ? 'red' : 'black'"
                              @click="SelectAction('ameliorer');" direction="left"
                              :info-supp="{ 'Labo utilisé(s)': buildings.actualLaboUsed}"/>
+
             <BatimentElement class="SpatioPort" :level="buildings.spatioPortLevel" nom-batiment="SPATIOPORT"
+                              :border-color="buildings.spatioPortLevel === buildings.actualSpatioPortUsed ? 'red' : 'black'"
                              @click="SelectAction('explorer');" direction="right"
                              :info-supp="{ 'SpatioPort utilisé(s)': buildings.actualSpatioPortUsed}"/>
+
         </div>
         <div v-if="selectedAction !== ''" class="ActionFormDiv">
             <ListSelector class="cardsList" :objects="cards" title="Cartes"

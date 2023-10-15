@@ -1,239 +1,244 @@
-<script>
-    export default {
-        name: 'Background',
-    mounted() {
-        this.initStars();
-    },
-    methods: {
-        initStars() {
-            /*          *     .        *  .    *    *   .
-             .  *  move your mouse to over the stars   .
-             *  .  .   change these values:   .  *
-               .      * .        .          * .       */
-            const STAR_COLOR = '#9f9f9f';
-            const STAR_SIZE = 3;
-            const STAR_MIN_SCALE = 0.2;
-            const OVERFLOW_THRESHOLD = 50;
-            const STAR_COUNT = ( window.innerWidth + window.innerHeight ) / 8;
+<script setup>
+import {onMounted} from "vue";
 
-            const canvas = document.querySelector( 'canvas' ),
-                context = canvas.getContext( '2d' );
+    const { color } = defineProps({
+        color: {
+            type: String,
+            default: '#9f9f9f'
+        }
+    });
 
-            let scale = 1, // device pixel ratio
-                width,
-                height;
+    onMounted(() => {
+        initStars(color);
+    });
 
-            let stars = [];
+    function initStars(starColor) {
+        /*          *     .        *  .    *    *   .
+         .  *  move your mouse to over the stars   .
+         *  .  .   change these values:   .  *
+           .      * .        .          * .       */
+        const STAR_COLOR = starColor;
+        const STAR_SIZE = 3;
+        const STAR_MIN_SCALE = 0.2;
+        const OVERFLOW_THRESHOLD = 50;
+        const STAR_COUNT = ( window.innerWidth + window.innerHeight ) / 8;
 
-            let pointerX,
-                pointerY;
+        const canvas = document.querySelector( 'canvas' ),
+            context = canvas.getContext( '2d' );
 
-            let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
+        let scale = 1, // device pixel ratio
+            width,
+            height;
 
-            let touchInput = false;
+        let stars = [];
 
-            generate();
-            resize();
-            step();
+        let pointerX,
+            pointerY;
 
-            window.onresize = resize;
-            canvas.onmousemove = onMouseMove;
-            canvas.ontouchmove = onTouchMove;
-            canvas.ontouchend = onMouseLeave;
-            document.onmouseleave = onMouseLeave;
+        let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
 
-            function generate() {
+        let touchInput = false;
 
-                for( let i = 0; i < STAR_COUNT; i++ ) {
-                    stars.push({
-                        x: 0,
-                        y: 0,
-                        z: STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE )
-                    });
-                }
+        generate();
+        resize();
+        step();
 
+        window.onresize = resize;
+        canvas.onmousemove = onMouseMove;
+        canvas.ontouchmove = onTouchMove;
+        canvas.ontouchend = onMouseLeave;
+        document.onmouseleave = onMouseLeave;
+
+        function generate() {
+
+            for( let i = 0; i < STAR_COUNT; i++ ) {
+                stars.push({
+                    x: 0,
+                    y: 0,
+                    z: STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE )
+                });
             }
 
-            function placeStar( star ) {
+        }
 
+        function placeStar( star ) {
+
+            star.x = Math.random() * width;
+            star.y = Math.random() * height;
+
+        }
+
+        function recycleStar( star ) {
+
+            let direction = 'z';
+
+            let vx = Math.abs( velocity.x ),
+                vy = Math.abs( velocity.y );
+
+            if( vx > 1 || vy > 1 ) {
+                let axis;
+
+                if( vx > vy ) {
+                    axis = Math.random() < vx / ( vx + vy ) ? 'h' : 'v';
+                }
+                else {
+                    axis = Math.random() < vy / ( vx + vy ) ? 'v' : 'h';
+                }
+
+                if( axis === 'h' ) {
+                    direction = velocity.x > 0 ? 'l' : 'r';
+                }
+                else {
+                    direction = velocity.y > 0 ? 't' : 'b';
+                }
+            }
+
+            star.z = STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE );
+
+            if( direction === 'z' ) {
+                star.z = 0.1;
                 star.x = Math.random() * width;
                 star.y = Math.random() * height;
-
+            }
+            else if( direction === 'l' ) {
+                star.x = -OVERFLOW_THRESHOLD;
+                star.y = height * Math.random();
+            }
+            else if( direction === 'r' ) {
+                star.x = width + OVERFLOW_THRESHOLD;
+                star.y = height * Math.random();
+            }
+            else if( direction === 't' ) {
+                star.x = width * Math.random();
+                star.y = -OVERFLOW_THRESHOLD;
+            }
+            else if( direction === 'b' ) {
+                star.x = width * Math.random();
+                star.y = height + OVERFLOW_THRESHOLD;
             }
 
-            function recycleStar( star ) {
+        }
 
-                let direction = 'z';
+        function resize() {
 
-                let vx = Math.abs( velocity.x ),
-                    vy = Math.abs( velocity.y );
+            scale = window.devicePixelRatio || 1;
 
-                if( vx > 1 || vy > 1 ) {
-                    let axis;
+            width = window.innerWidth * scale;
+            height = window.innerHeight * scale;
 
-                    if( vx > vy ) {
-                        axis = Math.random() < vx / ( vx + vy ) ? 'h' : 'v';
-                    }
-                    else {
-                        axis = Math.random() < vy / ( vx + vy ) ? 'v' : 'h';
-                    }
+            canvas.width = width;
+            canvas.height = height;
 
-                    if( axis === 'h' ) {
-                        direction = velocity.x > 0 ? 'l' : 'r';
-                    }
-                    else {
-                        direction = velocity.y > 0 ? 't' : 'b';
-                    }
+            stars.forEach( placeStar );
+
+        }
+
+        function step() {
+
+            context.clearRect( 0, 0, width, height );
+
+            update();
+            render();
+
+            requestAnimationFrame( step );
+
+        }
+
+        function update() {
+
+            velocity.tx *= 0.96;
+            velocity.ty *= 0.96;
+
+            velocity.x += ( velocity.tx - velocity.x ) * 0.8;
+            velocity.y += ( velocity.ty - velocity.y ) * 0.8;
+
+            stars.forEach( ( star ) => {
+
+                star.x += velocity.x * star.z;
+                star.y += velocity.y * star.z;
+
+                star.x += ( star.x - width/2 ) * velocity.z * star.z;
+                star.y += ( star.y - height/2 ) * velocity.z * star.z;
+                star.z += velocity.z;
+
+                // recycle when out of bounds
+                if( star.x < -OVERFLOW_THRESHOLD || star.x > width + OVERFLOW_THRESHOLD || star.y < -OVERFLOW_THRESHOLD || star.y > height + OVERFLOW_THRESHOLD ) {
+                    recycleStar( star );
                 }
 
-                star.z = STAR_MIN_SCALE + Math.random() * ( 1 - STAR_MIN_SCALE );
+            } );
 
-                if( direction === 'z' ) {
-                    star.z = 0.1;
-                    star.x = Math.random() * width;
-                    star.y = Math.random() * height;
-                }
-                else if( direction === 'l' ) {
-                    star.x = -OVERFLOW_THRESHOLD;
-                    star.y = height * Math.random();
-                }
-                else if( direction === 'r' ) {
-                    star.x = width + OVERFLOW_THRESHOLD;
-                    star.y = height * Math.random();
-                }
-                else if( direction === 't' ) {
-                    star.x = width * Math.random();
-                    star.y = -OVERFLOW_THRESHOLD;
-                }
-                else if( direction === 'b' ) {
-                    star.x = width * Math.random();
-                    star.y = height + OVERFLOW_THRESHOLD;
-                }
+        }
 
-            }
+        function render() {
 
-            function resize() {
+            stars.forEach( ( star ) => {
 
-                scale = window.devicePixelRatio || 1;
+                context.beginPath();
+                context.lineCap = 'round';
+                context.lineWidth = STAR_SIZE * star.z * scale;
+                context.globalAlpha = 0.5 + 0.5*Math.random();
+                context.strokeStyle = STAR_COLOR;
 
-                width = window.innerWidth * scale;
-                height = window.innerHeight * scale;
+                context.beginPath();
+                context.moveTo( star.x, star.y );
 
-                canvas.width = width;
-                canvas.height = height;
+                let tailX = velocity.x * 2,
+                    tailY = velocity.y * 2;
 
-                stars.forEach( placeStar );
+                // stroke() wont work on an invisible line
+                if( Math.abs( tailX ) < 0.1 ) tailX = 0.5;
+                if( Math.abs( tailY ) < 0.1 ) tailY = 0.5;
 
-            }
+                context.lineTo( star.x + tailX, star.y + tailY );
 
-            function step() {
+                context.stroke();
 
-                context.clearRect( 0, 0, width, height );
+            } );
 
-                update();
-                render();
+        }
 
-                requestAnimationFrame( step );
+        function movePointer( x, y ) {
+
+            if( typeof pointerX === 'number' && typeof pointerY === 'number' ) {
+
+                let ox = x - pointerX,
+                    oy = y - pointerY;
+
+                velocity.tx = velocity.tx + ( ox / 8*scale ) * ( touchInput ? 1 : -1 );
+                velocity.ty = velocity.ty + ( oy / 8*scale ) * ( touchInput ? 1 : -1 );
 
             }
 
-            function update() {
+            pointerX = x;
+            pointerY = y;
 
-                velocity.tx *= 0.96;
-                velocity.ty *= 0.96;
+        }
 
-                velocity.x += ( velocity.tx - velocity.x ) * 0.8;
-                velocity.y += ( velocity.ty - velocity.y ) * 0.8;
+        function onMouseMove( event ) {
 
-                stars.forEach( ( star ) => {
+            touchInput = false;
 
-                    star.x += velocity.x * star.z;
-                    star.y += velocity.y * star.z;
+            movePointer( event.clientX, event.clientY );
 
-                    star.x += ( star.x - width/2 ) * velocity.z * star.z;
-                    star.y += ( star.y - height/2 ) * velocity.z * star.z;
-                    star.z += velocity.z;
+        }
 
-                    // recycle when out of bounds
-                    if( star.x < -OVERFLOW_THRESHOLD || star.x > width + OVERFLOW_THRESHOLD || star.y < -OVERFLOW_THRESHOLD || star.y > height + OVERFLOW_THRESHOLD ) {
-                        recycleStar( star );
-                    }
+        function onTouchMove( event ) {
 
-                } );
+            touchInput = true;
 
-            }
+            movePointer( event.touches[0].clientX, event.touches[0].clientY, true );
 
-            function render() {
+            event.preventDefault();
 
-                stars.forEach( ( star ) => {
+        }
 
-                    context.beginPath();
-                    context.lineCap = 'round';
-                    context.lineWidth = STAR_SIZE * star.z * scale;
-                    context.globalAlpha = 0.5 + 0.5*Math.random();
-                    context.strokeStyle = STAR_COLOR;
+        function onMouseLeave() {
 
-                    context.beginPath();
-                    context.moveTo( star.x, star.y );
+            pointerX = null;
+            pointerY = null;
 
-                    let tailX = velocity.x * 2,
-                        tailY = velocity.y * 2;
-
-                    // stroke() wont work on an invisible line
-                    if( Math.abs( tailX ) < 0.1 ) tailX = 0.5;
-                    if( Math.abs( tailY ) < 0.1 ) tailY = 0.5;
-
-                    context.lineTo( star.x + tailX, star.y + tailY );
-
-                    context.stroke();
-
-                } );
-
-            }
-
-            function movePointer( x, y ) {
-
-                if( typeof pointerX === 'number' && typeof pointerY === 'number' ) {
-
-                    let ox = x - pointerX,
-                        oy = y - pointerY;
-
-                    velocity.tx = velocity.tx + ( ox / 8*scale ) * ( touchInput ? 1 : -1 );
-                    velocity.ty = velocity.ty + ( oy / 8*scale ) * ( touchInput ? 1 : -1 );
-
-                }
-
-                pointerX = x;
-                pointerY = y;
-
-            }
-
-            function onMouseMove( event ) {
-
-                touchInput = false;
-
-                movePointer( event.clientX, event.clientY );
-
-            }
-
-            function onTouchMove( event ) {
-
-                touchInput = true;
-
-                movePointer( event.touches[0].clientX, event.touches[0].clientY, true );
-
-                event.preventDefault();
-
-            }
-
-            function onMouseLeave() {
-
-                pointerX = null;
-                pointerY = null;
-
-            }
-            },
-        },
+        }
     };
 </script>
 

@@ -91,6 +91,10 @@ body {
     filter: drop-shadow(0 0 1rem var(--vt-c-black));
 }
 
+.shadow-red {
+    filter: drop-shadow(0 0 4px var(--vt-c-red-2));
+}
+
 .top {
     margin-top: 0;
 }

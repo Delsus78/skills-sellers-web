@@ -59,8 +59,8 @@ a,
   repeat 0% 0% / 300% 100%;
   position: absolute;
   inset: -3px;
-  border-radius: 16px;
-  filter: blur(8px) brightness(0.5);
+  border-radius: 4px;
+  filter: blur(8px) brightness(0.6);
   transform: translateZ(-1px);
   animation: rgb 6s linear infinite;
   opacity: 0.8;
