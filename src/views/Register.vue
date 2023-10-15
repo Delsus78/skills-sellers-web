@@ -27,7 +27,6 @@ onMounted(() => {
 });
 
 const register = () => {
-    console.log('register');
     if (username.value === '') {
         error.value = 'Veuillez entrer un nom d\'utilisateur';
         toast.error(error.value, {position: 'bottom-right', delay: 3000});

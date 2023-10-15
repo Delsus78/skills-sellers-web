@@ -9,7 +9,8 @@ import {
     BuildingsView,
     OpeningView,
     UpgradeView,
-    RegisterView
+    RegisterView,
+    GamesView
 } from '@/views';
 
 export const router = createRouter({
@@ -22,6 +23,7 @@ export const router = createRouter({
         { path: '/cards', component: CardsView },
         { path: '/stats/:id', component: StatsView },
         { path: '/batiments', component: BuildingsView },
+        { path: '/games', component: GamesView},
         { path: '/opening', component: OpeningView },
         { path: '/upgrade', component: UpgradeView }
     ]

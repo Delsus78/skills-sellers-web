@@ -30,7 +30,7 @@ const { cards } = storeToRefs(cardsStore);
 
 onMounted(() => {
     // sort cards by id
-    if (cards.value) {
+    if (cards.value && !cards.value.loading && !cards.value.error) {
         cards.value.sort((a, b) => a.id - b.id);
     }
 });

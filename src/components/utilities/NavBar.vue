@@ -16,6 +16,7 @@ import {
     faEarthEurope as planetIcon,
     faGift as giftIcon,
     faAnglesUp as upgradeIcon,
+    faDice as gamesIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -56,6 +57,7 @@ const { pageName } = defineProps({
             <RouterLink :to="`/cards`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/games`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></RouterLink>
         </div>
 
         <div class="player-infos">
@@ -138,10 +140,11 @@ h1 {
     align-items: center;
     justify-content: center;
     height: 100%;
+    transition: transform 0.1s ease-in-out;
 }
 
 .nav-item:hover {
-    color: #3574f0;
+    transform: scale(1.3);
 }
 
 .navbar .player-infos {

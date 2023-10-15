@@ -27,7 +27,6 @@ export const useMarchandStore = defineStore({
                     return this.offer = {error};
                 });
 
-            console.log(response);
             this.offer = response;
         },
         async buyMarchandOffer(){
