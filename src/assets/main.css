@@ -2,6 +2,12 @@
 @import "tooltip.css";
 @import "simpleHover.css";
 @import "legendaireEffect.css";
+
+@font-face {
+  font-family: "Big John";
+  src: url("fonts/BigJohn.otf");
+}
+
 body::-webkit-scrollbar,
 html::-webkit-scrollbar {
   display: none;

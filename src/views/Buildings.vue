@@ -1,26 +1,33 @@
 <script setup>
-import {useUsersStore, useAuthStore, useCardsStore, useActionsStore} from "@/stores";
+import {useUsersStore, useAuthStore, useCardsStore, useActionsStore, useMarchandStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import BatimentElement from "@/components/utilities/BatimentElement.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {ref, watch} from "vue";
 import ListSelector from "@/components/utilities/CardListSelector.vue";
 import ActionForm from "@/components/utilities/ActionForm.vue";
+import MarchandRocket from "@/components/utilities/MarchandRocket.vue";
+import BonnBouff from "@/components/utilities/BonnBouff.vue";
 const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const cardsStore = useCardsStore();
 const actionsStore = useActionsStore();
+const marchandStore = useMarchandStore();
 
 const { buildings } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { cards } = storeToRefs(cardsStore);
+const { offer } = storeToRefs(marchandStore);
 
+marchandStore.getMarchandOffer();
 usersStore.getBuildingsOfUser(authUser.value.id);
 
 const selectedAction = ref("");
 const selectedCards = ref([]);
 const estimatedAction = ref({});
 const batimentToUpgrade = ref("cuisine");
+const bonnBouffopen = ref(false);
+
 const SelectAction = (action) => {
     selectedAction.value = action;
 }
@@ -69,6 +76,14 @@ const setBatimentToUpgrade = async (batiment) => {
     await refreshEstimatedAction();
 }
 
+const switchOpenBonnBouff = () => {
+    bonnBouffopen.value = !bonnBouffopen.value;
+}
+
+const tradeWithBonnBouff = () => {
+    marchandStore.buyMarchandOffer();
+}
+
 </script>
 <template>
     <div class="BuildingsWrapper">
@@ -103,6 +118,16 @@ const setBatimentToUpgrade = async (batiment) => {
                         @updateBatiment-to-upgrade="setBatimentToUpgrade"/>
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
+
+        <div v-if="(!buildings.loading || !buildings.error || offer.loading) && buildings.nbBuyMarchandToday < buildings.nbBuyMarchandMaxPerDay"
+             class="marchandRocket"
+             @click="switchOpenBonnBouff">
+            <MarchandRocket :seed="offer.foodName" class="svgRocket"/>
+            <h2 class="shadow-black DivTitle" >M. BonnBouff</h2>
+        </div>
+        <div v-if="bonnBouffopen">
+            <BonnBouff @close="switchOpenBonnBouff" @buy="tradeWithBonnBouff" :offer="offer"/>
+        </div>
     </div>
 </template>
 
@@ -192,4 +217,28 @@ const setBatimentToUpgrade = async (batiment) => {
     transform: translate(-50%, -50%);
     z-index: 100;
 }
+
+.marchandRocket {
+    position: fixed;
+    bottom: 7rem;
+    right: 2rem;
+    width: 10rem;
+    height: 10rem;
+    z-index: 100;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.marchandRocket:hover {
+    transform: scale(1.1);
+}
+
+.marchandRocket h2 {
+    font-size: 1.2rem;
+}
+
+.marchandRocket .svgRocket {
+    transform: rotate(100deg);
+}
+
 </style>
