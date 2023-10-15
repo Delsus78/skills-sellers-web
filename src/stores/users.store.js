@@ -39,8 +39,10 @@ export const useUsersStore = defineStore({
             nbCuisineUsedToday: 0,
             salleSportLevel: 1,
             laboLevel: 1,
-            spatioPortLevel: 1
-        }
+            spatioPortLevel: 1,
+            nbBuyMarchandToday: 0,
+            nbBuyMarchandMaxPerDay: 1
+        },
     }),
     actions: {
         async getAllUsers() {
@@ -80,7 +82,7 @@ export const useUsersStore = defineStore({
                 })
         },
         async getBuildingsOfUser(id) {
-            this.buildings = { loading: true };
+            this.buildings = {loading: true};
             let usedUrl = baseUrl + `Users/${id}/batiments`;
             fetchWrapper.get(usedUrl)
                 .then(buildings => {
@@ -90,6 +92,6 @@ export const useUsersStore = defineStore({
                     console.error(error);
                     return this.buildings = {error};
                 })
-        }
+        },
     }
 });
