@@ -89,6 +89,9 @@ const { pageName } = defineProps({
             <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
         </div>
     </nav>
+    <div class="version">
+        <span class="version-text">Version 0.20 - BETA</span>
+    </div>
 </template>
 <style scoped>
 .navbar {
@@ -262,5 +265,14 @@ h1 {
 
 .player-infos .text.moved .resource-name {
     opacity: 1;
+}
+
+.version {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: gray;
+    font-size: 1rem;
+    margin: 0 10px;
 }
 </style>
