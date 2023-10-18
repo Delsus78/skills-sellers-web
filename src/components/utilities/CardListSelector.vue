@@ -1,9 +1,9 @@
 <template>
-    <div class="object-list bg-dark-blur">
-        <div class="Cards_header">
+    <div :class="['object-list','bg-dark-blur', containerClass]">
+        <div class="Cards_header" v-show="title !== ''">
             <h1 class="DivTitle">{{ title }}</h1>
         </div>
-        <div class="filter-controls" v-if="withFilters">
+        <div class="filter-controls" v-show="withFilters">
             <input type="text" v-model="searchText" placeholder="Rechercher..." />
         </div>
 
@@ -113,8 +113,19 @@ const updateList = (newList) => {
 // TODO : afficher si la carte à une action ou non, et si oui, afficher son nom, et sa date de fin (tooltip)
 const emit = defineEmits(['ResultedList']);
 
+const containerClass = computed(() => {
+    if (title === '' && !withFilters) {
+        return 'no-title-no-filters';
+    }
+    return '';
+});
+
 watch(list, (newValue) => {
     emit('ResultedList', newValue);
+});
+
+watch(objects, (newValue) => {
+    list.value = newValue;
 });
 </script>
 <style scoped>
@@ -126,6 +137,22 @@ watch(list, (newValue) => {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+}
+
+.object-list.no-title-no-filters {
+    grid-template-rows: 1fr;
+    grid-template-areas: "cards";
+    padding: 0;
+    margin: 0;
+}
+
+.object-list.no-title-no-filters .items-list {
+    margin: 0;
+    grid-template-columns: 1fr;
+    grid-template-areas: "cards";
+    grid-auto-rows: min-content;
+    overflow-y: hidden;
+    height: 100%;
 }
 
 .Cards_header {

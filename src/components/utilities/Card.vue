@@ -71,7 +71,10 @@
                         <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/>
                     </span>
                 </p>
-
+                <p v-if="actionKey === 'muscle'">
+                    <span class="little_title">Muscle : </span>
+                    <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
+                </p>
             </div>
         </div>
     </div>
