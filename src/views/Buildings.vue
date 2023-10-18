@@ -81,6 +81,7 @@ const switchOpenBonnBouff = () => {
 
 const tradeWithBonnBouff = () => {
     marchandStore.buyMarchandOffer();
+    switchOpenBonnBouff();
 }
 
 </script>

@@ -90,7 +90,7 @@ const { pageName } = defineProps({
         </div>
     </nav>
     <div class="version">
-        <span class="version-text">Version 0.20 - BETA</span>
+        <span class="version-text">Version 0.21 - BETA</span>
     </div>
 </template>
 <style scoped>
