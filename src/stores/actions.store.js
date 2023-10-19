@@ -34,6 +34,20 @@ export const useActionsStore = defineStore({
                     return {error: error};
                 });
         },
+        async deleteAction(actionId) {
+            const { user } = useAuthStore();
+            let usedUrl = baseUrl + `${user.id}/actions/${actionId}`;
+            return await fetchWrapper.delete(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                }).then(response => {
+                    // refresh user ressources and cards
+                    useUsersStore().getUser(user.id);
+                    useCardsStore().getAllCardsFromUser(user.id);
+                    return response;
+                });
+        },
         async postOpenCard() {
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/actions/opencard`;

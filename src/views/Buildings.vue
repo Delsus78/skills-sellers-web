@@ -127,7 +127,9 @@ const tradeWithBonnBouff = () => {
         </div>
         <RandomPlanet class="planetBuilding" :class="{ actionSelectedMode : selectedAction }" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
 
-        <div v-if="(!buildings.loading || !buildings.error || offer.loading) && buildings.nbBuyMarchandToday < buildings.nbBuyMarchandMaxPerDay"
+        <div v-if="(!buildings.loading || !buildings.error || offer.loading)
+                        && buildings.nbBuyMarchandToday < buildings.nbBuyMarchandMaxPerDay
+                        && selectedAction === ''"
              class="marchandRocket"
              @click="switchOpenBonnBouff">
             <MarchandRocket :seed="offer.foodName" class="svgRocket"/>

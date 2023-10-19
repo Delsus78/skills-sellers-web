@@ -45,10 +45,6 @@
             <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
             <p class="date">{{ action ? 'Termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
             <div v-for="(val, actionKey ) in action || {}">
-                <p v-if="['cards', 'actionName', 'endTime', 'isReturningToHome', 'planetName', 'batimentToUpgrade'].indexOf(actionKey) === -1" class="infos">
-                    <span class="little_title">{{ actionKey }} : </span>
-                    <span> {{ val }}</span>
-                </p>
                 <!-- Particular cases-->
                 <p v-if="actionKey === 'planetName'">
                     <span class="little_title">Planète : </span>
@@ -75,7 +71,12 @@
                     <span class="little_title">Muscle : </span>
                     <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
                 </p>
+                <p v-if="actionKey === 'plat'">
+                    <span class="little_title">Plat : </span>
+                    <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
+                </p>
             </div>
+            <div v-if="action" class="cancelAction red" @click="emit('cancelAction', action.id)">Annuler l'action</div>
         </div>
     </div>
 
@@ -89,7 +90,8 @@ import {getFormattedRemainingTime} from "./DateFormator";
 import {
     faHome as homeIcon,
     faArrowLeft as rightArrowIcon,
-    faArrowRight as leftArrowIcon, faEarthEurope as planetIcon
+    faArrowRight as leftArrowIcon,
+    faEarthEurope as planetIcon
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 
@@ -142,6 +144,7 @@ const { id, name, imageUrl, description, collection, rarity, competences, action
     }
 
 });
+const emit = defineEmits(['cancelAction']);
 
 onMounted(() => {
     VanillaTilt.init(document.querySelectorAll("[data-tilt]"),{
@@ -356,5 +359,17 @@ function toggleActive() {
     font-size: 0.7rem;
     font-weight: bold;
     color: var(--color-text);
+}
+
+
+.cancelAction {
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+}
+
+.cancelAction:hover {
+    transform: scale(1.2);
+    color: var(--vt-c-red-2);
+    filter: drop-shadow(0 0 4px var(--vt-c-red-2));
 }
 </style>

@@ -94,7 +94,7 @@ const handleUpdateOption = (option) => {
       <div class="buttons">
           <button class="validate swipe-overlay-out" @click="validate()"
                   :disabled="error" :class="{disabled: error}">Valider</button>
-          <div class="leave leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
+          <div class="leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
       <div class="errorInfo">
           <span class="red">{{ error }}</span>
