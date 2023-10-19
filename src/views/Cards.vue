@@ -9,7 +9,8 @@
                :competences="card.competences"
                :rarity="card.rarity"
                :collection="card.collection"
-               :action="card.action"/>
+               :action="card.action"
+               @cancel-action="cancelAction"/>
     </div>
     <div v-if="cards.loading">
         <p class="huge-text">Chargement des cartes...</p>
@@ -21,11 +22,12 @@
 </template>
 <script setup>
 import Card from "@/components/utilities/Card.vue";
-import { useCardsStore } from "@/stores";
+import { useCardsStore, useActionsStore } from "@/stores";
 import {storeToRefs} from "pinia";
 import {onMounted} from "vue";
 
 const cardsStore = useCardsStore();
+const actionsStore = useActionsStore();
 const { cards } = storeToRefs(cardsStore);
 
 onMounted(() => {
@@ -34,6 +36,10 @@ onMounted(() => {
         cards.value.sort((a, b) => a.id - b.id);
     }
 });
+
+const cancelAction = async (cardId) => {
+    await actionsStore.deleteAction(cardId);
+}
 
 </script>
 <style scoped>
