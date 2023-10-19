@@ -25,7 +25,8 @@ export const useUsersStore = defineStore({
             "totalCardWithAStatMaxed": 0,
             "totalBuildingsUpgraded": 0,
             "totalRocketLaunched": 0,
-            "totalMealCooked": 0
+            "totalMealCooked": 0,
+            "totalDoublonsEarned": 0
         },
         actualUser: {
             pseudo: '',

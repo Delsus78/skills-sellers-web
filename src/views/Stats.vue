@@ -62,6 +62,10 @@ const user = computed(() => {
                 <span class="stat-item-value">{{ stats.totalFailedCardsCauseOfCharisme }}</span>
             </li>
             <li class="stat-item">
+                <span>Nombre de doublons obtenus</span>
+                <span class="stat-item-value">{{ stats.totalDoublonsEarned }}</span>
+            </li>
+            <li class="stat-item">
                 <span>Nombre de messages envoyés</span>
                 <span class="stat-item-value">{{ stats.totalMessagesSent }}</span>
             </li>
