@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="titleImg">
         <img :src="imageSrc" alt="Titre" />
     </div>
 </template>
@@ -23,10 +23,15 @@ const imageSrc = computed(() => {
 
 <style scoped>
 /* Vous pouvez ajouter des styles ici si nécessaire */
+.titleImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+}
 
 img {
     width: 100%;
-    height: auto;
     -webkit-filter: drop-shadow(0 0 20px #666666);
     filter: drop-shadow(0 0 20px #666666);
 }
