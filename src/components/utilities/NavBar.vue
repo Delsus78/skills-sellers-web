@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore, useUsersStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {onMounted, ref} from 'vue';
+import {ref} from 'vue';
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
@@ -92,7 +92,7 @@ const { pageName } = defineProps({
         </div>
     </nav>
     <div class="version">
-        <span class="version-text">Version 0.23 - BETA</span>
+        <span class="version-text">Version 0.24 - BETA</span>
     </div>
 </template>
 <style scoped>
