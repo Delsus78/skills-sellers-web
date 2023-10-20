@@ -19,8 +19,6 @@ html {
   scrollbar-width: none;
 }
 
-
-
 #app {
   max-width: 1920px;
   margin: 0 auto;
@@ -33,10 +31,22 @@ a,
   transition: 0.4s;
 }
 
+.green {
+  text-decoration: none;
+  color: var(--vt-c-green-2);
+  transition: 0.4s;
+}
+
 .red {
   text-decoration: none;
   color: var(--vt-c-red-1);
   transition: 0.4s;
+}
+
+.blue {
+    text-decoration: none;
+    color: var(--vt-c-blue-1);
+    transition: 0.4s;
 }
 
 .js-tilt-glare {

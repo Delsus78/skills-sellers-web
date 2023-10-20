@@ -7,3 +7,4 @@ export { default as OpeningView } from './PackOpeningPage.vue';
 export { default as UpgradeView } from './UpgradeCard.vue';
 export { default as RegisterView } from './Register.vue';
 export { default as GamesView } from './Games.vue';
+export { default as RulesView } from './Rules.vue';
