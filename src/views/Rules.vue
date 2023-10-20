@@ -7,9 +7,15 @@ import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {
     faAnglesUp as upgradeIcon,
     faBurger as foodIcon,
-    faBurger as cuisiIcon, faCoins as moneyIcon,
-    faCompass as exploIcon, faCubesStacked as creatiumIcon,
-    faDumbbell as forceIcon, faGift as giftIcon, faGraduationCap as intelIcon, faPeopleGroup as cardsIcon,
+    faBurger as cuisiIcon,
+    faCoins as moneyIcon,
+    faCompass as exploIcon,
+    faCubesStacked as creatiumIcon, faDice as gamesIcon,
+    faDumbbell as forceIcon,
+    faEarthEurope as planetIcon,
+    faGift as giftIcon,
+    faGraduationCap as intelIcon,
+    faPeopleGroup as cardsIcon,
     faStar as chariIcon
 } from "@fortawesome/free-solid-svg-icons";
 const inLine = ref(false);
@@ -155,18 +161,18 @@ onMounted(() => {
                 </div>
             </div>
             <div class="rulesCard bordered rotate-left">
-                <p class="DivTitle centered">Les batiments</p>
+                <p class="DivTitle centered">Les bâtiments</p>
                 <div class="column centered">
                     <img src="../assets/images/salle%20de%20sport_wip.png" :width="300" alt="salle de sport"/>
                     <img src="../assets/images/cuisine_wip.png" :width="300" alt="cuisine"/>
                 </div>
                 <p class="centered shadow-white">
-                    Chaque action se réalise dans un batiment. Il en existe un pour chaque !
+                    Chaque action se réalise dans un bâtiment. Il en existe un pour chaque !
                 </p>
             </div>
             <div class="rulesCard rotate-right">
                 <p class="justified shadow-white">
-                    Les batiments sont améliorables. Plus ils sont haut niveau, plus ils peuvent accueillir d'actions !
+                    Les bâtiments sont améliorables. Plus ils sont haut niveau, plus ils peuvent accueillir d'actions !
                 </p>
                 <p class="justified shadow-white">
                     <strong>Petites précisions :</strong>
@@ -178,10 +184,10 @@ onMounted(() => {
             </div>
             <div class="rulesCard separator colored"/>
             <div class="rulesCard large">
-                <p class="DivTitle centered">Utiliser les batiments, consommer des ressources, faire des actions... <br/> Comment jouer ??</p>
+                <p class="DivTitle centered">Utiliser les bâtiments, consommer des ressources, faire des actions... <br/> Comment jouer ??</p>
                 <p class="centered">
                     Les <strong>ressources</strong> sont utilisées pour effectuer des actions. <br/>
-                    Chaque action a un coût en ressources, en temps et se réalise dans un batiment !<br/>
+                    Chaque action a un coût en ressources, en temps et se réalise dans un bâtiment !<br/>
                     Ce sont vos <strong class="colored">cartes</strong> qui vous permettent d'effectuer des actions
                 </p>
                 <div class="sectionGrid">
@@ -211,12 +217,12 @@ onMounted(() => {
                             Améliorer coûte <strong class="red">1 <svg-icon :fa-icon="foodIcon" :size="24"/> / cartes utilisées</strong><br/>
                             En effet, une amélioration demande beaucoup de force et d'intelligence ! <br/>
                             Cumuler les cartes permet de répondre à ces besoins.<br/>
-                            Cela vous permet de gagner <strong class="green">1 niveau sur votre batiment !</strong><br/>
+                            Cela vous permet de gagner <strong class="green">1 niveau sur votre bâtiment !</strong><br/>
                             Et donc d'augmenter le nombre d'actions réalisables sur celui dans le même temps !<br/>
                             Vos cartes gagnent aléatoirement <strong class="green">X niveaux d'INTEL(LIGENCE) <svg-icon :fa-icon="intelIcon" :size="22"/></strong><br/>
                             répartis entre elles, en excluant bien-sûr les cartes niveau max !<br/>
                             <strong class="colored">Prend 12 * X heures !</strong><br/>
-                            <span class='italic blue'>(X = niveau <strong>ACTUEL</strong> du batiment, ex : 12h pour passer de 1 à 2)</span><br/>
+                            <span class='italic blue'>(X = niveau <strong>ACTUEL</strong> du bâtiment, ex : 12h pour passer de 1 à 2)</span><br/>
                             <span class='italic blue'>Formule coûts: <strong>X*2 INTEL <svg-icon :fa-icon="intelIcon" :size="22"/>  X*4 FORCE <svg-icon :fa-icon="forceIcon" :size="22"/> 1.3^(X)*400 Créatium <svg-icon :fa-icon="creatiumIcon" :size="22"/></strong></span>
                         </p>
                     </section>
@@ -430,21 +436,21 @@ onMounted(() => {
                             <th class="big or">
                                 <strong>Icone</strong>
                             </th>
-                            <th class="big green" colspan="3">
+                            <th class="big green" colspan="2">
                                 <strong>Résumé</strong>
                             </th>
                         </tr>
                         <tr>
                             <td class="red big">Pack Opening !</td>
                             <td class="colored"><svg-icon :fa-icon="giftIcon" :size="40" /></td>
-                            <td :class="{big: inLine }">Une exploration a trouvé une carte!</td>
+                            <td :class="{big: inLine }">Une exploration a trouvée une carte!</td>
                             <td :class="{big: inLine }">Vous pouvez l'ouvrir!</td>
                         </tr>
                         <tr>
                             <td class="red big">Amélioration !</td>
                             <td class="colored"><svg-icon :fa-icon="upgradeIcon" :size="40" /></td>
-                            <td :class="{big: inLine }">Une ouverture de pack à fini en doublon!</td>
-                            <td :class="{big: inLine }">Vous pouvez up une carte!</td>
+                            <td :class="{big: inLine }">Une ouverture de pack a fini en doublon!</td>
+                            <td :class="{big: inLine }">Vous pouvez améliorer une carte!</td>
                         </tr>
                         <tr>
                             <td class="red big">Voir les cartes</td>
@@ -452,13 +458,35 @@ onMounted(() => {
                             <td :class="{big: inLine }">Vous pouvez voir vos cartes</td>
                             <td :class="{big: inLine }">Voilà c'est tout</td>
                         </tr>
+                        <tr>
+                            <td class="red big">Voir votre planète</td>
+                            <td><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></td>
+                            <td :class="{big: inLine }">Vous pouvez voir vos bâtiments</td>
+                            <td :class="{big: inLine }">Et donc réaliser une action !</td>
+                        </tr>
+                        <tr>
+                            <td class="red big">Cliquer sur une carte</td>
+                            <td>/</td>
+                            <td :class="{big: inLine }" colspan="2">N'hesitez pas à cliquer sur une carte pour zoomer et en savoir plus sur l'action en cours !</td>
+                        </tr>
+                        <tr>
+                            <td class="red big">Les évenements !</td>
+                            <td><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></td>
+                            <td :class="{big: inLine }" colspan="2">Ici vous pouvez parier votre or dans des jeux en tout genre !</td>
+                        </tr>
+                        <tr>
+                            <td class="red big">Stats</td>
+                            <td><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></td>
+                            <td :class="{big: inLine }">Parfait pour savoir où vous en êtes !</td>
+                            <td :class="{big: inLine }">Vou spouvez aussi cliquer sur un pseudo du scoreboard!</td>
+                        </tr>
                     </table>
                 </div>
             </div>
         </div>
     </div>
     <footer class="footer">
-        <p>© 2021 - Skills Sellers - Tous droits réservés</p>
+        <p>© 2023 - Skills Sellers - Tous droits réservés</p>
     </footer>
 </template>
 
