@@ -17,6 +17,7 @@ import {
     faGift as giftIcon,
     faAnglesUp as upgradeIcon,
     faDice as gamesIcon,
+    faBook as rulesIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -58,6 +59,7 @@ const { pageName } = defineProps({
             <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
             <RouterLink :to="`/games`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></RouterLink>
+            <RouterLink :to="`/rules`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="rulesIcon" :size="36"/></RouterLink>
         </div>
 
         <div class="player-infos">
@@ -90,7 +92,7 @@ const { pageName } = defineProps({
         </div>
     </nav>
     <div class="version">
-        <span class="version-text">Version 0.22 - BETA</span>
+        <span class="version-text">Version 0.23 - BETA</span>
     </div>
 </template>
 <style scoped>
