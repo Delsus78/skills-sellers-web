@@ -1,9 +1,10 @@
 <script setup>
 
 import NotificationElement from "@/components/utilities/NotificationElement.vue";
-import {computed, onMounted, ref} from "vue";
+import {computed} from "vue";
 import { useNotificationStore } from "@/stores";
 import {storeToRefs} from "pinia";
+import {faTrashCan as deleteIcon} from "@fortawesome/free-solid-svg-icons";
 const notifStore = useNotificationStore();
 const { notifications } = storeToRefs(notifStore);
 notifStore.getNotifications();
@@ -17,7 +18,8 @@ const notificationsSorted = computed(() => {
 });
 
 const deleteNotification = (id) => {
-    notifStore.deleteNotification(id);
+    if (id === 'all') return notifStore.deleteNotifications(notifications.value.map(n => n.id));
+    notifStore.deleteNotifications([id]);
 }
 
 </script>
@@ -29,6 +31,9 @@ const deleteNotification = (id) => {
     <div v-else class="Notifications bg-dark-blur">
         <div class="Notifications_header">
             <p class="DivTitle">Notifications</p>
+            <a @click="deleteNotification('all')">
+                <svg-icon class="delete shadow-white" :fa-icon="deleteIcon" :size="24"/>
+            </a>
         </div>
         <div class="Notifications_content">
             <NotificationElement v-for="notification in notificationsSorted"
@@ -59,6 +64,20 @@ const deleteNotification = (id) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.Notifications_header .delete {
+    position: absolute;
+    right: 2rem;
+    top: 2.8rem;
+    transition: 0.2s ease-in-out;
+}
+
+.Notifications_header .delete:hover {
+    cursor: pointer;
+    transform: scale(1.3);
+    color: #ff0000;
+    filter: drop-shadow(0 0 4px var(--vt-c-black));
 }
 
 .Notifications_content {

@@ -28,7 +28,7 @@ const competencesToAdd = ref({
     intelligence: 0,
 });
 
-usersStore.getUser(authUser.value.id).then(async (userReturned) => {
+usersStore.getUser(authUser.value.id).then(async (_) => {
     if (user.value.cardsDoubledIds.length === 0) {
         error.value = "Vous n'avez pas de carte à doubler";
     }
@@ -151,6 +151,7 @@ const removePts = (competence) => {
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
+    margin-bottom: 4rem;
 }
 
 .cardElement {
@@ -193,21 +194,6 @@ const removePts = (competence) => {
     transform: scale(1.2);
     color: var(--vt-c-green-1);
     filter: drop-shadow(0 0 4px var(--vt-c-green-1));
-}
-
-.disabled {
-    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
-    color: var(--vt-c-black-soft);
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.disabled:hover {
-    transform: scale(1);
-    color: var(--vt-c-black-soft);
-    filter: drop-shadow(0 0 4px var(--vt-c-black-soft));
-    cursor: not-allowed;
-    pointer-events: none;
 }
 
 .competences {

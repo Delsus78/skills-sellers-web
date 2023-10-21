@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const scratchContainer = ref(null);
 const scratchCanvas = ref(null);
@@ -22,23 +22,43 @@ const initializeScratchEffect = () => {
         canvas.height = scratchContainer.value.offsetHeight;
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
 
+        // Ajout du texte
+        ctx.font = '20px Arial'; // Vous pouvez ajuster la taille et le style de la police ici
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Gratte ici pour découvrir ta carte!', canvas.width / 2, canvas.height / 2);
+
+    };
     resizeCanvas();
 
-    canvas.addEventListener('mousedown', (event) => {
+    document.addEventListener('mousedown', (event) => {
         isDrawing = true;
         const rect = canvas.getBoundingClientRect();
         lastX = event.clientX - rect.left;
         lastY = event.clientY - rect.top;
     });
 
-    canvas.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
+        isDrawing = false;
+        ctx.beginPath();
+    });
+
+    document.addEventListener('touchstart', (event) => {
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        lastX = event.touches[0].clientX - rect.left;
+        lastY = event.touches[0].clientY - rect.top;
+    });
+
+    document.addEventListener('touchend', () => {
         isDrawing = false;
         ctx.beginPath();
     });
 
     canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', draw);
 
     function draw(event) {
         if (!isDrawing) return;
@@ -65,7 +85,6 @@ const initializeScratchEffect = () => {
 onMounted(initializeScratchEffect);
 
 </script>
-
 <style scoped>
 .scratch-container {
     position: relative;
@@ -77,5 +96,12 @@ onMounted(initializeScratchEffect);
     top: 0;
     left: 0;
     cursor: crosshair;
+
+    filter:
+        drop-shadow(0.5rem 0 0.5rem black)
+        drop-shadow(-0.5rem 0 0.5rem black)
+        drop-shadow(0 0.5rem 0.5rem black)
+        drop-shadow(0 -0.5rem 0.5rem black)
+        drop-shadow(0 0 10rem black)
 }
 </style>
