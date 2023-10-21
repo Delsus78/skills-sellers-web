@@ -7,7 +7,7 @@ import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {
     faAnglesUp as upgradeIcon,
     faBurger as foodIcon,
-    faBurger as cuisiIcon,
+    faBurger as cuisiIcon, faChartSimple as statsIcon,
     faCoins as moneyIcon,
     faCompass as exploIcon,
     faCubesStacked as creatiumIcon, faDice as gamesIcon,
@@ -46,7 +46,7 @@ onMounted(() => {
                     Ainsi qu'une carte aléatoire gratuite !
                 </p>
                 <p class="centered colored little">
-                    Tout les participants ont déposé leurs propre collection de carte, de 7 à 8 exemplaires, dont 1 légendaire et 2 épiques !
+                    Tous les participants ont déposé leur propre collection de cartes, de 7 à 8 exemplaires, dont 1 légendaire et 2 épiques !
                 </p>
             </div>
             <div class="rulesCard">
@@ -83,7 +83,7 @@ onMounted(() => {
                 </div>
 
             </div>
-            <div class="rulesCard pointer">
+            <div class="rulesCard pointer" id="exempleCard">
                 <card id="0"
                       :competences="{
                             cuisine: 2,
@@ -156,12 +156,15 @@ onMounted(() => {
                 <p class="centered shadow-white">
                     Une carte CUISI(NE) 10 ne réalisera pas des plats aussi bons qu’une carte CUISI(NE) 0 !
                 </p>
+                <p class="centered shadow-white">
+                    En cas d'erreur, cliquer sur une de vos cartes (comme l'exemple ci-dessus) il est possible d'annuler votre Action !
+                </p>
                 <div class="background centered">
                     <RandomPlanet class="planet" width="1000" height="1000" model-value="KOUZINE" :planet-id="1"/>
                 </div>
             </div>
             <div class="rulesCard bordered rotate-left">
-                <p class="DivTitle centered">Les bâtiments</p>
+                <p class="DivTitle centered">Les batiments</p>
                 <div class="column centered">
                     <img src="../assets/images/salle%20de%20sport_wip.png" :width="300" alt="salle de sport"/>
                     <img src="../assets/images/cuisine_wip.png" :width="300" alt="cuisine"/>
@@ -184,7 +187,7 @@ onMounted(() => {
             </div>
             <div class="rulesCard separator colored"/>
             <div class="rulesCard large">
-                <p class="DivTitle centered">Utiliser les bâtiments, consommer des ressources, faire des actions... <br/> Comment jouer ??</p>
+                <p class="DivTitle centered">Utiliser les batiments, consommer des ressources, faire des actions... <br/> Comment jouer ??</p>
                 <p class="centered">
                     Les <strong>ressources</strong> sont utilisées pour effectuer des actions. <br/>
                     Chaque action a un coût en ressources, en temps et se réalise dans un bâtiment !<br/>
@@ -218,7 +221,7 @@ onMounted(() => {
                             En effet, une amélioration demande beaucoup de force et d'intelligence ! <br/>
                             Cumuler les cartes permet de répondre à ces besoins.<br/>
                             Cela vous permet de gagner <strong class="green">1 niveau sur votre bâtiment !</strong><br/>
-                            Et donc d'augmenter le nombre d'actions réalisables sur celui dans le même temps !<br/>
+                            Et donc d'augmenter le nombre d'actions réalisables sur celui-ci dans le même temps !<br/>
                             Vos cartes gagnent aléatoirement <strong class="green">X niveaux d'INTEL(LIGENCE) <svg-icon :fa-icon="intelIcon" :size="22"/></strong><br/>
                             répartis entre elles, en excluant bien-sûr les cartes niveau max !<br/>
                             <strong class="colored">Prend 12 * X heures !</strong><br/>
@@ -234,7 +237,7 @@ onMounted(() => {
                             Pour explorer, il vous faudra au <strong class="red">minimum 1 EXPLO(RATION) <svg-icon :fa-icon="exploIcon" :size="22"/></strong><br/>
                             <strong class="green">20% de chance de UP votre niveau d'EXPLO(RATION) <svg-icon :fa-icon="cuisiIcon" :size="22"/></strong><br/>
                             La <strong class="red">FORCE <svg-icon :fa-icon="forceIcon" :size="22"/></strong> déterminera <strong class="green">les ressources minées</strong><br/>
-                            l' <strong class="red">EXPLO(RATION) <svg-icon :fa-icon="forceIcon" :size="22"/></strong> déterminera lui <strong class="green">le temps</strong> que prendra le voyage<br/>
+                            L' <strong class="red">EXPLO(RATION) <svg-icon :fa-icon="forceIcon" :size="22"/></strong> déterminera <strong class="green">le temps</strong> que prendra le voyage<br/>
                             Et enfin le <strong class="red">CHARI(SME) <svg-icon :fa-icon="chariIcon" :size="22"/></strong> déterminera la probabilité d'avoir <strong class="colored">une nouvelle carte !</strong><br/>
                             <strong class="colored">Prend 5h30 -  X * 30 minutes !</strong> (bref plus égal moins)<br/>
                             <span class='italic blue'>(X = stat EXPLO(RATION) de la carte utilisée)</span><br/>
@@ -254,7 +257,7 @@ onMounted(() => {
                     <strong class="red">FORCE <svg-icon :fa-icon="forceIcon" :size="22"/></strong>,
                     <strong class="red">EXPLO(RATION) <svg-icon :fa-icon="exploIcon" :size="22"/></strong>
                     et <strong class="red">CHARI(SME) <svg-icon :fa-icon="chariIcon" :size="22"/></strong> de votre astronaute,<br/>
-                    vous aurez plus ou moins de chance d'avoir une carte où des resources.<br/>
+                    vous aurez plus ou moins de chance d'avoir une carte ou des ressources.<br/>
                 </p>
                 <br/>
                 <div class="sectionGrid">
@@ -335,6 +338,7 @@ onMounted(() => {
                             </div>
                         </div>
                     </section>
+                    <br/>
                     <section class="bordered rotate-right">
                         <p class="red big centered"><strong>ATTRIBUTION COMPETENCES</strong></p>
                         <p class="centered little">
@@ -476,7 +480,7 @@ onMounted(() => {
                         </tr>
                         <tr>
                             <td class="red big">Stats</td>
-                            <td><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></td>
+                            <td><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></td>
                             <td :class="{big: inLine }">Parfait pour savoir où vous en êtes !</td>
                             <td :class="{big: inLine }">Vou spouvez aussi cliquer sur un pseudo du scoreboard!</td>
                         </tr>
@@ -495,7 +499,6 @@ onMounted(() => {
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    justify-content: center;
     margin: 10px;
     padding: 10px;
     max-width: 1660px;
@@ -541,6 +544,10 @@ onMounted(() => {
     border-bottom: 10px solid #000000;
     width: 100%;
     margin: 15rem 0;
+
+    @media (max-width: 1023px) {
+        margin: 5rem 0;
+    }
 }
 
 .column {
@@ -657,18 +664,6 @@ div.centered {
     font-size: 2rem;
 }
 
-.footer {
-    bottom: 0;
-    width: 100%;
-    pointer-events: none;
-    text-align: center;
-    font-size: 1rem;
-    padding: 5rem;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(3px);
-
-}
-
 .player-infos .resources {
     width: 14rem;
     height: 6rem;
@@ -754,5 +749,13 @@ table {
 
 .espace td {
     padding: 0.5rem;
+}
+
+card {
+    z-index: 100 !important;
+}
+
+#exempleCard {
+    z-index: 1000;
 }
 </style>
