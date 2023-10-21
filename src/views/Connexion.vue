@@ -1,4 +1,7 @@
 <template>
+    <div class="rulesBtn">
+        <RouterLink :to="`/rules`"><svg-icon class="shadow-white" :fa-icon="rulesIcon" :size="50"/></RouterLink>
+    </div>
     <div class="ConnexionPage">
         <header>
             <HeaderComp />
@@ -20,12 +23,13 @@
 
 <script setup>
 import {ref, watch} from 'vue';
-import background from "@/components/utilities/background.vue";
 import TextBox from "@/components/utilities/TextBox.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {toast} from "vue3-toastify";
 import HeaderComp from "@/components/utilities/HeaderComp.vue";
 import {useAuthStore} from "@/stores";
+import {faBook as rulesIcon} from "@fortawesome/free-solid-svg-icons";
+import {RouterLink} from "vue-router";
 
 const username = ref('');
 const password = ref('');
@@ -121,4 +125,22 @@ header {
     transition: 1s;
 }
 
+.rulesBtn {
+    position: fixed;
+    cursor: pointer;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+    transition: 0.2s ease-in-out;
+}
+
+.rulesBtn svg {
+    color: var(--vt-c-white-1);
+}
+
+.rulesBtn:hover {
+    filter: brightness(0.8);
+    transform: scale(1.4);
+    transition: 0.5s;
+}
 </style>
