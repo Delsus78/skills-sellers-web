@@ -59,12 +59,12 @@ export const useActionsStore = defineStore({
 
                     // refresh user ressources and cards
                     await useUsersStore().getUser(user.id);
-                    await useCardsStore().getAllCardsFromUser(user.id);
 
                     // if the response is null
                     if (response === '') {
                         return {doublon: true};
                     } else {
+                        await useCardsStore().getAllCardsFromUser(user.id);
                         const imgRep = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${response.id}`);
                         response.imageUrl = URL.createObjectURL(imgRep);
                     }

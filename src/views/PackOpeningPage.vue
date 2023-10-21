@@ -65,7 +65,7 @@ onMounted(async () => {
 }
 
 .radiance {
-    position: absolute;
+    position: fixed;
     width: 230%;
     height: 230%;
     top: 50%;
@@ -105,7 +105,6 @@ onMounted(async () => {
     align-items: center;
     flex-direction: column;
     z-index: 2;
-    box-shadow: black 0 0 3rem 3rem;
 }
 
 

@@ -94,12 +94,12 @@ export const useNotificationStore = defineStore({
                     return this.error = {error};
                 })
         },
-        async deleteNotification(id) {
+        async deleteNotifications(ids) {
             const { user} = useAuthStore();
-            let usedUrl = baseUrl + `Users/${user.id}/notifications/${id}`;
-            fetchWrapper.delete(usedUrl)
+            let usedUrl = baseUrl + `Users/${user.id}/notifications`;
+            this.notifications = this.notifications.filter(x => !ids.includes(x.id));
+            fetchWrapper.delete(usedUrl, ids)
                 .then(_ => {
-                    this.notifications = this.notifications.filter(n => n.id !== id);
                 })
                 .catch(error => {
                     console.error(error);

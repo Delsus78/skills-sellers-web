@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useAuthStore, useUsersStore } from "@/stores";
+import { useAuthStore, useUsersStore, useGiftStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
 import {ref} from 'vue';
@@ -17,10 +17,12 @@ import {
     faGift as giftIcon,
     faAnglesUp as upgradeIcon,
     faDice as gamesIcon,
-    faBook as rulesIcon
+    faBook as rulesIcon,
+    faGifts as giftCodeIcon,
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
+const giftStore = useGiftStore();
 const { user: authUser } = storeToRefs(authStore);
 const { actualUser: user } = storeToRefs(usersStore);
 
@@ -35,6 +37,13 @@ const { pageName } = defineProps({
     }
 });
 
+const openGiftCodePrompt = () => {
+    const code = prompt('Code du cadeau');
+    if (code) {
+        giftStore.enterGiftCode(code);
+    }
+}
+
 </script>
 
 <template>
@@ -44,27 +53,59 @@ const { pageName } = defineProps({
         </RouterLink>
         <h1>{{ pageName }}</h1>
         <div class="navbar-nav">
-            <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening" class="nav-item">
+            <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening"
+                        class="nav-item"
+                        v-tooltip:bottom.tooltip="'Pack Opening !'">
                 <span class="colored">
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="40" />
                 </span>
             </RouterLink>
-            <RouterLink v-if="user.cardsDoubledIds?.length > 0" to="/upgrade" class="nav-item">
+            <RouterLink v-if="user.cardsDoubledIds?.length > 0" to="/upgrade"
+                        v-tooltip:bottom.tooltip="'Amélioration disponible !'"
+                        class="nav-item">
                 <span class="colored">
                     {{ user.cardsDoubledIds?.length }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
                 </span>
             </RouterLink>
-            <RouterLink to="/" class="nav-item"><svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/></RouterLink>
-            <RouterLink :to="`/cards`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/></RouterLink>
-            <RouterLink :to="`/stats/${authUser.id}`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></RouterLink>
-            <RouterLink :to="`/batiments`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/></RouterLink>
-            <RouterLink :to="`/games`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/></RouterLink>
-            <RouterLink :to="`/rules`" class="nav-item"><svg-icon class="shadow-white" :fa-icon="rulesIcon" :size="36"/></RouterLink>
+            <RouterLink to="/"
+                        class="nav-item"
+                        :class="{selected: pageName === ''}"
+                        v-tooltip:bottom.tooltip="'Page principale'">
+                <svg-icon class="shadow-white" :fa-icon="homeIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/cards`"
+                        :class="{selected: pageName === 'cards'}"
+                        v-tooltip:bottom.tooltip="'Vos cartes'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="cardsIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/stats/${authUser.id}`"
+                        v-tooltip:bottom.tooltip="'Statistiques'"
+                        :class="{selected: pageName === 'stats'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/batiments`"
+                        v-tooltip:bottom.tooltip="'Batiments & Actions'"
+                        :class="{selected: pageName === 'batiments'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/games`"
+                        :class="{selected: pageName === 'games'}"
+                        v-tooltip:bottom.tooltip="'Jeux'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/>
+            </RouterLink>
+            <a @click="openGiftCodePrompt"
+               v-tooltip:bottom.tooltip="'Code cadeau'"
+               class="nav-item"><svg-icon class="green" :fa-icon="giftCodeIcon" :size="36"/></a>
         </div>
 
         <div class="player-infos">
             <span class="pseudoText">{{authUser.pseudo}}</span>
             <a @click="authStore.logout()"><svg-icon class="logout shadow-white" :fa-icon="leaveIcon" :size="26"/></a>
+            <RouterLink :to="`/rules`"><svg-icon class="rules" :fa-icon="rulesIcon" :size="26"/></RouterLink>
             <div class="resources bg-dark-blur"
                  @mouseenter="isHovered = true"
                  @mouseleave="isHovered = false">
@@ -92,7 +133,7 @@ const { pageName } = defineProps({
         </div>
     </nav>
     <div class="version">
-        <span class="version-text">Version 0.24 - BETA</span>
+        <span class="version-text prevent-select">Version 0.25 - BETA</span>
     </div>
 </template>
 <style scoped>
@@ -101,7 +142,7 @@ const { pageName } = defineProps({
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 100;
+    z-index: 2000;
     height: 5rem;
     padding: 1rem;
     display: flex;
@@ -152,6 +193,10 @@ h1 {
     transform: scale(1.3);
 }
 
+.nav-item.selected {
+    transform: scale(1.3);
+}
+
 .navbar .player-infos {
     position: fixed;
     right: 0;
@@ -197,6 +242,21 @@ h1 {
     right: 15rem;
     top: 2.5rem;
     transition: all 0.2s ease-in-out;
+}
+
+.player-infos .rules {
+    position: fixed;
+    right: 17rem;
+    top: 2.5rem;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: lightgrey;
+}
+
+.player-infos .rules:hover {
+    color: var(--vt-c-green-1);
+    cursor: pointer;
+    filter: drop-shadow(0 0 4px var(--vt-c-black));
 }
 
 .player-infos .logout:hover  {
