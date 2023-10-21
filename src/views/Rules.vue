@@ -338,7 +338,6 @@ onMounted(() => {
                             </div>
                         </div>
                     </section>
-                    <br/>
                     <section class="bordered rotate-right">
                         <p class="red big centered"><strong>ATTRIBUTION COMPETENCES</strong></p>
                         <p class="centered little">
@@ -585,6 +584,7 @@ onMounted(() => {
 
     @media (max-width: 1023px) {
         transform: perspective(1000px) rotateX(12.5deg) rotateY(0deg);
+        margin-bottom: 5rem;
     }
 }
 
