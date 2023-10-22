@@ -112,6 +112,13 @@ const handleUpdateOption = (option) => {
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
     overflow: hidden;
+
+    @media (max-width: 1023px) {
+        grid-template-rows: 20% 50% 20%;
+        grid-template-areas: "title" "estimations" "buttons";
+        grid-template-columns: 1fr;
+        margin: 1rem;
+    }
 }
 
 .title {
@@ -130,11 +137,19 @@ const handleUpdateOption = (option) => {
     display: flex;
     justify-content: space-evenly;
     cursor: pointer;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        align-items: center;
+    }
 }
 
 
 .leave {
   transition: all 0.2s ease-in-out;
+  @media (max-width: 1023px) {
+    width: 10%;
+  }
 }
 
 .leave:hover {
@@ -144,8 +159,12 @@ const handleUpdateOption = (option) => {
 }
 
 .validate {
-  transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
     z-index: 100;
+
+    @media (max-width: 1023px) {
+        width: 50%;
+    }
 }
 
 .validate:hover {
@@ -159,6 +178,11 @@ const handleUpdateOption = (option) => {
     grid-column: 2;
     grid-row: 2 / 4;
     margin: 1rem auto;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 2;
+    }
 }
 
 :deep(.btn-group) {
@@ -217,6 +241,12 @@ const handleUpdateOption = (option) => {
      grid-template-rows: 1rem 4rem;
     margin-left: 1rem;
     justify-content: space-evenly;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 2;
+        margin: 0;
+    }
 }
 
 .errorInfo {

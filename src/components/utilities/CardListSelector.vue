@@ -137,6 +137,10 @@ watch(objects, (newValue) => {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+
+    @media (max-width: 1023px) {
+        margin: 0;
+    }
 }
 
 .object-list.no-title-no-filters {
@@ -178,6 +182,10 @@ watch(objects, (newValue) => {
     margin: 0 2rem;
     overflow-y: auto;
     max-height: 40rem;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .plus {

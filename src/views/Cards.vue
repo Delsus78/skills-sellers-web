@@ -46,12 +46,28 @@ const cancelAction = async (cardId) => {
 .cards {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    flex-wrap: wrap;
+    gap: 16px;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    margin-top: 8rem;
+    margin: 8rem auto 0 auto;
+
+    @media (max-width: 1440px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 1023px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 740px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cards Card {
+    padding: 0 20rem;
 }
 
 </style>

@@ -151,6 +151,12 @@ const tradeWithBonnBouff = () => {
     justify-items: center;
     height: 100vh;
     overflow-y: hidden;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 6rem 5rem 1fr;
+        overflow-y: visible;
+    }
 }
 
 .Batiments {
@@ -164,6 +170,12 @@ const tradeWithBonnBouff = () => {
     z-index: 101;
     justify-items: center;
     align-items: center;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+        grid-column: 1;
+        grid-row: 3;
+    }
 }
 
 .planetBuilding {
@@ -174,6 +186,12 @@ const tradeWithBonnBouff = () => {
     pointer-events: none;
     z-index: 1;
     transition: all 0.5s ease-in-out;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        display: none;
+
+    }
 }
 
 .actionSelectedMode {
@@ -194,6 +212,15 @@ const tradeWithBonnBouff = () => {
     justify-items: center;
     align-items: center;
     padding: 4rem;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 3;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 30rem;
+        padding: 0;
+        max-height: 100%;
+    }
 }
 
 .cardsList {
@@ -202,6 +229,12 @@ const tradeWithBonnBouff = () => {
     z-index: 100;
     height: 100%;
     width: 90%;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
+    }
 }
 
 .selectedCardsList {
@@ -210,6 +243,12 @@ const tradeWithBonnBouff = () => {
     z-index: 100;
     height: 100%;
     width: 90%;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 2;
+        width: 100%;
+    }
 }
 
 .actionForm {
@@ -218,6 +257,13 @@ const tradeWithBonnBouff = () => {
     z-index: 100;
     height: 100%;
     width: 90%;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 3;
+        width: 100%;
+        height: 30rem;
+    }
 }
 
 .huge-text {
@@ -237,6 +283,24 @@ const tradeWithBonnBouff = () => {
     z-index: 100;
     cursor: pointer;
     transition: all 0.1s ease-in-out;
+
+    @media (max-width: 1023px) {
+        position: initial;
+        height: 3rem;
+        width: 70%;
+        grid-column: 1;
+        grid-row: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 1023px) {
+    .marchandRocket h2 {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 1rem !important;
+    }
 }
 
 .marchandRocket:hover {
@@ -249,6 +313,12 @@ const tradeWithBonnBouff = () => {
 
 .marchandRocket .svgRocket {
     transform: rotate(100deg);
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 1;
+        max-height: 100%;
+    }
 }
 
 </style>

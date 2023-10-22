@@ -18,34 +18,46 @@ const usersSorted = computed(() => {
 </script>
 <template>
   <div class="Home">
-      <Scoreboard class="Scoreboard" :players="usersSorted" @reload="usersStore.getAllUsers()"/>
       <GlobalChat class="GlobalChat"/>
+      <Scoreboard class="Scoreboard" :players="usersSorted" @reload="usersStore.getAllUsers()"/>
   </div>
 </template>
 
 <style scoped>
 
 .Home {
-    width: 100%;
-    height: 100vh;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 8rem 1fr 1fr 1fr 1fr 1fr 0.5fr;
-    overflow: hidden;
+    grid-template-rows: 6rem 50rem;
+    grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 6rem 50rem 50rem;
+    }
 }
 
 .Scoreboard {
     transform: perspective(1000px) rotateX(0deg) rotateY(-12.5deg);
-    grid-column: 6 / 8;
-    grid-row: 2 / 7;
+    grid-row: 2;
     width: 40rem;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        grid-row: 2;
+        transform: rotateY(0deg);
+    }
 }
 
 .GlobalChat {
-    grid-column: 1 / 5;
-    grid-row: 2 / 7;
+    transform: perspective(1000px) rotateX(0deg) rotateY(12.5deg);
+    grid-row: 2;
     width: 40rem;
-    z-index: 10000;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        grid-row: 3;
+        transform: rotateY(0deg);
+    }
 }
 
 </style>

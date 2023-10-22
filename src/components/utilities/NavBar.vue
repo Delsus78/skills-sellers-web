@@ -146,7 +146,7 @@ const openGiftCodePrompt = () => {
     height: 5rem;
     padding: 1rem;
     display: flex;
-    background-image: linear-gradient(to right, transparent, rgb(217, 188, 188), transparent); /* Remplacez #000 par la couleur de votre choix */
+    background-image: linear-gradient(to right, transparent, rgb(217, 188, 188), transparent);
     background-size: 100% 1px; /* 2px est l'épaisseur de la "bordure". Ajustez selon vos besoins */
     background-repeat: no-repeat;
     background-position: bottom;
@@ -207,16 +207,6 @@ h1 {
     justify-content: center;
     align-items: center;
     margin: 0 10px;
-}
-
-.colored {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 2rem;
-    font-weight: bold;
-    margin:  2rem;
-    animation: colorChange 6s linear infinite;
 }
 
 .player-infos .planet {

@@ -160,6 +160,16 @@ strong {
   font-weight: bold;
 }
 
+.colored {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 2rem;
+  font-weight: bold;
+  margin:  2rem;
+  animation: colorChange 6s linear infinite;
+}
+
 @media (min-width: 1024px) {
   body {
     display: flex;
