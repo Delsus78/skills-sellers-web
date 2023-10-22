@@ -44,6 +44,10 @@ const openGiftCodePrompt = () => {
     }
 }
 
+const notAvailable = () => {
+    alert('Non disponible sur téléphone !');
+}
+
 const isUnrolled = ref(false);
 const unrollNavBar = () => {
     isUnrolled.value = !isUnrolled.value;
@@ -90,11 +94,11 @@ const unrollNavBar = () => {
                         :class="{selected: pageName === 'batiments'}">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="30"/>
             </RouterLink>
-            <RouterLink class="nav-item" :to="`/games`"
+            <a class="nav-item" @click="notAvailable"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="30"/>
-            </RouterLink>
+            </a>
             <a @click="openGiftCodePrompt" class="nav-item"
                v-tooltip:bottom.tooltip="'Code cadeau'">
                 <svg-icon class="green" :fa-icon="giftCodeIcon" :size="30"/>

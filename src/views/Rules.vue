@@ -45,7 +45,7 @@ onMounted(() => {
                     Chaque joueur commence avec une carte commune de sa propre collection avec des stats de base 3/3/3/3/3<br/>
                     Ainsi qu'une carte aléatoire gratuite !
                 </p>
-                <p class="centered colored little">
+                <p class="centered colorEffect little">
                     Tous les participants ont déposé leur propre collection de cartes, de 7 à 8 exemplaires, dont 1 légendaire et 2 épiques !
                 </p>
             </div>
@@ -104,7 +104,7 @@ onMounted(() => {
                             endTime: '2077-03-01T00:00:00.000Z'
                       }"/>
             </div>
-            <div class="rulesCard separator colored"/>
+            <div class="rulesCard separator colorEffect"/>
             <div class="rulesCard player-infos pointer">
                 <p class="DivTitle centered">Les Ressources</p>
                 <p class="centered shadow-white">
@@ -185,13 +185,13 @@ onMounted(() => {
                     <li>- Améliorer la cuisine permet d'augmenter le nombre d'utilisation  <strong class="red">par jour</strong>.</li>
                 </ul>
             </div>
-            <div class="rulesCard separator colored"/>
+            <div class="rulesCard separator colorEffect"/>
             <div class="rulesCard large">
                 <p class="DivTitle centered">Utiliser les batiments, consommer des ressources, faire des actions... <br/> Comment jouer ??</p>
                 <p class="centered">
                     Les <strong>ressources</strong> sont utilisées pour effectuer des actions. <br/>
                     Chaque action a un coût en ressources, en temps et se réalise dans un bâtiment !<br/>
-                    Ce sont vos <strong class="colored">cartes</strong> qui vous permettent d'effectuer des actions
+                    Ce sont vos <strong class="colorEffect">cartes</strong> qui vous permettent d'effectuer des actions
                 </p>
                 <div class="sectionGrid">
                     <section>
@@ -202,7 +202,7 @@ onMounted(() => {
                             <span class='italic blue'>(X = stat CUISI(NE) <svg-icon :fa-icon="cuisiIcon" :size="22"/> de la carte utilisée)</span><br/>
                             <strong class="green">20% de chance de UP votre niveau de CUISI(NE) <svg-icon :fa-icon="cuisiIcon" :size="22"/></strong><br/>
                             Pas de repas, pas d'action !<br/>
-                            <strong class="colored">Prend toujours 30 minutes !</strong>
+                            <strong class="colorEffect">Prend toujours 30 minutes !</strong>
                         </p>
                     </section>
                     <section>
@@ -210,7 +210,7 @@ onMounted(() => {
                         <p class="little">
                             Se muscler coûte <strong class="red">1 <svg-icon :fa-icon="foodIcon" :size="24"/></strong><br/>
                             Mais vous permet de gagner <strong class="green">1 de FORCE <svg-icon :fa-icon="forceIcon" :size="22"/></strong><br/>
-                            <strong class="colored">Prend X heures !</strong><br/>
+                            <strong class="colorEffect">Prend X heures !</strong><br/>
                             <span class='italic blue'>(X = <strong>NOUVELLE</strong> stat FORCE <svg-icon :fa-icon="forceIcon" :size="22"/> de la carte, ex : 1h pour passer de 0 à 1)</span>
                         </p>
                     </section>
@@ -224,7 +224,7 @@ onMounted(() => {
                             Et donc d'augmenter le nombre d'actions réalisables sur celui-ci dans le même temps !<br/>
                             Vos cartes gagnent aléatoirement <strong class="green">X niveaux d'INTEL(LIGENCE) <svg-icon :fa-icon="intelIcon" :size="22"/></strong><br/>
                             répartis entre elles, en excluant bien-sûr les cartes niveau max !<br/>
-                            <strong class="colored">Prend 12 * X heures !</strong><br/>
+                            <strong class="colorEffect">Prend 12 * X heures !</strong><br/>
                             <span class='italic blue'>(X = niveau <strong>ACTUEL</strong> du bâtiment, ex : 12h pour passer de 1 à 2)</span><br/>
                             <span class='italic blue'>Formule coûts: <strong>X*2 INTEL <svg-icon :fa-icon="intelIcon" :size="22"/>  X*4 FORCE <svg-icon :fa-icon="forceIcon" :size="22"/> 1.3^(X)*400 Créatium <svg-icon :fa-icon="creatiumIcon" :size="22"/></strong></span>
                         </p>
@@ -238,8 +238,8 @@ onMounted(() => {
                             <strong class="green">20% de chance de UP votre niveau d'EXPLO(RATION) <svg-icon :fa-icon="cuisiIcon" :size="22"/></strong><br/>
                             La <strong class="red">FORCE <svg-icon :fa-icon="forceIcon" :size="22"/></strong> déterminera <strong class="green">les ressources minées</strong><br/>
                             L' <strong class="red">EXPLO(RATION) <svg-icon :fa-icon="forceIcon" :size="22"/></strong> déterminera <strong class="green">le temps</strong> que prendra le voyage<br/>
-                            Et enfin le <strong class="red">CHARI(SME) <svg-icon :fa-icon="chariIcon" :size="22"/></strong> déterminera la probabilité d'avoir <strong class="colored">une nouvelle carte !</strong><br/>
-                            <strong class="colored">Prend 5h30 -  X * 30 minutes !</strong> (bref plus égal moins)<br/>
+                            Et enfin le <strong class="red">CHARI(SME) <svg-icon :fa-icon="chariIcon" :size="22"/></strong> déterminera la probabilité d'avoir <strong class="colorEffect">une nouvelle carte !</strong><br/>
+                            <strong class="colorEffect">Prend 5h30 -  X * 30 minutes !</strong> (bref plus égal moins)<br/>
                             <span class='italic blue'>(X = stat EXPLO(RATION) de la carte utilisée)</span><br/>
                             <span class='italic blue'>Plus de précision plus bas</span>
                         </p>
@@ -399,7 +399,7 @@ onMounted(() => {
                                     <td class="red big"><strong>9%</strong></td>
                                     <td class="epic-text big">3</td>
                                 </tr>
-                                <tr class="colored">
+                                <tr class="colorEffect">
                                     <td class="red big"><strong>1% OMG</strong></td>
                                     <td class="legendaire-text big">4</td>
                                 </tr>
@@ -445,13 +445,13 @@ onMounted(() => {
                         </tr>
                         <tr>
                             <td class="red big">Pack Opening !</td>
-                            <td class="colored"><svg-icon :fa-icon="giftIcon" :size="40" /></td>
+                            <td class="colorEffect"><svg-icon :fa-icon="giftIcon" :size="40" /></td>
                             <td :class="{big: inLine }">Une exploration a trouvée une carte!</td>
                             <td :class="{big: inLine }">Vous pouvez l'ouvrir!</td>
                         </tr>
                         <tr>
                             <td class="red big">Amélioration !</td>
-                            <td class="colored"><svg-icon :fa-icon="upgradeIcon" :size="40" /></td>
+                            <td class="colorEffect"><svg-icon :fa-icon="upgradeIcon" :size="40" /></td>
                             <td :class="{big: inLine }">Une ouverture de pack a fini en doublon!</td>
                             <td :class="{big: inLine }">Vous pouvez améliorer une carte!</td>
                         </tr>
@@ -498,7 +498,7 @@ onMounted(() => {
     display: grid;
     grid-template-columns: 1fr;
     align-items: center;
-    margin: 10px;
+    margin: 8rem 10px 10px 10px;
     padding: 10px;
     max-width: 1660px;
 }
@@ -606,7 +606,7 @@ onMounted(() => {
     transform: scale(0.5);
 }
 
-.colored {
+.colorEffect {
     animation: colorChange 6s linear infinite;
 }
 

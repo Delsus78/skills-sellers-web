@@ -45,20 +45,4 @@ watch(path, () => {
 
 <style>
 @import 'vue3-toastify/dist/index.css';
-
-/*
-.warningSize {
-    width: 100vw;
-    height: 100vh;
-    background: black;
-    position: relative;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    @media (min-width: 1080px) {
-        display: none;
-    }
-}*/
 </style>
