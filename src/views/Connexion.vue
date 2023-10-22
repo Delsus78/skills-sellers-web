@@ -11,12 +11,11 @@
                 <TextBox placeholder="Nom d'utilisateur" :is-errored="error !== ''" v-model="username"/>
                 <TextBox input-type="password" v-model="password" placeholder="Mot de passe" />
             </div>
-
+        </div>
+        <div class="playButton">
             <RandomPlanet v-if="username" v-model="username" :key="reRenderKey" :width="950" :height="1000" class="playButton-planet"
-                :onclick="login"/>
-
+                          :onclick="login" :planet-id="100"/>
             <p class="play-text" v-if="username">JOUER</p>
-
         </div>
     </div>
 </template>
@@ -66,13 +65,11 @@ const login = () => {
 </script>
 
 <style scoped>
-
 .ConnexionPage {
     max-width: 1280px;
     display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    padding: 2rem;
+    grid-gap: 1rem;
+    padding: 2rem
 }
 
 .connexionForm {
@@ -80,49 +77,49 @@ const login = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-bottom: 7rem;
 }
 
 header {
-    grid-column: 1 / 4;
-    grid-row: 1;
-    pointer-events: none;
+    pointer-events: none
 }
 
 .ConnexionComp {
-    grid-column: 2;
-    grid-row: 2;
-    padding: 0 7rem;
-    margin: 3rem;
+    margin-top: 3rem
 }
 
 .playButton-planet {
     position: fixed;
-    /* Décaler la div de la moitié de sa largeur pour la centrer parfaitement */
-    transform: translateX(-25%) translateY(-10%);
+    cursor: pointer;
+    bottom: -45rem
+}
+
+.playButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 7rem;
 }
 
 .play-text {
-    position: fixed;
-    bottom: 2rem;
-    transform: translateX(30%);
-    /* Décaler la div de la moitié de sa largeur pour la centrer parfaitement */
     font-size: 5rem;
-    font-family: "Big John", sans-serif;
+    font-family: "Big John",sans-serif;
     pointer-events: none;
+    position: fixed;
+    cursor: pointer;
+    bottom: 1rem;
     color: var(--vt-c-white-1);
     text-shadow: 0 0 1rem var(--vt-c-white-dark);
+    z-index: 100;
 }
 
-/* hover qui fonce le playButton avec une transition */
-.playButton-planet:hover {
-    filter: brightness(0.8);
-    transition: 0.5s;
+.playButton-planet:hover,.rulesBtn:hover {
+    filter: brightness(.8);
+    transition: .5s
 }
 
-.playButton-planet:hover + .play-text {
+.playButton-planet:hover+.play-text {
     text-shadow: 0 0 2rem var(--vt-c-white-1);
-    transition: 1s;
+    transition: 1s
 }
 
 .rulesBtn {
@@ -131,16 +128,14 @@ header {
     top: 2rem;
     right: 2rem;
     z-index: 100;
-    transition: 0.2s ease-in-out;
+    transition: .2s ease-in-out
 }
 
 .rulesBtn svg {
-    color: var(--vt-c-white-1);
+    color: var(--vt-c-white-1)
 }
 
 .rulesBtn:hover {
-    filter: brightness(0.8);
-    transform: scale(1.4);
-    transition: 0.5s;
+    transform: scale(1.4)
 }
 </style>

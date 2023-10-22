@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 export const useMainStore = defineStore({
     id: 'main',
     state: () => ({
-        backgroundColor: '#9f9f9f'
+        backgroundColor: '#9f9f9f',
+        isMobileSize: false
     }),
     actions: {
         changeBackgroundColor(color) {
@@ -10,6 +11,9 @@ export const useMainStore = defineStore({
         },
         resetBackgroundColor() {
             this.backgroundColor = '#9f9f9f';
+        },
+        setIsMobileSize(isMobileSize) {
+            this.isMobileSize = isMobileSize;
         }
     }
 });
