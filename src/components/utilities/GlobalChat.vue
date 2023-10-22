@@ -80,6 +80,13 @@ function globalKeyHandler(e) {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);  /* Effet de flou sur l'arrière-plan */
+
+    @media (max-width: 1023px) {
+        margin: 0;
+        margin-top: 1rem;
+        border-radius: 0;
+        box-shadow: none;
+    }
 }
 
 .GlobalChat .header {

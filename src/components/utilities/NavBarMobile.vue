@@ -30,8 +30,6 @@ const { isMobileSize } = storeToRefs(mainStore);
 
 usersStore.getUser(authUser.value.id);
 
-const isHovered = ref(false);
-
 const { pageName } = defineProps({
     pageName: {
         type: String,
@@ -46,8 +44,6 @@ const openGiftCodePrompt = () => {
     }
 }
 
-
-/* MOBILE NAVBAR */
 const isUnrolled = ref(false);
 const unrollNavBar = () => {
     isUnrolled.value = !isUnrolled.value;
@@ -61,7 +57,7 @@ const unrollNavBar = () => {
             <svg-icon class="menuIcon" :fa-icon="menuIcon" :size="70" />
         </div>
 
-        <div class="mobile-nav-items" :class="{hidden: isUnrolled}">
+        <div class="mobile-nav-items" :class="{hidden: !isUnrolled}">
             <RouterLink class="nav-item" v-if="user.nbCardOpeningAvailable > 0" to="/opening"
                         v-tooltip:bottom.tooltip="'Pack Opening !'">
                 <span class="colored">
