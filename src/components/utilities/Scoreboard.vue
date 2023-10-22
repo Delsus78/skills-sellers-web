@@ -38,6 +38,7 @@
 import {defineProps, ref} from 'vue';
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
+import {storeToRefs} from "pinia";
 
 const emit = defineEmits(['reload']);
 
@@ -66,6 +67,12 @@ const reload = () => {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);  /* Effet de flou sur l'arrière-plan */
+
+    @media (max-width: 1023px) {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
 }
 
 .header-scoreboard {
