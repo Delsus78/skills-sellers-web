@@ -67,6 +67,16 @@ const imageUrl = computed(() => {
     transition: all 0.2s ease-in-out;
     box-shadow: 0 0 1rem black;
     z-index: 100;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 2rem 18rem 2rem;
+        grid-template-areas: "nomBatiment" "image" "stats";
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+        box-shadow: none;
+    }
 }
 
 .BatimentElementImage {
@@ -97,17 +107,30 @@ strong {
 .BatimentElementInfo.right {
     right: 0;
     transform: translate(120%, -400%);
+
+    @media (max-width: 1023px) {
+        transform: translate(0, -400%);
+    }
 }
 
 .BatimentElementInfo.left {
     left: 0;
     transform: translate(-120%, -400%);
+
+    @media (max-width: 1023px) {
+        transform: translate(0, -400%);
+    }
 }
 
 .BatimentElement:hover {
     cursor: pointer;
     transform: scale(1.1);
     box-shadow: 0 0 1rem var(--vt-c-white-dark);
+
+    @media (max-width: 1023px) {
+        transform: scale(1);
+        box-shadow: none;
+    }
 }
 
 .BatimentElementName {

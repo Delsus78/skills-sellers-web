@@ -114,6 +114,10 @@ const { offer } = defineProps({
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.5);
     border: 1px solid yellow;
     overflow: hidden;
+
+    @media (max-width: 1023px) {
+        overflow-y: auto;
+    }
 }
 
 .offer_content {
@@ -179,6 +183,8 @@ const { offer } = defineProps({
     align-items: center;
     margin-top: 2rem;
     z-index: 201;
+
+
 }
 
 .trade-btn button {

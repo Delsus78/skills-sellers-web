@@ -265,5 +265,6 @@ const unrollNavBar = () => {
     color: gray;
     font-size: 1rem;
     margin: 0 10px;
+    z-index: 10003;
 }
 </style>
