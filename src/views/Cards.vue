@@ -1,16 +1,18 @@
 <template>
     <div v-if="cards.length" class="cards">
-         <Card v-for="card in cards"
-               :key="card.id"
-               :id="card.id"
-               :name="card.name"
-               :description="card.description"
-               :image-url="card.imageUrl"
-               :competences="card.competences"
-               :rarity="card.rarity"
-               :collection="card.collection"
-               :action="card.action"
-               @cancel-action="cancelAction"/>
+        <div class="card" v-for="card in cards">
+            <Card :key="card.id"
+                  :id="card.id"
+                  :name="card.name"
+                  :description="card.description"
+                  :image-url="card.imageUrl"
+                  :competences="card.competences"
+                  :rarity="card.rarity"
+                  :collection="card.collection"
+                  :action="card.action"
+                  @cancel-action="cancelAction"/>
+        </div>
+
     </div>
     <div v-if="cards.loading">
         <p class="huge-text">Chargement des cartes...</p>
@@ -54,7 +56,7 @@ const cancelAction = async (cardId) => {
     margin: 8rem auto 0 auto;
 
     @media (max-width: 1440px) {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     @media (max-width: 1023px) {
@@ -66,8 +68,9 @@ const cancelAction = async (cardId) => {
     }
 }
 
-.cards Card {
-    padding: 0 20rem;
+.cards .card {
+    display: flex;
+    justify-content: center;
 }
 
 </style>

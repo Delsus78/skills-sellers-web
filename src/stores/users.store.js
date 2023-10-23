@@ -9,24 +9,63 @@ export const useUsersStore = defineStore({
     state: () => ({
         users: {},
         stats: {
-            "totalCards": 0,
+            "totalCards": {
+                "stat": 39,
+                "rank": 2
+            },
             "totalCardsByRarity": {
-                "legendaire": 0,
-                "epic": 0,
-                "commune": 0
+                "commune": {
+                    "stat": 24,
+                    "rank": 2
+                },
+                "epic": {
+                    "stat": 10,
+                    "rank": 2
+                },
+                "legendaire": {
+                    "stat": 5,
+                    "rank": 2
+                }
             },
-            "totalFailedCardsCauseOfCharisme": 0,
-            "totalMessagesSent": 0,
+            "totalFailedCardsCauseOfCharisme": {
+                "stat": 20,
+                "rank": 3
+            },
+            "totalMessagesSent": {
+                "stat": 28,
+                "rank": 3
+            },
             "totalResourcesMined": {
-                "Creatium": 0,
-                "Or": 0
+                "Creatium": {
+                    "stat": 2511,
+                    "rank": 5
+                },
+                "Or": {
+                    "stat": 1287,
+                    "rank": 4
+                }
             },
-            "totalPlanetDiscovered": 0,
-            "totalCardWithAStatMaxed": 0,
-            "totalBuildingsUpgraded": 0,
-            "totalRocketLaunched": 0,
-            "totalMealCooked": 0,
-            "totalDoublonsEarned": 0
+            "totalCardWithAStatMaxed": {
+                "stat": 2,
+                "rank": 2
+            },
+            "totalBuildingsUpgraded": {
+                "stat": 4,
+                "rank": 4
+            },
+            "totalRocketLaunched": {
+                "stat": 23,
+                "rank": 4
+            },
+            "totalMealCooked": {
+                "stat": 10,
+                "rank": 5
+            },
+            "totalDoublonsEarned": {
+                "stat": 624,
+                "rank": 1
+            },
+            "totalCardsInBDD": 39
         },
         actualUser: {
             pseudo: '',

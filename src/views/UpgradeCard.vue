@@ -85,7 +85,7 @@ const removePts = (competence) => {
             <div class="DivTitle">
                 <h1 class="title">Doublon !</h1>
             </div>
-            <p>Votre doublon est une <strong class="colored">{{ card.rarity }}</strong>, vous avez donc <strong class="red">{{maxPts}} Points</strong> à dépenser.</p>
+            <p>Votre doublon est une <strong class="colorChange">{{ card.rarity }}</strong>, vous avez donc <strong class="red">{{maxPts}} Points</strong> à dépenser.</p>
         </div>
         <CardListElement v-if="card" :card="card" class="cardElement not_draggable"/>
         <div class="upgradeForm bg-dark-blur">
@@ -164,7 +164,7 @@ const removePts = (competence) => {
     backdrop-filter: blur(5px);
 }
 
-.colored {
+.colorChange {
     font-weight: bold;
     animation: colorChange 6s linear infinite;
 }

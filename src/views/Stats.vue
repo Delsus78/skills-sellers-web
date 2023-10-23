@@ -44,57 +44,96 @@ const user = computed(() => {
                 <h1 class="DivTitle">Statistiques</h1>
             </div>
             <ul class="stats-list">
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCards.rank === 1}">
                     <span>Nombre total de cartes</span>
-                    <span class="stat-item-value">{{ stats.totalCards }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCards.stat }} / {{ stats.totalCardsInBDD}}</span>
+                        <span>{{ stats.totalCards.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.commune.rank === 1}">
                     <span>Nombre de cartes communes</span>
-                    <span class="stat-item-value">{{ stats.totalCardsByRarity.commune ?? "0" }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCardsByRarity.commune.stat ?? "0" }}</span>
+                        <span>{{ stats.totalCardsByRarity.commune.rank ?? "?" }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.epic.rank === 1}">
                     <span>Nombre de cartes épiques</span>
-                    <span class="stat-item-value">{{ stats.totalCardsByRarity.epic ?? "0" }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCardsByRarity.epic.stat ?? "0" }}</span>
+                        <span>{{ stats.totalCardsByRarity.epic.rank ?? "?" }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.legendaire.rank === 1}">
                     <span>Nombre de cartes légendaires</span>
-                    <span class="stat-item-value">{{ stats.totalCardsByRarity.legendaire ?? "0" }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCardsByRarity.legendaire.stat ?? "0" }}</span>
+                        <span>{{ stats.totalCardsByRarity.legendaire.rank ?? "?" }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCardWithAStatMaxed.rank === 1}">
                     <span>Nombre de cartes avec une compétence maximisée</span>
-                    <span class="stat-item-value">{{ stats.totalCardWithAStatMaxed }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCardWithAStatMaxed.stat }}</span>
+                        <span>{{ stats.totalCardWithAStatMaxed.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalFailedCardsCauseOfCharisme.rank === 1}">
                     <span>Nombre d'échecs dus au charisme lors d'explorations</span>
-                    <span class="stat-item-value">{{ stats.totalFailedCardsCauseOfCharisme }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalFailedCardsCauseOfCharisme.stat }}</span>
+                        <span>{{ stats.totalFailedCardsCauseOfCharisme.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalDoublonsEarned.rank === 1}">
                     <span>Nombre de doublons obtenus</span>
-                    <span class="stat-item-value">{{ stats.totalDoublonsEarned }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalDoublonsEarned.stat }}</span>
+                        <span>{{ stats.totalDoublonsEarned.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalMessagesSent.rank === 1}">
                     <span>Nombre de messages envoyés</span>
-                    <span class="stat-item-value">{{ stats.totalMessagesSent }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalMessagesSent.stat }}</span>
+                        <span>{{ stats.totalMessagesSent.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Creatium.rank === 1}">
                     <span>Nombre de créatiums minés</span>
-                    <span class="stat-item-value">{{ stats.totalResourcesMined.Creatium ?? "0" }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalResourcesMined.Creatium.stat ?? "0" }}</span>
+                        <span>{{ stats.totalResourcesMined.Creatium.rank ?? "?" }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Or.rank === 1}">
                     <span>Nombre d'onces d'or minées</span>
-                    <span class="stat-item-value">{{ stats.totalResourcesMined.Or ?? "0" }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalResourcesMined.Or.stat ?? "0" }}</span>
+                        <span>{{ stats.totalResourcesMined.Or.rank ?? "?" }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalBuildingsUpgraded.rank === 1}">
                     <span>Nombre d'améliorations de bâtiments effectuées</span>
-                    <span class="stat-item-value">{{ stats.totalBuildingsUpgraded }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalBuildingsUpgraded.stat }}</span>
+                        <span>{{ stats.totalBuildingsUpgraded.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalRocketLaunched.rank === 1}">
                     <span>Nombre de fusées lancées</span>
-                    <span class="stat-item-value">{{ stats.totalRocketLaunched }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalRocketLaunched.stat }}</span>
+                        <span>{{ stats.totalRocketLaunched.rank }}</span>
+                    </span>
                 </li>
-                <li class="stat-item">
+                <li class="stat-item" :class="{'legendaire-text': stats.totalMealCooked.rank === 1}">
                     <span>Nombre de repas préparés</span>
-                    <span class="stat-item-value">{{ stats.totalMealCooked }}</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalMealCooked.stat }}</span>
+                        <span>{{ stats.totalMealCooked.rank }}</span>
+                    </span>
                 </li>
             </ul>
         </div>
@@ -184,6 +223,8 @@ const user = computed(() => {
 
 .stat-item-value {
     color: #fff;
+    display: flex;
+    column-gap: 1rem;
 }
 
 .stat-item:hover {
