@@ -22,7 +22,12 @@
         <ul class="player-list">
             <li v-for="(player, index) in players"
                 :key="player.id"
-                class="player-item"
+                class="player-item" :class="
+                {
+                    'legendaire-text': player.nbCards === maxCardNumber,
+                    'epic-text': player.nbCards >= thirdQuartile && player.nbCards < maxCardNumber,
+                    'commun-text': player.nbCards >= firstQuartile && player.nbCards < secondQuartile
+                }"
                 @click="router.push('/stats/'+player.id);">
                 <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
@@ -38,9 +43,13 @@
 import {defineProps, ref} from 'vue';
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
-import {storeToRefs} from "pinia";
 
 const emit = defineEmits(['reload']);
+
+const maxCardNumber = 39;
+const firstQuartile = 10;
+const secondQuartile = 20;
+const thirdQuartile = 30;
 
 const { players } = defineProps({
     players: {
