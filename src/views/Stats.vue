@@ -135,6 +135,13 @@ const user = computed(() => {
                         <span>{{ stats.totalMealCooked.rank }}</span>
                     </span>
                 </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalMachineUsed.rank === 1}">
+                    <span>Nombre de machine E. Zeiss utilisées</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalMachineUsed.stat }}</span>
+                        <span>{{ stats.totalMachineUsed.rank }}</span>
+                    </span>
+                </li>
             </ul>
         </div>
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
