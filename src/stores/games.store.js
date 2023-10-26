@@ -54,7 +54,10 @@ export const useGamesStore = defineStore({
                 });
 
             // refresh user ressources and cards
-            await useUsersStore().getUser(user.id);
+            if (!response.error) {
+                await useUsersStore().getUser(user.id);
+                await useCardsStore().getAllCardsFromUser(user.id);
+            }
 
             this.gameResponse = response;
         },
