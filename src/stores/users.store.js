@@ -45,6 +45,16 @@ export const useUsersStore = defineStore({
                     "rank": 4
                 }
             },
+            "totalMachineUsed": {
+                "Creatium": {
+                    "stat": 2511,
+                    "rank": 5
+                },
+                "Or": {
+                    "stat": 1287,
+                    "rank": 4
+                }
+            },
             "totalCardWithAStatMaxed": {
                 "stat": 2,
                 "rank": 2
