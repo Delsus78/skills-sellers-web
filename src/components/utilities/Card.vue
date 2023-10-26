@@ -75,6 +75,10 @@
                     <span class="little_title">Plat : </span>
                     <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
                 </p>
+                <p v-if="actionKey === 'repairChances'">
+                    <span class="little_title">Chance de réussir : </span>
+                    <span class="value">{{ val.toFixed(2) }}% </span>
+                </p>
             </div>
             <div v-if="action" class="cancelAction red" @click="emit('cancelAction', action.id)">Annuler l'action</div>
         </div>

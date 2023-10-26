@@ -2,6 +2,7 @@
 import { useGamesStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import Casino from "@/components/utilities/games/casino.vue";
+import MachineRepair from "@/components/utilities/games/machineRepair.vue";
 
 const gamesStore = useGamesStore();
 const { game } = storeToRefs(gamesStore);
@@ -25,6 +26,8 @@ const estimate = (GameName, bet, cardIds) => {
     </div>
     <div v-else class="games">
         <casino v-if="game?.name.toLowerCase() === 'casino'" :game="game"
+                @play="play" @estimate="estimate"/>
+        <machine-repair v-if="game?.name.toLowerCase() === 'machine'" :game="game"
                 @play="play" @estimate="estimate"/>
     </div>
     <footer class="footer">

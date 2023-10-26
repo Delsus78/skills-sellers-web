@@ -125,7 +125,7 @@ watch(bet, reestimateGame);
         <div v-else class="casino_content">
             <div class="cards">
                 <ListSelector class="cardsList" :objects="cards" title="Cartes"
-                              withFilters/>
+                              withFilters selected-action="charisme"/>
             </div>
             <div class="title">CHARISMATIC CASINO</div>
             <div class="subTitle">The amazing one</div>

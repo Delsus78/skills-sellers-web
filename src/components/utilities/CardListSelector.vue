@@ -95,11 +95,22 @@ const selectedActionCompetence = computed(() => {
         case "cuisiner":
             return "cuisine";
         case "ameliorer":
+        case "reparer":
             return "intelligence";
         case "explorer":
             return "exploration";
         case "muscler":
             return "force";
+        case "charisme":
+            return "charisme";
+        case "intelligence":
+            return "intelligence";
+        case "exploration":
+            return "exploration";
+        case "force":
+            return "force";
+        case "cuisine":
+            return "cuisine";
         default:
             return "";
     }
