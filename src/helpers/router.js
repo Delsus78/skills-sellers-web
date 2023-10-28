@@ -10,6 +10,7 @@ import {
     OpeningView,
     UpgradeView,
     RegisterView,
+    ResetPasswordView,
     GamesView,
     RulesView
 } from '@/views';
@@ -21,6 +22,7 @@ export const router = createRouter({
         { path: '/', component: HomeView },
         { path: '/login', component: LoginView },
         { path: '/register', component: RegisterView },
+        { path: '/resetpassword', component: ResetPasswordView },
         { path: '/rules', component: RulesView },
         { path: '/cards', component: CardsView },
         { path: '/stats/:id', component: StatsView },
@@ -33,7 +35,7 @@ export const router = createRouter({
 
 router.beforeEach(async (to) => {
     // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login','/register','/rules'];
+    const publicPages = ['/login','/register','/rules','/resetpassword'];
     const authRequired = !publicPages.includes(to.path);
     const auth = useAuthStore();
 

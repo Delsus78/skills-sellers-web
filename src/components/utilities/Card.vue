@@ -302,6 +302,7 @@ function toggleActive() {
     opacity: 0.6;
     text-shadow: black 0.1em 0.1em 0.2em;
     font-size:14px;
+    line-height: 15px;
 }
 .card-text h2 {
     margin-top: 0;
