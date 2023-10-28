@@ -12,7 +12,11 @@ export const useGamesStore = defineStore({
     state: () => ({
         game: {
             id: 0,
-            name: "CASINO"
+            name: "CASINO",
+            description: "Jouez à la roulette et gagnez des ressources !",
+            Regles: "Règles du jeu : \n",
+            isRepairing: false,
+            nbLetters: 0
         },
         gameResponse: {
             "name": "string",
@@ -73,6 +77,26 @@ export const useGamesStore = defineStore({
                 });
 
             this.gameEstimation = response;
+        },
+        async validateWordForWordleGame(gameName, word){
+            const { user } = useAuthStore();
+
+            this.gameResponse = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/gameOfTheDay/play`;
+            let response = await fetchWrapper.post(usedUrl, {Name:gameName, Bet:0, CardsIds:[], Word:word})
+                .catch(error => {
+                    console.error(error);
+                    return this.gameResponse = {error};
+                });
+
+            // refresh user ressources and cards
+            if (!response.error) {
+                await useUsersStore().getUser(user.id);
+                await useCardsStore().getAllCardsFromUser(user.id);
+                await useGamesStore().getGameDay();
+            }
+
+            this.gameResponse = response;
         }
     }
 });
