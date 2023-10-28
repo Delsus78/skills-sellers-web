@@ -56,6 +56,39 @@ export const useAuthStore = defineStore({
                     return { error };
                 });
         },
+        async resetpassword(password, confirmPassword, link) {
+            await fetchWrapper.post(`${baseUrl}/resetpassword`, { password, confirmPassword, link })
+                .then(async response => {
+
+                    // update pinia state
+                    this.user = response;
+
+                    // store user details and jwt in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('user', JSON.stringify(response));
+
+                    // reload cards
+                    await useCardsStore().getAllCardsFromUser(response.id);
+
+                    const notifStore = useNotificationStore();
+                    notifStore.initConnection();
+
+                    // redirect to previous url or default to home page
+                    await router.push(this.returnUrl || '/');
+                })
+                .catch(error => {
+                    console.error(error);
+                    // pars regex error.errors.ConfirmPassword[0]
+                    const regex = /"ConfirmPassword":\["(.*?)"/;
+                    const match = error.match(regex);
+
+                    if (!match)
+                        toast.error(error);
+                    else
+                        toast.error(match[1]);
+
+                    return { error };
+                });
+        },
         logout() {
             this.user = null;
             localStorage.removeItem('user');
