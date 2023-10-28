@@ -1,19 +1,18 @@
 <script setup>
-import {useGamesStore, useMainStore, useUsersStore} from "@/stores";
+import {useGamesStore, useMainStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {onMounted, onUnmounted, ref} from "vue";
 import {faShareFromSquare as clipboardIcon} from "@fortawesome/free-solid-svg-icons";
 
 const mainStore = useMainStore();
 const gamesStore = useGamesStore();
-const usersStore = useUsersStore();
 
 const { gameResponse, game } = storeToRefs(gamesStore);
 
 const word = ref("");
 
 const handleKeydown = (event) => {
-    if (game.value.words.length === 5) return;
+    if (game.value.words.length === 5 || game.value.win) return;
 
     // setting up allowed keys
     const allowedKeys = ["Enter", "-", ".", "Backspace"];
@@ -120,7 +119,8 @@ mainStore.changeBackgroundColor("#d30550");
                               </div>
                           </div>
                       </div>
-                      <div class="wordleRow" :style="`grid-template-columns: repeat(${game.nbLetters}, 4rem);`">
+                      <div class="wordleRow" :style="`grid-template-columns: repeat(${game.nbLetters}, 4rem);`"
+                        v-if="!game.win && !(game.words.length === 5)">
                           <div v-for="letter in game.nbLetters" :key="letter" class="letter-box">
                               <div class="letter">
                                   {{ word[letter-1] }}
@@ -132,8 +132,8 @@ mainStore.changeBackgroundColor("#d30550");
               <div class="error shadow-white">
                   {{ gameResponse.error}}
               </div>
-              <div v-if="gameResponse?.words?.length === 5" class="shadow-white">
-                  <div v-if="gameResponse.win" class="win">
+              <div v-if="game?.words?.length === 5 || game.win" class="shadow-white">
+                  <div v-if="game.win" class="win">
                       GAGNE
                   </div>
                   <div v-else class="loose">
