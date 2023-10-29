@@ -83,7 +83,7 @@ const removePts = (competence) => {
     <div v-else class="UpgradeCardWrapper">
         <div class="infos">
             <div class="DivTitle">
-                <h1 class="title">Doublon !</h1>
+                <h1 class="title" :class="card.rarity + '-text'">Doublon !</h1>
             </div>
             <p>Votre doublon est une <strong class="colorChange">{{ card.rarity }}</strong>, vous avez donc <strong class="red">{{maxPts}} Points</strong> à dépenser.</p>
         </div>
