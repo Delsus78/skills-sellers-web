@@ -6,6 +6,7 @@ import {faCoins as moneyIcon} from "@fortawesome/free-solid-svg-icons";
 import {ref, watch} from "vue";
 import ListSelector from "@/components/utilities/CardListSelector.vue";
 import GearsBackground from "@/components/utilities/GearsBackground.vue";
+import InfoBulle from "@/components/utilities/InfoBulle.vue";
 
 const mainStore = useMainStore();
 const cardsStore = useCardsStore();
@@ -75,7 +76,13 @@ watch(cards, () => {
                           class="cardsList" :objects="cards" title="Cartes"
                           withFilters selected-action="reparer"/>
             <div class="form_content" :class="{'large': actualUser.statRepairedObjectMachine > -1}">
+
                 <div class="description bg-dark-blur">
+                    <info-bulle>
+                        <p v-for="(r1, r2) in game.regles">
+                            {{ r2 }}  {{ r1 }}
+                        </p>
+                    </info-bulle>
                     {{ game.description }}
                 </div>
                 <div class="validate">

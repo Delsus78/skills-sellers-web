@@ -8,6 +8,7 @@ import SpinWheel from "@/components/utilities/SpinWheel.vue";
 import {
     faCoins as moneyIcon
 } from "@fortawesome/free-solid-svg-icons";
+import InfoBulle from "@/components/utilities/InfoBulle.vue";
 const mainStore = useMainStore();
 const cardsStore = useCardsStore();
 const gamesStore = useGamesStore();
@@ -131,6 +132,11 @@ watch(bet, reestimateGame);
             <div class="subTitle">The amazing one</div>
             <div class="form_content">
                 <div class="description bg-dark-blur">
+                    <info-bulle>
+                        <p v-for="(r1, r2) in game.regles">
+                            {{ r1 }}  {{ r2 }}
+                        </p>
+                    </info-bulle>
                     {{ game.description }}
                 </div>
                 <div class="input_gold">

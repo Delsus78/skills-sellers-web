@@ -3,6 +3,7 @@ import {useGamesStore, useMainStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {onMounted, onUnmounted, ref} from "vue";
 import {faShareFromSquare as clipboardIcon} from "@fortawesome/free-solid-svg-icons";
+import InfoBulle from "@/components/utilities/InfoBulle.vue";
 
 const mainStore = useMainStore();
 const gamesStore = useGamesStore();
@@ -12,7 +13,7 @@ const { gameResponse, game } = storeToRefs(gamesStore);
 const word = ref("");
 
 const handleKeydown = (event) => {
-    if (game.value.words.length === 5 || game.value.win) return;
+    if (game.value.words.length === 5 || game.value.isWin) return;
 
     // setting up allowed keys
     const allowedKeys = ["Enter", "-", ".", "Backspace"];
@@ -104,6 +105,11 @@ mainStore.changeBackgroundColor("#d30550");
               <div class="subTitle">bah un Wordle quoi</div>
           </div>
           <div class="form_content">
+              <info-bulle>
+                  <p v-for="(r1, r2) in game.regles">
+                      {{ r1 }}  {{ r2 }}
+                  </p>
+              </info-bulle>
               <!--Display letters of the word in a grid with the number of letters-->
               <div class="wordle_form_letters">
                   <div class="wordle_form_letters_grid">
@@ -120,7 +126,7 @@ mainStore.changeBackgroundColor("#d30550");
                           </div>
                       </div>
                       <div class="wordleRow" :style="`grid-template-columns: repeat(${game.nbLetters}, 4rem);`"
-                        v-if="!game.win && !(game.words.length === 5)">
+                           v-if="!game?.isWin  && !(game?.words.length === 5)">
                           <div v-for="letter in game.nbLetters" :key="letter" class="letter-box">
                               <div class="letter">
                                   {{ word[letter-1] }}
@@ -132,8 +138,8 @@ mainStore.changeBackgroundColor("#d30550");
               <div class="error shadow-white">
                   {{ gameResponse.error}}
               </div>
-              <div v-if="game?.words?.length === 5 || game.win" class="shadow-white">
-                  <div v-if="game.win" class="win">
+              <div v-if="game?.words?.length === 5 || game.isWin" class="shadow-white">
+                  <div v-if="game.isWin" class="win">
                       GAGNE
                   </div>
                   <div v-else class="loose">

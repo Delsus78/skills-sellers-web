@@ -14,9 +14,8 @@ export const useGamesStore = defineStore({
             id: 0,
             name: "CASINO",
             description: "Jouez à la roulette et gagnez des ressources !",
-            Regles: "Règles du jeu : \n",
-            isRepairing: false,
-            nbLetters: 0
+            regles: "Règles du jeu : \n",
+            isRepairing: false
         },
         gameResponse: {
             "name": "string",
