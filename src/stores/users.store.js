@@ -46,14 +46,12 @@ export const useUsersStore = defineStore({
                 }
             },
             "totalMachineUsed": {
-                "Creatium": {
-                    "stat": 2511,
-                    "rank": 5
-                },
-                "Or": {
-                    "stat": 1287,
-                    "rank": 4
-                }
+                "stat": 2,
+                "rank": 2
+            },
+            "totalWordleWon": {
+                "stat": 1,
+                "rank": 1
             },
             "totalCardWithAStatMaxed": {
                 "stat": 2,
@@ -142,6 +140,6 @@ export const useUsersStore = defineStore({
                     console.error(error);
                     return this.buildings = {error};
                 })
-        },
+        }
     }
 });

@@ -94,6 +94,18 @@ export const useNotificationStore = defineStore({
                     return this.error = {error};
                 })
         },
+        async sendMessageToUser(id, message) {
+            const { user} = useAuthStore();
+            let usedUrl = baseUrl + `Users/${user.id}/notification/${id}`;
+            await fetchWrapper.post(usedUrl, {title:'', message})
+                .catch(error => {
+                    console.error(error);
+                    return error;
+                });
+
+            // refresh data
+            await useUsersStore().getUser(user.id);
+        },
         async deleteNotifications(ids) {
             const { user} = useAuthStore();
             let usedUrl = baseUrl + `Users/${user.id}/notifications`;

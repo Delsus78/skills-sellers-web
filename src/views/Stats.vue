@@ -1,18 +1,22 @@
 <script setup>
 import {storeToRefs} from "pinia";
-import { useUsersStore, useAuthStore } from "@/stores";
+import { useUsersStore, useAuthStore, useNotificationStore } from "@/stores";
 import {useRoute} from "vue-router";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
+import {faCoins as moneyIcon, faPaperPlane as sendIcon} from "@fortawesome/free-solid-svg-icons";
 
 const route = useRoute();
 const userId = route.params.id;
 
 const usersStore = useUsersStore();
 const authStore = useAuthStore();
+const notifStore = useNotificationStore();
 const { stats, users } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
+const messageToSend = ref("");
+
 
 usersStore.getAllUsers();
 usersStore.getStatsOfUser(userId);
@@ -22,6 +26,10 @@ const user = computed(() => {
     return users.value.find(u => u.id.toString() === userId);
 });
 
+const handleSend = () => {
+    notifStore.sendMessageToUser(userId, messageToSend.value);
+    messageToSend.value = "";
+}
 
 </script>
 <template>
@@ -142,9 +150,32 @@ const user = computed(() => {
                         <span>{{ stats.totalMachineUsed.rank }}</span>
                     </span>
                 </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalWordleWon.rank === 1}">
+                    <span>Nombre de Worldle gagnés</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalWordleWon.stat }}</span>
+                        <span>{{ stats.totalWordleWon.rank }}</span>
+                    </span>
+                </li>
             </ul>
         </div>
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
+        <div v-else class="SendNotification bg-dark-blur">
+            <div class="SendNotification_header">
+                <h1 class="DivTitle">Envoyer un message</h1>
+            </div>
+
+            <div class="SendNotification_input">
+                <input class="TextBox" v-model="messageToSend" placeholder="Un truc à dire ?"/>
+            </div>
+
+            <div class="SendNotification_button">
+                <div class="input_gold">
+                    10<svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
+                </div>
+                <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
+            </div>
+        </div>
         <RandomPlanet class="planetBuilding" :model-value="user?.pseudo" :width="850" :height="850" :planet-id='1'/>
     </div>
 </template>
@@ -284,10 +315,97 @@ const user = computed(() => {
     }
 }
 
+
+.SendNotification {
+    grid-column: 1;
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-rows: 15% 45% 40%;
+    grid-template-areas: "title" "message" "info";
+    padding: 1rem;
+    margin: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    max-height: 15rem;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 4;
+        margin: 0;
+        width: 100%;
+        border-radius: 0;
+    }
+}
+
+.SendNotification_header {
+    grid-area: title;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+
+.SendNotification_input {
+    grid-area: message;
+    display: flex;
+    justify-content: center;
+}
+
+.SendNotification_input .TextBox {
+    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 90%;
+    padding: 0.5rem 1rem;
+    color: var(--color-text);
+    border: 0;
+    font-size: 2rem;
+    margin: 1rem;
+}
+
+.SendNotification_input .TextBox:focus {
+    border-color: var(--vt-c-green-2);
+    box-shadow: 0 0 0 3px rgba(0, 128, 0, 0.3); /* Cette couleur est juste un exemple. */
+}
+.SendNotification_input .TextBox::placeholder {
+    font-size: 2rem;
+    color: rgba(100, 96, 96, 0.56); /* Ceci est un exemple de couleur grise semi-transparente. */
+}
+
+.SendNotification_button svg {
+    margin: 1.5rem 1rem;
+}
+
+.SendNotification_button svg:hover {
+    filter: drop-shadow(0 0 0.75rem white);
+}
+
+.SendNotification_button {
+    grid-area: info;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+    margin: 0 5rem;
+}
+
 .User_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.input_gold {
+    display: flex;
+    align-items: center;
+    color: gold;
+    gap: 1rem;
+    border-radius: 1rem;
+    font-size: 1.8em;
+    font-family: 'Big John', sans-serif;
+}
 </style>
