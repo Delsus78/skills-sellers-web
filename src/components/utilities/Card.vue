@@ -306,8 +306,8 @@ function toggleActive() {
 }
 .card-text h2 {
     margin-top: 0;
-    font-size: 23px;
     font-weight: bolder;
+    text-align: center;
 }
 
 .actionText {
