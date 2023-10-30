@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import * as signalR from '@microsoft/signalr';
 import { useAuthStore, useCardsStore, useUsersStore } from '@/stores';
 import {fetchWrapper} from "@/helpers";
+import {PlayAudio} from "@/helpers/AudioPlay";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/`;
 
@@ -50,6 +51,9 @@ export const useNotificationStore = defineStore({
                             background: "#d0de21",
                         }
                     });
+
+                // play sound
+                await PlayAudio('oof');
 
                 // refresh data
                 await useUsersStore().getUser(user.id);
