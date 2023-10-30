@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import * as signalR from '@microsoft/signalr';
 import { useAuthStore } from '@/stores';
+import {PlayAudio} from "@/helpers/AudioPlay";
 
 const chatHubUrl = `${import.meta.env.VITE_API_URL}/globalChatHub`;
 
@@ -24,8 +25,11 @@ export const useChatStore = defineStore({
                 .build();
 
             // Gérer le message reçu
-            this.connection.on("ReceiveMessage", (user, message) => {
-                this.addMessage({ user, message });
+            this.connection.on("ReceiveMessage", async (user, message) => {
+                this.addMessage({user, message});
+
+                // play sound
+                await PlayAudio('msg');
             });
 
             // Démarrer la connexion

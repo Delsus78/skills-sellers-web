@@ -154,7 +154,7 @@ onMounted(() => {
                     <li><strong>EXPLORER</strong></li>
                 </ul>
                 <p class="centered shadow-white">
-                    Une carte CUISI(NE) 10 ne réalisera pas des plats aussi bons qu’une carte CUISI(NE) 0 !
+                    Une carte CUISI(NE) 0 ne réalisera pas des plats aussi bons qu’une carte CUISI(NE) 10 !
                 </p>
                 <p class="centered shadow-white">
                     En cas d'erreur, cliquer sur une de vos cartes (comme l'exemple ci-dessus) il est possible d'annuler votre Action !
@@ -481,7 +481,7 @@ onMounted(() => {
                             <td class="red big">Stats</td>
                             <td><svg-icon class="shadow-white" :fa-icon="statsIcon" :size="36"/></td>
                             <td :class="{big: inLine }">Parfait pour savoir où vous en êtes !</td>
-                            <td :class="{big: inLine }">Vou spouvez aussi cliquer sur un pseudo du scoreboard!</td>
+                            <td :class="{big: inLine }">Vous pouvez aussi cliquer sur un pseudo du scoreboard!</td>
                         </tr>
                     </table>
                 </div>
