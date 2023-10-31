@@ -126,6 +126,7 @@ const reload = () => {
     list-style-type: none;
     padding: 0;
     margin: 0 2rem;
+    overflow-y: auto; /* Ajout d'une barre de défilement si la liste est trop longue */
 }
 
 .player-item {
