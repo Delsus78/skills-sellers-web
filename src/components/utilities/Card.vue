@@ -44,6 +44,7 @@
         <div class="actionInfoText">
             <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
             <p class="date">{{ action ? 'Termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
+            <p>{{ action ? format(action.endTime, "DD MMMM YYYY hh:mm:ss Z") : ''}}</p>
             <div v-for="(val, actionKey ) in action || {}">
                 <!-- Particular cases-->
                 <p v-if="actionKey === 'planetName'">
@@ -90,7 +91,7 @@
 import {VanillaTilt} from "./VanillaTilt";
 import {onMounted} from "vue";
 import { ref } from "vue";
-import {getFormattedRemainingTime} from "./DateFormator";
+import {getFormattedRemainingTime, format} from "./DateFormator";
 import {
     faHome as homeIcon,
     faArrowLeft as rightArrowIcon,

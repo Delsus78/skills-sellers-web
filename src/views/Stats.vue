@@ -5,7 +5,11 @@ import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
-import {faCoins as moneyIcon, faPaperPlane as sendIcon} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCoins as moneyIcon,
+    faRankingStar as rankIcon,
+    faPaperPlane as sendIcon,
+faArrowTrendUp as statIcon} from "@fortawesome/free-solid-svg-icons";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -50,6 +54,13 @@ const handleSend = () => {
         <div class="Stats_content bg-dark-blur">
             <div class="Stats_header">
                 <h1 class="DivTitle">Statistiques</h1>
+                <div class="headers-list">
+                    <span>Statistique</span>
+                    <div style="display:flex; column-gap: 1rem;">
+                        <span><svg-icon class="shadow-white" :fa-icon="statIcon" :size="26"/></span>
+                        <span><svg-icon class="shadow-white" :fa-icon="rankIcon" :size="26"/></span>
+                    </div>
+                </div>
             </div>
             <ul class="stats-list">
                 <li class="stat-item" :class="{'legendaire-text': stats.totalCards.rank === 1}">
@@ -150,6 +161,20 @@ const handleSend = () => {
                         <span>{{ stats.totalMachineUsed.rank }}</span>
                     </span>
                 </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalWinAtCharismeCasino.rank === 1}">
+                    <span>Nombre d'or remporté au casino</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalWinAtCharismeCasino.stat }}</span>
+                        <span>{{ stats.totalWinAtCharismeCasino.rank }}</span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalLooseAtCharismeCasino.rank === 1}">
+                    <span>Nombre d'or perdu au casino</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalLooseAtCharismeCasino.stat }}</span>
+                        <span>{{ stats.totalLooseAtCharismeCasino.rank }}</span>
+                    </span>
+                </li>
                 <li class="stat-item" :class="{'legendaire-text': stats.totalWordleWon.rank === 1}">
                     <span>Nombre de Worldle gagnés</span>
                     <span class="stat-item-value">
@@ -232,9 +257,21 @@ const handleSend = () => {
 .Stats_header {
     grid-area: title;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     z-index: 1;
+}
+
+.headers-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.51); /* Nuance de blanc pour le texte des en-têtes */
+    font-weight: bolder;
+    font-size: 1.3rem;
+    padding: 0 1.5rem;
 }
 
 .stats-list {
