@@ -8,3 +8,7 @@ export function getFormattedRemainingTime(endDateStr) {
     const remainingTime = moment.duration(endDate.diff(now));
     return remainingTime.locale('fr').humanize(true);
 }
+
+export function format(dateStr, formatStr) {
+    return moment(dateStr).format(formatStr);
+}

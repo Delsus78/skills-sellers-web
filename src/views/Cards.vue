@@ -1,7 +1,11 @@
 <template>
     <div class="cardsWrapper">
         <div class="filter-controls" v-if="cards?.length">
-            <input type="text" v-model="searchText" placeholder="Rechercher..." />
+            <input type="text" v-model="searchText" placeholder="Rechercher par nom..." />
+            <input type="text" v-model="collectionFilter" placeholder="Filtrer par collection..." />
+            <input type="text" v-model="rarityFilter" placeholder="Filtrer par rareté..." />
+            <input type="text" v-model="actionFilter" placeholder="Filtrer par action..." />
+            <input type="text" v-model="competenceFilter" placeholder="Filtrer par compétence..." />
         </div>
         <div v-if="cards.length" class="cards">
             <div class="card" v-for="card in filteredList">
@@ -38,12 +42,18 @@ const actionsStore = useActionsStore();
 const { cards } = storeToRefs(cardsStore);
 
 const searchText = ref('');
+const collectionFilter = ref('');
+const rarityFilter = ref('');
+const actionFilter = ref('');
+const competenceFilter = ref('');
+
 const filteredList = computed(() => {
     let result = cards.value;
     if (searchText.value) {
         result = result.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()));
     }
 
+    // based sort
     // sort by competences sum
     result.sort((a, b) => {
         const aSum =
@@ -60,6 +70,30 @@ const filteredList = computed(() => {
             b.competences.exploration;
         return bSum - aSum;
     });
+
+    if (collectionFilter.value) {
+        result = result.filter(item => item.collection.toLowerCase().includes(collectionFilter.value.toLowerCase()));
+    }
+
+    if (rarityFilter.value) {
+        result = result.filter(item => item.rarity.toLowerCase().includes(rarityFilter.value.toLowerCase()));
+    }
+
+    if (actionFilter.value) {
+        if (actionFilter.value === '!')
+            result = result.filter(item => !item.action);
+        else
+            result = result.filter(item => item.action?.actionName.toLowerCase().includes(actionFilter.value.toLowerCase()));
+    }
+
+    if (competenceFilter.value) {
+        result = result.sort((a, b) => {
+            const aCompetence = a.competences[competenceFilter.value.toLowerCase()];
+            const bCompetence = b.competences[competenceFilter.value.toLowerCase()];
+            return bCompetence - aCompetence;
+        });
+    }
+
     return result;
 });
 
