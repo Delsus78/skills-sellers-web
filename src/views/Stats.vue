@@ -162,7 +162,7 @@ const handleSend = () => {
                     </span>
                 </li>
                 <li class="stat-item" :class="{'legendaire-text': stats.totalWinAtCharismeCasino.rank === 1}">
-                    <span>Nombre d'or remporté au casino</span>
+                    <span>Nombre de charisme remporté au casino</span>
                     <span class="stat-item-value">
                         <span>{{ stats.totalWinAtCharismeCasino.stat }}</span>
                         <span>{{ stats.totalWinAtCharismeCasino.rank }}</span>
