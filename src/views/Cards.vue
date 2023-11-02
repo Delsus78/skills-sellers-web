@@ -3,9 +3,29 @@
         <div class="filter-controls" v-if="cards?.length">
             <input type="text" v-model="searchText" placeholder="Rechercher par nom..." />
             <input type="text" v-model="collectionFilter" placeholder="Filtrer par collection..." />
-            <input type="text" v-model="rarityFilter" placeholder="Filtrer par rareté..." />
-            <input type="text" v-model="actionFilter" placeholder="Filtrer par action..." />
-            <input type="text" v-model="competenceFilter" placeholder="Filtrer par compétence..." />
+            <select v-model="rarityFilter">
+                <option value="">Filtrer par rareté...</option>
+                <option value="commune">Commune</option>
+                <option value="epic">Épique</option>
+                <option value="legendaire">Légendaire</option>
+            </select>
+            <select v-model="actionFilter">
+                <option value="">Filtrer par action...</option>
+                <option value="explorer">Explorer</option>
+                <option value="cuisiner">Cuisiner</option>
+                <option value="muscler">Muscler</option>
+                <option value="reparer">Réparer</option>
+                <option value="ameliorer">Améliorer</option>
+                <option value="!">Ne fais rien</option>
+            </select>
+            <select v-model="competenceFilter">
+                <option value="">Trier par compétence...</option>
+                <option value="cuisine">Cuisine</option>
+                <option value="charisme">Charisme</option>
+                <option value="force">Force</option>
+                <option value="exploration">Exploration</option>
+                <option value="intelligence">Intelligence</option>
+            </select>
         </div>
         <div v-if="cards.length" class="cards">
             <div class="card" v-for="card in filteredList">
@@ -140,6 +160,29 @@ const cancelAction = async (cardId) => {
     background: rgba(199, 175, 175, 0.1);
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+}
+
+.filter-controls select {
+    width: 100%;
+    height: 2rem;
+    padding: 0.1rem;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgba(199, 175, 175, 0.35);
+    background: rgba(199, 175, 175, 0.1);
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.filter-controls select option {
+    color: black;
+}
+
+.filter-controls select option:first-child {
+    color: rgba(199, 175, 175, 0.35);
 }
 
 .cards {

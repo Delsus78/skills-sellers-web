@@ -16,7 +16,10 @@
             <h2 class="shadow-black">{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
-        <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">{{ action ? action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}</footer>
+        <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">
+            {{ action ? action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}
+            <progress-bar v-if="action" :pourcentage="pourcentageRemainingTime" :text="clearRemainingTime"/>
+        </footer>
         <div class="card-stats">
             <div class="stat">
                 <div class="value">{{ competences.cuisine }}</div>
@@ -89,9 +92,9 @@
 
 <script setup>
 import {VanillaTilt} from "./VanillaTilt";
-import {onMounted} from "vue";
+import {onMounted, onUnmounted} from "vue";
 import { ref } from "vue";
-import {getFormattedRemainingTime, format} from "./DateFormator";
+import {getFormattedRemainingTime, format, getClearRemainingTime, getPourcentageRemainingTime} from "./DateFormator";
 import {
     faHome as homeIcon,
     faArrowLeft as rightArrowIcon,
@@ -99,6 +102,7 @@ import {
     faEarthEurope as planetIcon
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
+import ProgressBar from "@/components/utilities/progressBar.vue";
 
 const isActive = ref(false);
 const { id, name, imageUrl, description, collection, rarity, competences, action } = defineProps({
@@ -150,6 +154,9 @@ const { id, name, imageUrl, description, collection, rarity, competences, action
 
 });
 const emit = defineEmits(['cancelAction']);
+const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
+const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
+let intervalId;
 
 onMounted(() => {
     VanillaTilt.init(document.querySelectorAll("[data-tilt]"),{
@@ -157,7 +164,20 @@ onMounted(() => {
         reverse: true,
         "max-glare": 0.15
     });
+
+    intervalId = setInterval(updateDates, 1000);
 });
+
+onUnmounted(() => {
+    clearInterval(intervalId);  // Arrête l'intervalle lorsqu'on quitte le composant
+});
+
+function updateDates() {
+    // Votre logique pour mettre à jour les dates
+    if (!action) return;
+    clearRemainingTime.value = getClearRemainingTime(action?.endTime);
+    pourcentageRemainingTime.value = getPourcentageRemainingTime(action?.endTime, action?.createdAt);
+}
 
 function toggleActive() {
     isActive.value = !isActive.value;
@@ -187,7 +207,7 @@ function toggleActive() {
 .card {
     display: grid;
     grid-template-columns: 20rem;
-    grid-template-rows: 20rem 11rem 3rem 5rem;
+    grid-template-rows: 19rem 12rem 3rem 5rem;
     grid-template-areas: "image" "text" "footer" "stats";
     border-radius: 18px;
     color:white;
@@ -318,6 +338,7 @@ function toggleActive() {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 .card-stats {
