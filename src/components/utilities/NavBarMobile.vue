@@ -94,11 +94,11 @@ const unrollNavBar = () => {
                         :class="{selected: pageName === 'batiments'}">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="30"/>
             </RouterLink>
-            <a class="nav-item" @click="notAvailable"
+            <RouterLink class="nav-item" :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="30"/>
-            </a>
+            </RouterLink>
             <a @click="openGiftCodePrompt" class="nav-item"
                v-tooltip:bottom.tooltip="'Code cadeau'">
                 <svg-icon class="green" :fa-icon="giftCodeIcon" :size="30"/>
@@ -130,7 +130,7 @@ const unrollNavBar = () => {
     </div>
 
     <div class="version">
-        <span class="version-text prevent-select">Version 1.3</span>
+        <span class="version-text prevent-select">Version 1.4</span>
     </div>
 </template>
 
