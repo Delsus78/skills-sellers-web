@@ -20,8 +20,27 @@ export function getClearRemainingTime(dateStr) {
     const now = moment();
     const endDate = moment(dateStr);
     const remainingTime = moment.duration(endDate.diff(now));
-    return moment.utc(remainingTime.asMilliseconds()).format("HH:mm:ss");
+
+    let formattedTime = "";
+
+    if (remainingTime.days() > 0) {
+        const totalHours = remainingTime.asHours();
+        const days = Math.floor(totalHours / 24);
+        const hours = Math.floor(totalHours % 24);
+        const minutes = remainingTime.minutes();
+        const seconds = remainingTime.seconds();
+        formattedTime = `${days}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else if (remainingTime.hours() > 0) {
+        formattedTime = `${remainingTime.hours().toString().padStart(2, '0')}:${remainingTime.minutes().toString().padStart(2, '0')}:${remainingTime.seconds().toString().padStart(2, '0')}`;
+    } else if (remainingTime.minutes() > 0) {
+        formattedTime = `${remainingTime.minutes().toString().padStart(2, '0')}:${remainingTime.seconds().toString().padStart(2, '0')}`;
+    } else {
+        formattedTime = remainingTime.seconds().toString().padStart(2, '0');
+    }
+
+    return formattedTime;
 }
+
 
 export function getPourcentageRemainingTime(dateStr, startStr) {
     moment.locale('fr');

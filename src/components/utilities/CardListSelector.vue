@@ -4,7 +4,31 @@
             <h1 class="DivTitle">{{ title }}</h1>
         </div>
         <div class="filter-controls" v-show="withFilters">
-            <input type="text" v-model="searchText" placeholder="Rechercher..." />
+            <input type="text" v-model="searchText" placeholder="Rechercher par nom..." />
+            <input type="text" v-model="collectionFilter" placeholder="Filtrer par collection..." />
+            <select v-model="rarityFilter">
+                <option value="">Filtrer par rareté...</option>
+                <option value="commune">Commune</option>
+                <option value="epic">Épique</option>
+                <option value="legendaire">Légendaire</option>
+            </select>
+            <select v-model="actionFilter">
+                <option value="">Filtrer par action...</option>
+                <option value="explorer">Explorer</option>
+                <option value="cuisiner">Cuisiner</option>
+                <option value="muscler">Muscler</option>
+                <option value="reparer">Réparer</option>
+                <option value="ameliorer">Améliorer</option>
+                <option value="!">Ne fais rien</option>
+            </select>
+            <select v-model="competenceFilter">
+                <option value="">Trier par compétence...</option>
+                <option value="cuisine">Cuisine</option>
+                <option value="charisme">Charisme</option>
+                <option value="force">Force</option>
+                <option value="exploration">Exploration</option>
+                <option value="intelligence">Intelligence</option>
+            </select>
         </div>
 
         <div v-if="isDroppedZone && list.length === 0" class="items-list plus">+</div>
@@ -61,14 +85,21 @@ const error = computed(() => {
 
 const list = ref(objects);
 
-const searchText = ref('');
 // autres propriétés réactives pour les filtres
+const searchText = ref('');
+const collectionFilter = ref('');
+const rarityFilter = ref('');
+const actionFilter = ref('');
+const competenceFilter = ref('');
 
 const filteredList = computed(() => {
     let result = list.value;
     if (searchText.value) {
         result = result.filter(item => item.name.toLowerCase().includes(searchText.value.toLowerCase()));
     }
+
+    // based sort
+    // sort by competences sum
     if (selectedAction) {
 
         // appliquer d'autres filtres ici
@@ -84,6 +115,29 @@ const filteredList = computed(() => {
                 return 0;
             });
         }
+    }
+
+    if (collectionFilter.value) {
+        result = result.filter(item => item.collection.toLowerCase().includes(collectionFilter.value.toLowerCase()));
+    }
+
+    if (rarityFilter.value) {
+        result = result.filter(item => item.rarity.toLowerCase().includes(rarityFilter.value.toLowerCase()));
+    }
+
+    if (actionFilter.value) {
+        if (actionFilter.value === '!')
+            result = result.filter(item => !item.action);
+        else
+            result = result.filter(item => item.action?.actionName.toLowerCase().includes(actionFilter.value.toLowerCase()));
+    }
+
+    if (competenceFilter.value) {
+        result = result.sort((a, b) => {
+            const aCompetence = a.competences[competenceFilter.value.toLowerCase()];
+            const bCompetence = b.competences[competenceFilter.value.toLowerCase()];
+            return bCompetence - aCompetence;
+        });
     }
 
     return result;
@@ -260,5 +314,28 @@ watch(objects, (newValue) => {
     background: rgba(199, 175, 175, 0.1);
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+}
+
+.filter-controls select {
+    width: 100%;
+    height: 2rem;
+    padding: 0.1rem;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgba(199, 175, 175, 0.35);
+    background: rgba(199, 175, 175, 0.1);
+    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.filter-controls select option {
+    color: black;
+}
+
+.filter-controls select option:first-child {
+    color: rgba(199, 175, 175, 0.35);
 }
 </style>

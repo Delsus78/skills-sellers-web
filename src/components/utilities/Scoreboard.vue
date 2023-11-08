@@ -46,10 +46,10 @@ import {router} from "@/helpers";
 
 const emit = defineEmits(['reload']);
 
-const maxCardNumber = 118;
-const firstQuartile = 30;
-const secondQuartile = 60;
-const thirdQuartile = 90;
+const maxCardNumber = 126;
+const firstQuartile = 31;
+const secondQuartile = 63;
+const thirdQuartile = 94;
 
 const { players } = defineProps({
     players: {
