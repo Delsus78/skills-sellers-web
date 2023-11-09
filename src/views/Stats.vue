@@ -1,6 +1,6 @@
 <script setup>
 import {storeToRefs} from "pinia";
-import { useUsersStore, useAuthStore, useNotificationStore } from "@/stores";
+import { useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore } from "@/stores";
 import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
@@ -9,6 +9,8 @@ import {
     faCoins as moneyIcon,
     faRankingStar as rankIcon,
     faPaperPlane as sendIcon,
+    faGift as giftIcon,
+    faInfinity as infinityIcon,
 faArrowTrendUp as statIcon} from "@fortawesome/free-solid-svg-icons";
 
 const route = useRoute();
@@ -17,13 +19,17 @@ const userId = route.params.id;
 const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const notifStore = useNotificationStore();
+const achievementsStore = useAchievementsStore();
 const { stats, users } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
+const { achievements } = storeToRefs(achievementsStore);
 const messageToSend = ref("");
-
+// stats or achievements
+const openedTab = ref("stats");
 
 usersStore.getAllUsers();
 usersStore.getStatsOfUser(userId);
+achievementsStore.getAchievementsOfUser(userId);
 
 const user = computed(() => {
     if (users.value.loading || users.value.error) return null;
@@ -34,14 +40,19 @@ const handleSend = () => {
     notifStore.sendMessageToUser(userId, messageToSend.value);
     messageToSend.value = "";
 }
-
 </script>
 <template>
     <div v-if="stats.loading || !user">
       <p class="huge-text">Chargement des statistiques...</p>
     </div>
+    <div v-else-if="achievements.loading">
+        Chargement des Achievements...
+    </div>
     <div v-else-if="stats.error" class="huge-text text-danger">
       Erreur lors du chargement des statistiques: {{stats.error}}
+    </div>
+    <div v-else-if="achievements.error" class="huge-text text-danger">
+        Erreur lors du chargement des achievements: {{stats.error}}
     </div>
     <div v-else class="Stats">
         <div class="User_info bg-dark-blur">
@@ -53,8 +64,23 @@ const handleSend = () => {
         </div>
         <div class="Stats_content bg-dark-blur">
             <div class="Stats_header">
-                <h1 class="DivTitle">Statistiques</h1>
-                <div class="headers-list">
+                <div class="headersTitlesSelect">
+                    <div class="headerStatistique" :style="{opacity: openedTab === 'stats' ? 1 : 0.5}">
+                        <h1 class="DivTitle" @click="openedTab = 'stats'">Statistiques</h1>
+                    </div>
+                    <div class="headerAchievements" :style="{opacity: openedTab === 'achievements' ? 1 : 0.5}">
+                        <h1 class="DivTitle" @click="openedTab = 'achievements'">Achievements</h1>
+                    </div>
+                </div>
+
+                <div v-if="openedTab === 'achievements'" class="headers-list">
+                    <span>Achievement</span>
+                    <div style="display:flex; column-gap: 1rem;">
+                        <span><svg-icon class="shadow-white" :fa-icon="statIcon" :size="26"/></span>
+                        <span><svg-icon class="shadow-white" :fa-icon="giftIcon" :size="26"/></span>
+                    </div>
+                </div>
+                <div v-if="openedTab === 'stats'" class="headers-list">
                     <span>Statistique</span>
                     <div style="display:flex; column-gap: 1rem;">
                         <span><svg-icon class="shadow-white" :fa-icon="statIcon" :size="26"/></span>
@@ -62,7 +88,7 @@ const handleSend = () => {
                     </div>
                 </div>
             </div>
-            <ul class="stats-list">
+            <ul v-if="openedTab === 'stats'" class="stats-list">
                 <li class="stat-item" :class="{'legendaire-text': stats.totalCards.rank === 1}">
                     <span>Nombre total de cartes</span>
                     <span class="stat-item-value">
@@ -96,6 +122,13 @@ const handleSend = () => {
                     <span class="stat-item-value">
                         <span>{{ stats.totalCardWithAStatMaxed.stat }}</span>
                         <span>{{ stats.totalCardWithAStatMaxed.rank }}</span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsFull10.rank === 1}">
+                    <span>Nombre de cartes avec toutes les compétences à 10</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCardsFull10.stat }}</span>
+                        <span>{{ stats.totalCardsFull10.rank }}</span>
                     </span>
                 </li>
                 <li class="stat-item" :class="{'legendaire-text': stats.totalFailedCardsCauseOfCharisme.rank === 1}">
@@ -183,6 +216,79 @@ const handleSend = () => {
                     </span>
                 </li>
             </ul>
+
+            <ul v-if="openedTab === 'achievements'" class="stats-list">
+                <li class="stat-item" :class="{'legendaire-text': achievements.cardAtStat10.isClaimable}"
+                    @click="achievementsStore.claimAchievement('cardAtStat10');">
+                    <span>Obtenir une carte avec une statistique à 10</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.cardAtStat10.value}} / 1</span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.cardAtStat10.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.doublon.isClaimable}"
+                    @click="achievementsStore.claimAchievement('doublon');">
+                    <span>Obtenir votre premier doublon</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.doublon.value}} / 1</span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.doublon.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.each5Cuisine.isClaimable}"
+                    @click="achievementsStore.claimAchievement('each5Cuisine');">
+                    <span>Passer de 5 levels du bâtiment cuisine</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.each5Cuisine.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5Cuisine.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.each5SalleDeSport.isClaimable}"
+                    @click="achievementsStore.claimAchievement('each5SalleDeSport');">
+                    <span>Passer 5 levels du bâtiment salle de sport</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.each5SalleDeSport.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5SalleDeSport.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.each5Spatioport.isClaimable}"
+                    @click="achievementsStore.claimAchievement('each5Spatioport');">
+                    <span>Passer 5 levels du bâtiment spatioport</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.each5Spatioport.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5Spatioport.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.cardAtFull10.isClaimable}"
+                    @click="achievementsStore.claimAchievement('cardAtFull10');">
+                    <span>Avoir une carte ayant des stats FULL 10</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.cardAtFull10.value}} / 1</span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.cardAtFull10.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.charismCasinoWin.isClaimable}"
+                    @click="achievementsStore.claimAchievement('charismCasinoWin');">
+                    <span>Gagner 1 fois au casino</span>
+                    <span class="stat-item-value">
+                        <span>{{ achievements.charismCasinoWin.value}} / 1</span>
+                        <span>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.charismCasinoWin.isClaimable}" style="margin: auto;" :size="16"/>
+                        </span>
+                    </span>
+                </li>
+            </ul>
         </div>
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
         <div v-else class="SendNotification bg-dark-blur">
@@ -263,6 +369,26 @@ const handleSend = () => {
     z-index: 1;
 }
 
+.headersTitlesSelect {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0 1rem;
+}
+
+.headersTitlesSelect > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.headersTitlesSelect > div:hover {
+    cursor: pointer;
+}
+
 .headers-list {
     width: 100%;
     display: flex;
@@ -281,6 +407,7 @@ const handleSend = () => {
     box-shadow: inset 0 0 1rem 0.5rem black;
     padding: 1rem;
     overflow-y: auto;
+    height: 40rem;
 }
 
 .stat-item {
@@ -300,6 +427,7 @@ const handleSend = () => {
     color: #fff;
     display: flex;
     column-gap: 1rem;
+    align-items: center;
 }
 
 .stat-item:hover {
@@ -340,7 +468,7 @@ const handleSend = () => {
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     max-height: 35rem;
-    width: 34.5rem;
+    width: auto;
     z-index: 1;
 
     @media (max-width: 1023px) {

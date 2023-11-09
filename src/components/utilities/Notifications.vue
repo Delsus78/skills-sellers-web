@@ -26,7 +26,7 @@ const deleteNotification = (id) => {
 
 <template>
     <div v-if="notifications.loading">
-        <p class="huge-text">Chargement des notifications...</p>
+        <p class="shadow-white">Chargement des notifications...</p>
     </div>
     <div v-else class="Notifications bg-dark-blur">
         <div class="Notifications_header">

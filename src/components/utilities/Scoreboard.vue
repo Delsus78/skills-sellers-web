@@ -25,7 +25,7 @@
                 class="player-item" :class="
                 {
                     'legendaire-text': player.nbCards === maxCardNumber,
-                    'epic-text': player.nbCards >= thirdQuartile && player.nbCards < maxCardNumber,
+                    'epic-text': player.nbCards >= secondQuartile && player.nbCards < maxCardNumber,
                     'commun-text': player.nbCards >= firstQuartile && player.nbCards < secondQuartile
                 }"
                 @click="router.push('/stats/'+player.id);">
@@ -46,10 +46,9 @@ import {router} from "@/helpers";
 
 const emit = defineEmits(['reload']);
 
-const maxCardNumber = 118;
-const firstQuartile = 30;
-const secondQuartile = 60;
-const thirdQuartile = 90;
+const maxCardNumber = 126;
+const firstQuartile = 42;
+const secondQuartile = 82;
 
 const { players } = defineProps({
     players: {

@@ -31,6 +31,10 @@ export const useUsersStore = defineStore({
                 "stat": 20,
                 "rank": 3
             },
+            "totalCardsFull10": {
+                "stat": 20,
+                "rank": 3
+            },
             "totalMessagesSent": {
                 "stat": 28,
                 "rank": 3
