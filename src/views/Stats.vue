@@ -288,6 +288,16 @@ const handleSend = () => {
                         </span>
                     </span>
                 </li>
+                <li class="stat-item" :class="{'legendaire-text': achievements.got100RocketLaunched.isClaimable}"
+                    @click="achievementsStore.claimAchievement('got100RocketLaunched');">
+                  <span>Lancer 100 fusées</span>
+                  <span class="stat-item-value">
+                          <span>{{ achievements.got100RocketLaunched.value}} / 1</span>
+                          <span>
+                              <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.got100RocketLaunched.isClaimable}" style="margin: auto;" :size="16"/>
+                          </span>
+                      </span>
+                </li>
             </ul>
         </div>
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>

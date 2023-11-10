@@ -38,6 +38,10 @@ export const useAchievementsStore = defineStore({
             "charismCasinoWin": {
                 "value": 0,
                 "isClaimable": true
+            },
+            "got100RocketLaunched": {
+                "value": 0,
+                "isClaimable": true
             }
         },
     }),
