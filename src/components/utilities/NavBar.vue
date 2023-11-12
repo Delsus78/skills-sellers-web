@@ -133,7 +133,7 @@ const openGiftCodePrompt = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.5</span>
+        <span class="version-text prevent-select">Version 1.6</span>
     </div>
 </template>
 <style scoped>

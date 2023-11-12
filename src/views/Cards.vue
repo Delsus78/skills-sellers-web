@@ -18,6 +18,10 @@
                 <option value="ameliorer">Améliorer</option>
                 <option value="!">Ne fais rien</option>
             </select>
+            <select v-model="endingDateFilter">
+                <option value="">Trier par date ...</option>
+                <option value="endingsoon">Fin proche</option>
+            </select>
             <select v-model="competenceFilter">
                 <option value="">Trier par compétence...</option>
                 <option value="cuisine">Cuisine</option>
@@ -53,19 +57,21 @@
 </template>
 <script setup>
 import Card from "@/components/utilities/Card.vue";
-import { useCardsStore, useActionsStore } from "@/stores";
+import {useCardsStore, useActionsStore, useFiltersStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";
 
 const cardsStore = useCardsStore();
+const filtersStore = useFiltersStore();
 const actionsStore = useActionsStore();
 const { cards } = storeToRefs(cardsStore);
 
-const searchText = ref('');
-const collectionFilter = ref('');
-const rarityFilter = ref('');
-const actionFilter = ref('');
-const competenceFilter = ref('');
+const searchText = ref(filtersStore.filters?.searchText ?? '');
+const collectionFilter = ref(filtersStore.filters?.collectionFilter ?? '');
+const rarityFilter = ref(filtersStore.filters?.rarityFilter ?? '');
+const actionFilter = ref(filtersStore.filters?.actionFilter ?? '');
+const endingDateFilter = ref(filtersStore.filters?.endingDateFilter ?? '');
+const competenceFilter = ref(filtersStore.filters?.competenceFilter ?? '');
 
 const filteredList = computed(() => {
     let result = cards.value;
@@ -113,6 +119,28 @@ const filteredList = computed(() => {
             return bCompetence - aCompetence;
         });
     }
+
+    if (endingDateFilter.value) {
+        // fin proche
+        if (endingDateFilter.value === 'endingsoon') {
+            result = result.filter(item => item.action?.endTime);
+            result = result.sort((a, b) => {
+                const aDate = new Date(a.action?.endTime) - new Date();
+                const bDate = new Date(b.action?.endTime) - new Date();
+                return aDate - bDate;
+            });
+        }
+    }
+
+    // save filters
+    filtersStore.setFilters({
+        searchText: searchText.value,
+        collectionFilter: collectionFilter.value,
+        rarityFilter: rarityFilter.value,
+        actionFilter: actionFilter.value,
+        endingDateFilter: endingDateFilter.value,
+        competenceFilter: competenceFilter.value,
+    });
 
     return result;
 });
