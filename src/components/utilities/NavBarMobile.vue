@@ -130,7 +130,7 @@ const unrollNavBar = () => {
     </div>
 
     <div class="version">
-        <span class="version-text prevent-select">Version 1.5</span>
+        <span class="version-text prevent-select">Version 1.6</span>
     </div>
 </template>
 
