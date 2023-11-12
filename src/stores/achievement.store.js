@@ -42,6 +42,10 @@ export const useAchievementsStore = defineStore({
             "got100RocketLaunched": {
                 "value": 0,
                 "isClaimable": true
+            },
+            "got100FailCharism": {
+                "value": 0,
+                "isClaimable": true
             }
         },
     }),
