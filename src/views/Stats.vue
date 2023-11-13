@@ -292,7 +292,7 @@ const handleSend = () => {
                     @click="achievementsStore.claimAchievement('got100RocketLaunched');">
                   <span>Lancer 100 fusées</span>
                   <span class="stat-item-value">
-                          <span>{{ achievements.got100RocketLaunched.value}} / 1</span>
+                          <span>{{ achievements.got100RocketLaunched.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
                           <span>
                               <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.got100RocketLaunched.isClaimable}" style="margin: auto;" :size="16"/>
                           </span>
@@ -302,7 +302,7 @@ const handleSend = () => {
                     @click="achievementsStore.claimAchievement('got100FailCharism');">
                   <span>Echouer 100 fois à cause du charisme</span>
                   <span class="stat-item-value">
-                            <span>{{ achievements.got100FailCharism.value}} / 1</span>
+                            <span>{{ achievements.got100FailCharism.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
                             <span>
                                 <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.got100FailCharism.isClaimable}" style="margin: auto;" :size="16"/>
                             </span>
