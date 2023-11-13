@@ -90,6 +90,12 @@ const tradeWithBonnBouff = () => {
         <div v-if="buildings.loading">
             <p class="huge-text">Chargement des bâtiments...</p>
         </div>
+        <div v-else-if="cards.loading">
+            <p class="huge-text">Chargement des cartes...</p>
+        </div>
+        <div v-else-if="cards.error" class="huge-text text-danger">
+            Erreur lors du chargement des cartes: {{cards.error}}
+        </div>
         <div v-else-if="buildings.error" class="huge-text text-danger">
             Erreur lors du chargement des bâtiments: {{buildings.error}}
         </div>
