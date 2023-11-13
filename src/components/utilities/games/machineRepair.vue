@@ -4,7 +4,7 @@ import {useCardsStore, useGamesStore, useMainStore, useUsersStore} from "@/store
 import {storeToRefs} from "pinia";
 import {faCoins as moneyIcon} from "@fortawesome/free-solid-svg-icons";
 import {ref, watch} from "vue";
-import ListSelector from "@/components/utilities/CardListSelector.vue";
+import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import GearsBackground from "@/components/utilities/GearsBackground.vue";
 import InfoBulle from "@/components/utilities/InfoBulle.vue";
 

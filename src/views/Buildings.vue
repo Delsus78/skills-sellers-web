@@ -4,7 +4,7 @@ import {storeToRefs} from "pinia";
 import BatimentElement from "@/components/utilities/BatimentElement.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {ref, watch} from "vue";
-import ListSelector from "@/components/utilities/CardListSelector.vue";
+import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import ActionForm from "@/components/utilities/ActionForm.vue";
 import MarchandRocket from "@/components/utilities/MarchandRocket.vue";
 import BonnBouff from "@/components/utilities/BonnBouff.vue";

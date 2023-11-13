@@ -28,7 +28,7 @@
 <script setup>
 import ScratchEffect from '@/components/utilities/ScratchEffect.vue';
 import {onMounted, ref} from "vue";
-import Card from "@/components/utilities/Card.vue";
+import Card from "@/components/utilities/cards/Card.vue";
 import {router} from "@/helpers";
 
 import {useActionsStore} from "@/stores";

@@ -48,7 +48,7 @@
 <script setup>
 import draggable from 'vuedraggable';
 import {computed, ref, watch} from "vue";
-import CardListElement from "@/components/utilities/CardListElement.vue";
+import CardListElement from "@/components/utilities/cards/CardListElement.vue";
 import {useFiltersStore} from "@/stores";
 
 const { title, objects, isDroppedZone, maxCardAutorized, withFilters, selectedAction } = defineProps({
@@ -92,7 +92,6 @@ const searchText = ref(filtersStore.filters?.searchText ?? '');
 const collectionFilter = ref(filtersStore.filters?.collectionFilter ?? '');
 const rarityFilter = ref(filtersStore.filters?.rarityFilter ?? '');
 const actionFilter = ref(filtersStore.filters?.actionFilter ?? '');
-const endingDateFilter = ref(filtersStore.filters?.endingDateFilter ?? '');
 const competenceFilter = ref(filtersStore.filters?.competenceFilter ?? '');
 
 const filteredList = computed(() => {
@@ -143,25 +142,12 @@ const filteredList = computed(() => {
         });
     }
 
-    if (endingDateFilter.value) {
-        // fin proche
-        if (endingDateFilter.value === 'endingsoon') {
-            result = result.filter(item => item.action?.endTime);
-            result = result.sort((a, b) => {
-                const aDate = new Date(a.action?.endTime) - new Date();
-                const bDate = new Date(b.action?.endTime) - new Date();
-                return aDate - bDate;
-            });
-        }
-    }
-
     // save filters
     filtersStore.setFilters({
         searchText: searchText.value,
         collectionFilter: collectionFilter.value,
         rarityFilter: rarityFilter.value,
         actionFilter: actionFilter.value,
-        endingDateFilter: endingDateFilter.value,
         competenceFilter: competenceFilter.value,
     });
 

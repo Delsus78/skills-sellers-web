@@ -10,7 +10,7 @@ import {
     faStar as chariIcon
 } from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
-import CardListElement from "@/components/utilities/CardListElement.vue";
+import CardListElement from "@/components/utilities/cards/CardListElement.vue";
 
 const authStore = useAuthStore();
 const cardsStore = useCardsStore();
@@ -29,11 +29,17 @@ const competencesToAdd = ref({
 });
 
 usersStore.getUser(authUser.value.id).then(async (_) => {
-    if (user.value.cardsDoubledIds.length === 0) {
+    if (user.value.cardsDoublons.length === 0) {
         error.value = "Vous n'avez pas de carte à doubler";
     }
 
-    card.value = await cardsStore.getUserCard(authUser.value.id, user.value.cardsDoubledIds[0]);
+    // sort cards by last id
+    user.value.cardsDoublons.sort((a, b) => {
+        return b.doublonId - a.doublonId;
+    });
+
+    console.log(user.value.cardsDoublons[0].cardId);
+    card.value = await cardsStore.getUserCard(authUser.value.id, user.value.cardsDoublons[0].cardId);
 })
 
 watch(card, () => {

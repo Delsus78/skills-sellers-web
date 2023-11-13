@@ -2,7 +2,7 @@
 
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {onMounted, ref} from "vue";
-import Card from "@/components/utilities/Card.vue";
+import Card from "@/components/utilities/cards/Card.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {
     faAnglesUp as upgradeIcon,

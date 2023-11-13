@@ -1,7 +1,7 @@
 <script setup>
 import {useCardsStore, useGamesStore, useMainStore, useAuthStore} from "@/stores";
-import CardListSelector from "@/components/utilities/CardListSelector.vue";
-import ListSelector from "@/components/utilities/CardListSelector.vue";
+import CardListSelector from "@/components/utilities/cards/CardListSelector.vue";
+import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import {storeToRefs} from "pinia";
 import {computed, onBeforeMount, ref, watch} from "vue";
 import SpinWheel from "@/components/utilities/SpinWheel.vue";
