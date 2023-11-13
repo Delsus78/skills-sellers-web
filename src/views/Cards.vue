@@ -56,7 +56,7 @@
     </div>
 </template>
 <script setup>
-import Card from "@/components/utilities/Card.vue";
+import Card from "@/components/utilities/cards/Card.vue";
 import {useCardsStore, useActionsStore, useFiltersStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";

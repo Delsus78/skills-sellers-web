@@ -60,11 +60,11 @@ const openGiftCodePrompt = () => {
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="40" />
                 </span>
             </RouterLink>
-            <RouterLink v-if="user.cardsDoubledIds?.length > 0" to="/upgrade"
+            <RouterLink v-if="user.cardsDoublons?.length > 0" to="/upgrade"
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'"
                         class="nav-item">
                 <span class="colored">
-                    {{ user.cardsDoubledIds?.length }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
+                    {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
                 </span>
             </RouterLink>
             <RouterLink to="/"
@@ -133,7 +133,7 @@ const openGiftCodePrompt = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.6</span>
+        <span class="version-text prevent-select">Version 1.7</span>
     </div>
 </template>
 <style scoped>

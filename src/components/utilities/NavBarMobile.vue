@@ -68,10 +68,10 @@ const unrollNavBar = () => {
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="30" />
                 </span>
             </RouterLink>
-            <RouterLink class="nav-item" v-if="user.cardsDoubledIds?.length > 0" to="/upgrade"
+            <RouterLink class="nav-item" v-if="user.cardsDoublons?.length > 0" to="/upgrade"
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'">
                 <span class="colored">
-                    {{ user.cardsDoubledIds?.length }}<svg-icon :fa-icon="upgradeIcon" :size="30" />
+                    {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="30" />
                 </span>
             </RouterLink>
             <RouterLink class="nav-item" to="/"
@@ -130,7 +130,7 @@ const unrollNavBar = () => {
     </div>
 
     <div class="version">
-        <span class="version-text prevent-select">Version 1.6</span>
+        <span class="version-text prevent-select">Version 1.7</span>
     </div>
 </template>
 

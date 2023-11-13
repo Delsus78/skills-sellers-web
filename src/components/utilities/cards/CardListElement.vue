@@ -6,7 +6,7 @@ import {
     faStar as chariIcon,
     faCompass as exploIcon,
 } from "@fortawesome/free-solid-svg-icons";
-import {getFormattedRemainingTime} from "./DateFormator";
+import {getFormattedRemainingTime} from "../DateFormator";
 
 const { card } = defineProps({
     card: {

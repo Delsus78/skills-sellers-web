@@ -91,10 +91,10 @@
 </template>
 
 <script setup>
-import {VanillaTilt} from "./VanillaTilt";
+import {VanillaTilt} from "../VanillaTilt";
 import {onMounted, onUnmounted} from "vue";
 import { ref } from "vue";
-import {getFormattedRemainingTime, format, getClearRemainingTime, getPourcentageRemainingTime} from "./DateFormator";
+import {getFormattedRemainingTime, format, getClearRemainingTime, getPourcentageRemainingTime} from "../DateFormator";
 import {
     faHome as homeIcon,
     faArrowLeft as rightArrowIcon,
