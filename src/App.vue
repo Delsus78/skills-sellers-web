@@ -1,7 +1,7 @@
 <script setup>
 import {RouterView, useRoute} from "vue-router";
 import NavBar from "@/components/utilities/NavBar.vue";
-import {useAuthStore, useCardsStore, useNotificationStore, useMainStore} from '@/stores';
+import {useAuthStore, useCardsStore, useNotificationStore, useMainStore, useSettingsStore} from '@/stores';
 import {computed, onMounted, watch} from "vue";
 import Background from "@/components/utilities/background.vue";
 import 'moment/locale/fr';
@@ -11,10 +11,12 @@ const authStore = useAuthStore();
 const notifStore = useNotificationStore();
 const cardsStore = useCardsStore();
 const mainStore = useMainStore();
+const settingsStore = useSettingsStore();
 const route=useRoute();
 const path = computed(() =>route.path.split('/')[1]);
 const { user } = storeToRefs(authStore);
 const { backgroundColor, isMobileSize } = storeToRefs(mainStore);
+const { isStarsActive } = storeToRefs(settingsStore);
 
 const onResize = () => {
     mainStore.setIsMobileSize(window.innerWidth < 1023);
@@ -37,7 +39,7 @@ watch(path, () => {
 
 </script>
 <template>
-    <background v-if="!isMobileSize || !authStore.user" :color="backgroundColor" :key="backgroundColor"/>
+    <background v-if="(!isMobileSize || !authStore.user) && (isStarsActive ?? true)" :color="backgroundColor" :key="backgroundColor"/>
     <NavBar v-if="authStore.user && !isMobileSize" :page-name="path"/>
     <NavBarMobile v-if="authStore.user && isMobileSize" :page-name="path"/>
     <RouterView/>

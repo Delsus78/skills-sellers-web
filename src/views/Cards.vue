@@ -57,12 +57,12 @@
 </template>
 <script setup>
 import Card from "@/components/utilities/cards/Card.vue";
-import {useCardsStore, useActionsStore, useFiltersStore} from "@/stores";
+import {useCardsStore, useActionsStore, useSettingsStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";
 
 const cardsStore = useCardsStore();
-const filtersStore = useFiltersStore();
+const filtersStore = useSettingsStore();
 const actionsStore = useActionsStore();
 const { cards } = storeToRefs(cardsStore);
 

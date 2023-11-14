@@ -19,7 +19,9 @@ import {
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
+    faGear as settingsIcon,
 } from "@fortawesome/free-solid-svg-icons";
+import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const giftStore = useGiftStore();
@@ -29,6 +31,7 @@ const { actualUser: user } = storeToRefs(usersStore);
 usersStore.getUser(authUser.value.id);
 
 const isHovered = ref(false);
+const isSettingsTabOpened = ref(false);
 
 const { pageName } = defineProps({
     pageName: {
@@ -42,6 +45,10 @@ const openGiftCodePrompt = () => {
     if (code) {
         giftStore.enterGiftCode(code);
     }
+}
+
+const openSettingsTab = () => {
+    isSettingsTabOpened.value = !isSettingsTabOpened.value;
 }
 
 </script>
@@ -101,11 +108,12 @@ const openGiftCodePrompt = () => {
                v-tooltip:bottom.tooltip="'Code cadeau'"
                class="nav-item"><svg-icon class="green" :fa-icon="giftCodeIcon" :size="36"/></a>
         </div>
-
+        <Settings :style="{display: isSettingsTabOpened ? 'block' : 'none'}" class="bg-dark-blur"/>
         <div class="player-infos">
             <span class="pseudoText">{{authUser.pseudo}}</span>
             <a @click="authStore.logout()"><svg-icon class="logout shadow-white" :fa-icon="leaveIcon" :size="26"/></a>
             <RouterLink :to="`/rules`"><svg-icon class="rules" :fa-icon="rulesIcon" :size="26"/></RouterLink>
+            <a @click="openSettingsTab"><svg-icon class="settings" :fa-icon="settingsIcon" :size="26"/></a>
             <div class="resources bg-dark-blur"
                  @mouseenter="isHovered = true"
                  @mouseleave="isHovered = false">
@@ -133,7 +141,7 @@ const openGiftCodePrompt = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.7</span>
+        <span class="version-text prevent-select">Version 1.8</span>
     </div>
 </template>
 <style scoped>
@@ -241,6 +249,21 @@ h1 {
     transition: all 0.2s ease-in-out;
     text-decoration: none;
     color: lightgrey;
+}
+
+.player-infos .settings {
+    position: fixed;
+    right: 19rem;
+    top: 2.5rem;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: lightgrey;
+}
+
+.player-infos .settings:hover {
+    color: var(--vt-c-blue-1);
+    cursor: pointer;
+    filter: drop-shadow(0 0 4px var(--vt-c-black));
 }
 
 .player-infos .rules:hover {

@@ -5,7 +5,7 @@ import { useChatStore } from "@/stores";
 import {storeToRefs} from "pinia";
 
 const chatStore = useChatStore();
-const { messages, isConnected, error } = storeToRefs(chatStore);
+const { messages, isConnected, error, connectedUsers } = storeToRefs(chatStore);
 
 const messageToSend = ref("");
 
@@ -50,6 +50,9 @@ function globalKeyHandler(e) {
         <div class="header">
             <h2 class="DivTitle">GLOBAL CHAT</h2>
         </div>
+        <div class="header-information">
+            <p class="subtitle">{{ connectedUsers }} Joueur{{connectedUsers === 1 ? '' : 's'}}</p>
+        </div>
         <div class="messages" ref="messageContainer">
             <div v-for="msg in messages" :key="msg.message" class="message">
                 <strong class="message-user">{{ msg.user }}</strong>
@@ -91,6 +94,14 @@ function globalKeyHandler(e) {
 
 .GlobalChat .header {
     grid-area: title;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-information {
+    margin: 1rem auto;
+    grid-area: information;
     display: flex;
     justify-content: space-between;
     align-items: center;
