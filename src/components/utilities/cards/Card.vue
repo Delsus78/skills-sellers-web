@@ -1,7 +1,7 @@
 <!-- GameCard.vue -->
 <template>
     <div class="overlay" :class="{ active: isActive }"></div>
-    <a class="favoriteToggle" @click="switchFavorite">
+    <a class="favoriteToggle" @click="switchFavorite" v-if="!hideFavorite">
         <svg-icon v-if="isFavorite" class="colorEffect shadow-white" :fa-icon="heartIcon" :size="36"/>
         <svg-icon v-else class="shadow-white" :fa-icon="heartEmptyIcon" :size="36"/>
     </a>
@@ -111,7 +111,7 @@ import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, collection, rarity, competences, action, isFavorite } = defineProps({
+const { id, name, imageUrl, description, collection, rarity, competences, action, isFavorite, hideFavorite } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -158,6 +158,11 @@ const { id, name, imageUrl, description, collection, rarity, competences, action
         default: () => {}
     },
     isFavorite: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    hideFavorite: {
         type: Boolean,
         required: false,
         default: false
