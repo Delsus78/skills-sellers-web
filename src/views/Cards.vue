@@ -30,6 +30,7 @@
                 <option value="exploration">Exploration</option>
                 <option value="intelligence">Intelligence</option>
             </select>
+            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
         </div>
         <div v-if="cards.length" class="cards">
             <div class="card" v-for="card in filteredList">
@@ -42,7 +43,8 @@
                       :rarity="card.rarity"
                       :collection="card.collection"
                       :action="card.action"
-                      @cancel-action="cancelAction"/>
+                      :isFavorite="favoritesIds.includes(card.id)"
+                      @cancel-action="cancelAction" @switch-favorite="switchFavorite(card.id)"/>
             </div>
 
         </div>
@@ -57,14 +59,17 @@
 </template>
 <script setup>
 import Card from "@/components/utilities/cards/Card.vue";
-import {useCardsStore, useActionsStore, useSettingsStore} from "@/stores";
+import {useCardsStore, useActionsStore, useSettingsStore, useMainStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref} from "vue";
+import {faArrowRotateBackward as resetIcon} from "@fortawesome/free-solid-svg-icons";
 
 const cardsStore = useCardsStore();
 const filtersStore = useSettingsStore();
 const actionsStore = useActionsStore();
+const mainStore = useMainStore();
 const { cards } = storeToRefs(cardsStore);
+const { favoritesIds } = storeToRefs(mainStore);
 
 const searchText = ref(filtersStore.filters?.searchText ?? '');
 const collectionFilter = ref(filtersStore.filters?.collectionFilter ?? '');
@@ -142,6 +147,17 @@ const filteredList = computed(() => {
         competenceFilter: competenceFilter.value,
     });
 
+    // sort favorites first
+    result.sort((a, b) => {
+        if (favoritesIds.value.includes(a.id) && !favoritesIds.value.includes(b.id)) {
+            return -1;
+        } else if (!favoritesIds.value.includes(a.id) && favoritesIds.value.includes(b.id)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+
     return result;
 });
 
@@ -154,6 +170,32 @@ onMounted(() => {
 
 const cancelAction = async (cardId) => {
     await actionsStore.deleteAction(cardId);
+}
+
+const switchFavorite = async (cardId) => {
+    if (favoritesIds.value.includes(cardId)) {
+        await mainStore.removeFavoriteId(cardId);
+    } else {
+        await mainStore.addFavoriteId(cardId);
+    }
+}
+
+const resetFilters = () => {
+    searchText.value = '';
+    collectionFilter.value = '';
+    rarityFilter.value = '';
+    actionFilter.value = '';
+    endingDateFilter.value = '';
+    competenceFilter.value = '';
+
+    filtersStore.setFilters({
+        searchText: '',
+        collectionFilter: '',
+        rarityFilter: '',
+        actionFilter: '',
+        endingDateFilter: '',
+        competenceFilter: '',
+    });
 }
 
 </script>
@@ -203,6 +245,12 @@ const cancelAction = async (cardId) => {
     background: rgba(199, 175, 175, 0.1);
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
+}
+
+.filter-controls svg:hover {
+    cursor: pointer;
+    color: rgba(199, 175, 175, 0.35);
+    scale: 1.1;
 }
 
 .filter-controls select option {

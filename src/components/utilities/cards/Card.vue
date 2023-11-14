@@ -1,6 +1,10 @@
 <!-- GameCard.vue -->
 <template>
     <div class="overlay" :class="{ active: isActive }"></div>
+    <a class="favoriteToggle" @click="switchFavorite">
+        <svg-icon v-if="isFavorite" class="colorEffect shadow-white" :fa-icon="heartIcon" :size="36"/>
+        <svg-icon v-else class="shadow-white" :fa-icon="heartEmptyIcon" :size="36"/>
+    </a>
     <div :class="['card', rarity, { active: isActive }]"
          @click="toggleActive"
          data-tilt
@@ -99,13 +103,15 @@ import {
     faHome as homeIcon,
     faArrowLeft as rightArrowIcon,
     faArrowRight as leftArrowIcon,
-    faEarthEurope as planetIcon
+    faEarthEurope as planetIcon,
+    faHeartCircleCheck as heartIcon,
+    faHeart as heartEmptyIcon
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, collection, rarity, competences, action } = defineProps({
+const { id, name, imageUrl, description, collection, rarity, competences, action, isFavorite } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -150,10 +156,15 @@ const { id, name, imageUrl, description, collection, rarity, competences, action
         type: Object,
         required: false,
         default: () => {}
+    },
+    isFavorite: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 
 });
-const emit = defineEmits(['cancelAction']);
+const emit = defineEmits(['cancelAction', 'switchFavorite']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
 let intervalId;
@@ -181,6 +192,10 @@ function updateDates() {
 
 function toggleActive() {
     isActive.value = !isActive.value;
+}
+
+function switchFavorite() {
+    emit('switchFavorite');
 }
 
 </script>
@@ -218,6 +233,18 @@ function toggleActive() {
     transform-style: preserve-3d;
     transform: perspective(1000px);
     z-index: 1;
+}
+
+.favoriteToggle {
+    position: absolute;
+    transform: translate(300%, 0);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.favoriteToggle svg {
+    color: white;
+    font-size: 2rem;
 }
 
 .card.active {

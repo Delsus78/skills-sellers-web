@@ -59,7 +59,6 @@ export default {
     },
     watch: {
         animate(newVal) {
-            console.log(newVal);
             if (newVal) {
                 this.startAnimation();
             }

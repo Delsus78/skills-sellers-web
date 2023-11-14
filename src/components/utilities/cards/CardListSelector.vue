@@ -29,6 +29,7 @@
                 <option value="exploration">Exploration</option>
                 <option value="intelligence">Intelligence</option>
             </select>
+            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
         </div>
 
         <div v-if="isDroppedZone && list.length === 0" class="items-list plus">+</div>
@@ -50,6 +51,7 @@ import draggable from 'vuedraggable';
 import {computed, ref, watch} from "vue";
 import CardListElement from "@/components/utilities/cards/CardListElement.vue";
 import {useSettingsStore} from "@/stores";
+import {faArrowRotateBackward as resetIcon} from "@fortawesome/free-solid-svg-icons";
 
 const { title, objects, isDroppedZone, maxCardAutorized, withFilters, selectedAction } = defineProps({
     title: {
@@ -180,6 +182,23 @@ const selectedActionCompetence = computed(() => {
             return "";
     }
 });
+
+const resetFilters = () => {
+    searchText.value = '';
+    collectionFilter.value = '';
+    rarityFilter.value = '';
+    actionFilter.value = '';
+    competenceFilter.value = '';
+
+    filtersStore.setFilters({
+        searchText: '',
+        collectionFilter: '',
+        rarityFilter: '',
+        actionFilter: '',
+        endingDateFilter: '',
+        competenceFilter: '',
+    });
+}
 
 const updateList = (newList) => {
     searchText.value = "";
@@ -349,4 +368,11 @@ watch(objects, (newValue) => {
 .filter-controls select option:first-child {
     color: rgba(199, 175, 175, 0.35);
 }
+
+.filter-controls svg:hover {
+    cursor: pointer;
+    color: rgba(199, 175, 175, 0.35);
+    scale: 1.1;
+}
+
 </style>

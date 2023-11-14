@@ -606,10 +606,6 @@ onMounted(() => {
     transform: scale(0.5);
 }
 
-.colorEffect {
-    animation: colorChange 6s linear infinite;
-}
-
 .rulesCard h2 {
     text-align: center;
     font-size: 2rem;

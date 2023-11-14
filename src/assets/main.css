@@ -161,6 +161,10 @@ strong {
   font-weight: bold;
 }
 
+.colorEffect {
+  animation: colorChange 6s linear infinite;
+}
+
 .colored {
   display: flex;
   align-items: center;
