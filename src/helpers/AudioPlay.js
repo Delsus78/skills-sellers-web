@@ -5,9 +5,11 @@ export const PlayAudio = async (type) => {
     let audio = null;
     switch (type) {
         case 'msg':
+            if (localStorage.getItem('Settings_isGlobalChatSoundActive') === 'false') return;
             audio = msgSound;
             break;
         case 'oof':
+            if (localStorage.getItem('Settings_isNotifSoundActive') === 'false') return;
             audio = oof;
             break;
         default:

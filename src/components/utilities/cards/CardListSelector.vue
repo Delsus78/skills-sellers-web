@@ -49,7 +49,7 @@
 import draggable from 'vuedraggable';
 import {computed, ref, watch} from "vue";
 import CardListElement from "@/components/utilities/cards/CardListElement.vue";
-import {useFiltersStore} from "@/stores";
+import {useSettingsStore} from "@/stores";
 
 const { title, objects, isDroppedZone, maxCardAutorized, withFilters, selectedAction } = defineProps({
     title: {
@@ -85,7 +85,7 @@ const error = computed(() => {
 });
 
 const list = ref(objects);
-const filtersStore = useFiltersStore();
+const filtersStore = useSettingsStore();
 
 // autres propriétés réactives pour les filtres
 const searchText = ref(filtersStore.filters?.searchText ?? '');

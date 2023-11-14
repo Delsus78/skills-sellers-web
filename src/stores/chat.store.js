@@ -10,6 +10,7 @@ export const useChatStore = defineStore({
     state: () => ({
         messages: [],
         connection: null,
+        connectedUsers: 0,
         isConnected: false,
         error: null
     }),
@@ -30,6 +31,14 @@ export const useChatStore = defineStore({
 
                 // play sound
                 await PlayAudio('msg');
+            });
+
+            // Gérer le nombre de connectés
+            this.connection.on("UserConnected", async (connectedUsers) => {
+                this.connectedUsers = connectedUsers;
+
+                // play sound
+                await PlayAudio('connect');
             });
 
             // Démarrer la connexion
