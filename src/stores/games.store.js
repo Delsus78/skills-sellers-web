@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
-import { fetchWrapper } from '@/helpers';
+import {fetchWrapper} from '@/helpers';
 import {useAuthStore} from "@/stores/auth.store";
 import {useUsersStore} from "@/stores/users.store";
 import {useCardsStore} from "@/stores/cards.store";
@@ -27,6 +27,7 @@ export const useGamesStore = defineStore({
             "name": "string",
             "chances": 0,
             "results": 0,
+            "error": "string",
             "win": true
         }
     }),
@@ -69,13 +70,11 @@ export const useGamesStore = defineStore({
 
             this.gameEstimation = { loading: true };
             let usedUrl = baseUrl + `/${user.id}/gameOfTheDay/estimate`;
-            let response = await fetchWrapper.post(usedUrl, {Name:gameName, bet, cardsIds})
+            this.gameEstimation = await fetchWrapper.post(usedUrl, {Name: gameName, bet, cardsIds})
                 .catch(error => {
                     console.error(error);
                     return this.gameEstimation = {error};
                 });
-
-            this.gameEstimation = response;
         },
         async validateWordForWordleGame(gameName, word){
             const { user } = useAuthStore();

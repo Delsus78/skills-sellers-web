@@ -83,7 +83,6 @@ const play = () => {
 }
 
 watch(gameResponse, (newVal) => {
-    console.log(newVal);
     if (!newVal?.results) {
         return;
     }
