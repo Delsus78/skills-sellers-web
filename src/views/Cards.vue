@@ -1,6 +1,7 @@
 <template>
     <div class="cardsWrapper">
         <div class="filter-controls" v-if="cards?.length">
+            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
             <input type="text" v-model="searchText" placeholder="Rechercher par nom..." />
             <input type="text" v-model="collectionFilter" placeholder="Filtrer par collection..." />
             <select v-model="rarityFilter">
@@ -30,7 +31,6 @@
                 <option value="exploration">Exploration</option>
                 <option value="intelligence">Intelligence</option>
             </select>
-            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
         </div>
         <div v-if="cards.length" class="cards">
             <div class="card" v-for="card in filteredList">

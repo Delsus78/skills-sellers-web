@@ -4,6 +4,7 @@
             <h1 class="DivTitle">{{ title }}</h1>
         </div>
         <div class="filter-controls" v-show="withFilters">
+            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
             <input type="text" v-model="searchText" placeholder="Rechercher par nom..." />
             <input type="text" v-model="collectionFilter" placeholder="Filtrer par collection..." />
             <select v-model="rarityFilter">
@@ -29,7 +30,6 @@
                 <option value="exploration">Exploration</option>
                 <option value="intelligence">Intelligence</option>
             </select>
-            <a @click="resetFilters"><svg-icon :fa-icon="resetIcon" :size="30"/></a>
         </div>
 
         <div v-if="isDroppedZone && list.length === 0" class="items-list plus">+</div>
