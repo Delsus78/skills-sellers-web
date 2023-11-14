@@ -18,7 +18,7 @@
                :competences="cardInfo.competences"
                :rarity="cardInfo.rarity"
                :collection="cardInfo.collection"
-               :action="cardInfo.action"/>
+               :action="cardInfo.action" hide-favorite />
           </div>
       </ScratchEffect>
       <button class="validateOpening swipe-overlay-out" @click="router.push('/cards/');">Passer</button>
