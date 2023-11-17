@@ -90,11 +90,11 @@ const list = ref(objects);
 const filtersStore = useSettingsStore();
 
 // autres propriétés réactives pour les filtres
-const searchText = ref(filtersStore.filters?.searchText ?? '');
-const collectionFilter = ref(filtersStore.filters?.collectionFilter ?? '');
-const rarityFilter = ref(filtersStore.filters?.rarityFilter ?? '');
-const actionFilter = ref(filtersStore.filters?.actionFilter ?? '');
-const competenceFilter = ref(filtersStore.filters?.competenceFilter ?? '');
+const searchText = ref('');
+const collectionFilter = ref('');
+const rarityFilter = ref('');
+const actionFilter = ref('');
+const competenceFilter = ref('');
 
 const filteredList = computed(() => {
     let result = list.value;
@@ -143,15 +143,6 @@ const filteredList = computed(() => {
             return bCompetence - aCompetence;
         });
     }
-
-    // save filters
-    filtersStore.setFilters({
-        searchText: searchText.value,
-        collectionFilter: collectionFilter.value,
-        rarityFilter: rarityFilter.value,
-        actionFilter: actionFilter.value,
-        competenceFilter: competenceFilter.value,
-    });
 
     return result;
 });
