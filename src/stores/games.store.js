@@ -27,7 +27,7 @@ export const useGamesStore = defineStore({
             "name": "string",
             "chances": 0,
             "results": 0,
-            "error": "string",
+            "error": "",
             "win": true
         }
     }),

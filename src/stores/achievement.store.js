@@ -12,38 +12,7 @@ export const useAchievementsStore = defineStore({
     state: () => ({
         achievements: {
             "cardAtStat10": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "doublon": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "each5Cuisine": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "each5SalleDeSport": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "each5Spatioport": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "cardAtFull10": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "charismCasinoWin": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "got100RocketLaunched": {
-                "value": 0,
-                "isClaimable": true
-            },
-            "got100FailCharism": {
+                "title": "titre",
                 "value": 0,
                 "isClaimable": true
             }

@@ -31,6 +31,17 @@ usersStore.getAllUsers();
 usersStore.getStatsOfUser(userId);
 achievementsStore.getAchievementsOfUser(userId);
 
+const achievementsData = computed(() => {
+    return Object.entries(achievements.value).map(([key, value]) => ({
+        key,
+        title: value.title, // Supposez que chaque réalisation a un titre
+        value: value.value,
+        max: value.max || 1, // Vous pouvez définir une valeur par défaut
+        isClaimable: value.isClaimable,
+    }));
+});
+
+
 const user = computed(() => {
     if (users.value.loading || users.value.error) return null;
     return users.value.find(u => u.id.toString() === userId);
@@ -40,6 +51,7 @@ const handleSend = () => {
     notifStore.sendMessageToUser(userId, messageToSend.value);
     messageToSend.value = "";
 }
+
 </script>
 <template>
     <div v-if="stats.loading || !user">
@@ -187,6 +199,13 @@ const handleSend = () => {
                         <span>{{ stats.totalMealCooked.rank }}</span>
                     </span>
                 </li>
+                <li class="stat-item" :class="{'legendaire-text': stats.totalCollectionsCompleted.rank === 1}">
+                    <span>Nombre de collection complétées</span>
+                    <span class="stat-item-value">
+                        <span>{{ stats.totalCollectionsCompleted.stat }}</span>
+                        <span>{{ stats.totalCollectionsCompleted.rank }}</span>
+                    </span>
+                </li>
                 <li class="stat-item" :class="{'legendaire-text': stats.totalMachineUsed.rank === 1}">
                     <span>Nombre de machine E. Zeiss utilisées</span>
                     <span class="stat-item-value">
@@ -218,95 +237,15 @@ const handleSend = () => {
             </ul>
 
             <ul v-if="openedTab === 'achievements'" class="stats-list">
-                <li class="stat-item" :class="{'legendaire-text': achievements.cardAtStat10.isClaimable}"
-                    @click="achievementsStore.claimAchievement('cardAtStat10');">
-                    <span>Obtenir une carte avec une statistique à 10</span>
+                <li v-for="achievement in achievementsData" :key="achievement.key" class="stat-item" :class="{'legendaire-text': achievement.isClaimable}"
+                    @click="achievementsStore.claimAchievement(achievement.key);">
+                    <span>{{ achievement.title }}</span>
                     <span class="stat-item-value">
-                        <span>{{ achievements.cardAtStat10.value}} / 1</span>
+                    <span>{{ achievement.value }} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
                         <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.cardAtStat10.isClaimable}" style="margin: auto;" :size="16"/>
+                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievement.isClaimable}" style="margin: auto;" :size="16"/>
                         </span>
                     </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.doublon.isClaimable}"
-                    @click="achievementsStore.claimAchievement('doublon');">
-                    <span>Obtenir votre premier doublon</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.doublon.value}} / 1</span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.doublon.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.each5Cuisine.isClaimable}"
-                    @click="achievementsStore.claimAchievement('each5Cuisine');">
-                    <span>Passer de 5 levels du bâtiment cuisine</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.each5Cuisine.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5Cuisine.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.each5SalleDeSport.isClaimable}"
-                    @click="achievementsStore.claimAchievement('each5SalleDeSport');">
-                    <span>Passer 5 levels du bâtiment salle de sport</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.each5SalleDeSport.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5SalleDeSport.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.each5Spatioport.isClaimable}"
-                    @click="achievementsStore.claimAchievement('each5Spatioport');">
-                    <span>Passer 5 levels du bâtiment spatioport</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.each5Spatioport.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.each5Spatioport.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.cardAtFull10.isClaimable}"
-                    @click="achievementsStore.claimAchievement('cardAtFull10');">
-                    <span>Avoir une carte ayant des stats FULL 10</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.cardAtFull10.value}} / 1</span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.cardAtFull10.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.charismCasinoWin.isClaimable}"
-                    @click="achievementsStore.claimAchievement('charismCasinoWin');">
-                    <span>Gagner 1 fois au casino</span>
-                    <span class="stat-item-value">
-                        <span>{{ achievements.charismCasinoWin.value}} / 1</span>
-                        <span>
-                            <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.charismCasinoWin.isClaimable}" style="margin: auto;" :size="16"/>
-                        </span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.got100RocketLaunched.isClaimable}"
-                    @click="achievementsStore.claimAchievement('got100RocketLaunched');">
-                  <span>Lancer 100 fusées</span>
-                  <span class="stat-item-value">
-                          <span>{{ achievements.got100RocketLaunched.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
-                          <span>
-                              <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.got100RocketLaunched.isClaimable}" style="margin: auto;" :size="16"/>
-                          </span>
-                      </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': achievements.got100FailCharism.isClaimable}"
-                    @click="achievementsStore.claimAchievement('got100FailCharism');">
-                  <span>Echouer 100 fois à cause du charisme</span>
-                  <span class="stat-item-value">
-                            <span>{{ achievements.got100FailCharism.value}} / <svg-icon :fa-icon="infinityIcon" :size="13"/></span>
-                            <span>
-                                <svg-icon :fa-icon="giftIcon" :class="{colored: achievements.got100FailCharism.isClaimable}" style="margin: auto;" :size="16"/>
-                            </span>
-                        </span>
                 </li>
             </ul>
         </div>
