@@ -11,7 +11,7 @@ export const PlayAudio = async (type) => {
             break;
         case 'oof':
             if (localStorage.getItem('Settings_isNotifSoundActive') === 'false') return;
-            audio = door;
+            audio = oof;
             break;
         default:
             break;

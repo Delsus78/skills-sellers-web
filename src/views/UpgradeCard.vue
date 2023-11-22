@@ -95,7 +95,10 @@ const validate = async () => {
         await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
         await router.push('/cards');
-        await router.push('/upgrade');
+
+        if (user.value.cardsDoublons?.length > 0) {
+            await router.push('/upgrade');
+        }
     }
 }
 
