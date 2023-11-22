@@ -18,7 +18,7 @@ const notificationsSorted = computed(() => {
 });
 
 const deleteNotification = (id) => {
-    if (id === 'all') return notifStore.deleteNotifications(notifications.value.map(n => n.id));
+    if (id === 'all') return notifStore.deleteNotifications(notifications.value.filter(n => !n.title.includes('DM') && !n.title.includes('SPECIAL')).map(n => n.id));
     notifStore.deleteNotifications([id]);
 }
 

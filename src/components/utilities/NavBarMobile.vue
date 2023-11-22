@@ -18,7 +18,7 @@ import {
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
-    faBars as menuIcon
+    faBars as menuIcon, faW as wordleIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -99,6 +99,12 @@ const unrollNavBar = () => {
                         v-tooltip:bottom.tooltip="'Jeux'">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="30"/>
             </RouterLink>
+            <RouterLink :to="`/wordle`"
+                        :class="{selected: pageName === 'wordle'}"
+                        v-tooltip:bottom.tooltip="'Wordle'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="wordleIcon" :size="36"/>
+            </RouterLink>
             <a @click="openGiftCodePrompt" class="nav-item"
                v-tooltip:bottom.tooltip="'Code cadeau'">
                 <svg-icon class="green" :fa-icon="giftCodeIcon" :size="30"/>
@@ -130,7 +136,7 @@ const unrollNavBar = () => {
     </div>
 
     <div class="version">
-        <span class="version-text prevent-select">Version 1.8</span>
+        <span class="version-text prevent-select">Version 1.9</span>
     </div>
 </template>
 

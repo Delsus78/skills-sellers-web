@@ -4,7 +4,7 @@ import {
   faSquareXmark as leaveIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import dropdown from 'vue-dropdowns';
-import {getFormattedRemainingTime} from './DateFormator';
+import {getFormattedRemainingTime} from '../DateFormator';
 const emit = defineEmits(['validate', 'cancel', 'updateBatimentToUpgrade']);
 
 const { actionName, selectedCards, estimatedAction, batimentToUpgrade } = defineProps({
@@ -57,7 +57,9 @@ const handleUpdateOption = (option) => {
       <div class="estimations">
         <div class="info">
           <span class="little_title">Temps estimé</span>
-          <div>{{ estimatedAction.endTime ? getFormattedRemainingTime(estimatedAction.endTime) : "" }}</div>
+          <div v-for="endTime in estimatedAction.endDates">
+              {{ getFormattedRemainingTime(endTime) }}
+          </div>
         </div>
         <div class="info">
           <span class="little_title">Gains estimés</span>
@@ -92,8 +94,7 @@ const handleUpdateOption = (option) => {
                 :selected="batimentToUpgrade"
                 v-on:updateOption="handleUpdateOption"></dropdown>
       <div class="buttons">
-          <button class="validate swipe-overlay-out" @click="validate()"
-                  :disabled="error" :class="{disabled: error}">Valider</button>
+          <button class="validate swipe-overlay-out" @click="validate" :class="{disabled: error}">Valider</button>
           <div class="leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
       <div class="errorInfo">
@@ -107,23 +108,15 @@ const handleUpdateOption = (option) => {
     grid-template-rows: 22% 50% 20%;
     grid-template-areas: "title" "estimations" "buttons";
     grid-template-columns: 2fr 1fr;
-    margin: 3rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
     overflow: hidden;
 
     @media (max-width: 1023px) {
         grid-template-rows: 20% 50% 20%;
         grid-template-areas: "title" "estimations" "buttons";
         grid-template-columns: 1fr;
-        margin: 1rem;
     }
-}
-
-.title {
-    grid-area: title;
-    margin: 0.5rem 0 0.5rem 1rem;
 }
 
 .little_title {
@@ -134,6 +127,7 @@ const handleUpdateOption = (option) => {
 .buttons {
     grid-area: buttons;
     grid-column: 2;
+    grid-row: 3;
     display: flex;
     justify-content: space-evenly;
     cursor: pointer;
@@ -174,14 +168,13 @@ const handleUpdateOption = (option) => {
 }
 
 .dropdown-batiments {
-    grid-area: estimations;
     grid-column: 2;
     grid-row: 2 / 4;
     margin: 1rem auto;
 
     @media (max-width: 1023px) {
-        grid-column: 1;
-        grid-row: 2;
+        grid-column: 3;
+        grid-row: 3;
     }
 }
 

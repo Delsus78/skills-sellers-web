@@ -20,7 +20,12 @@ export const useCardsStore = defineStore({
             }
 
             try {
-                const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${cardId}`);
+                const response =
+                    await fetchWrapperJpeg
+                        .get(`${import.meta.env.VITE_API_URL}/Images/${cardId}`,
+                            null,
+                            'max-age=3600');
+
                 const imageUrl = URL.createObjectURL(response);
                 this.imageCache = { ...this.imageCache, [cardId]: imageUrl };  // Mettre en cache l'image
                 return imageUrl;
@@ -62,8 +67,21 @@ export const useCardsStore = defineStore({
             let usedUrl = baseUrl + `Users/${id}/Cards/${cardId}`;
             return fetchWrapper.get(usedUrl)
                 .then(async card => {
-                    const response = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`);
+                    const response =
+                        await fetchWrapperJpeg
+                            .get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`,
+                                null,
+                                'max-age=3600');
+
                     card.imageUrl = URL.createObjectURL(response);
+
+                    // refresh the card in cards list
+                    let index = this.cards.findIndex(cardInList => cardInList.id === cardId);
+                    if (index !== -1) {
+                        this.cards[index] = card;
+                    }
+
+
                     return card;
                 })
                 .catch(error => {

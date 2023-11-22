@@ -2,24 +2,30 @@
 
 import {storeToRefs} from "pinia";
 import {useAuthStore, useCardsStore, useUsersStore} from "@/stores";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {
-    faBurger as cuisiIcon,
+    faBurger as cuisiIcon, faCoins as moneyIcon,
     faCompass as exploIcon,
     faDumbbell as forceIcon, faGraduationCap as intelIcon,
     faStar as chariIcon
 } from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
-import CardListElement from "@/components/utilities/cards/CardListElement.vue";
+import Card from "@/components/utilities/cards/Card.vue";
 
 const authStore = useAuthStore();
 const cardsStore = useCardsStore();
 const usersStore = useUsersStore();
 const { user: authUser } = storeToRefs(authStore);
 const { actualUser: user } = storeToRefs(usersStore);
+const { cards } = storeToRefs(cardsStore);
 const error = ref('');
+const doublons = ref([]);
 const maxPts = ref(0);
+const isMaxed = computed(() => {
+    return Object.values(card.value.competences).reduce((a, b) => a + b, 0) >= 50;
+});
 const card = ref(null);
+
 const competencesToAdd = ref({
     cuisine: 0,
     charisme: 0,
@@ -28,21 +34,12 @@ const competencesToAdd = ref({
     intelligence: 0,
 });
 
-usersStore.getUser(authUser.value.id).then(async (_) => {
-    if (user.value.cardsDoublons.length === 0) {
-        error.value = "Vous n'avez pas de carte à doubler";
+watch(card, () => {
+
+    if (card.value.competences) {
+        competencesToAdd.value.cuisine = 0;
     }
 
-    // sort cards by last id
-    user.value.cardsDoublons.sort((a, b) => {
-        return b.doublonId - a.doublonId;
-    });
-
-    console.log(user.value.cardsDoublons[0].cardId);
-    card.value = await cardsStore.getUserCard(authUser.value.id, user.value.cardsDoublons[0].cardId);
-})
-
-watch(card, () => {
     if (card.value.rarity === "commune") {
         maxPts.value = 1;
     }
@@ -54,6 +51,42 @@ watch(card, () => {
     }
 })
 
+usersStore.getUser(authUser.value.id).then(async (_) => {
+    if (user.value.cardsDoublons.length === 0) {
+        error.value = "Vous n'avez pas de carte à doubler";
+    }
+
+    // sort cards by last id
+    user.value.cardsDoublons.sort((a, b) => {
+        return b.doublonId - a.doublonId;
+    });
+
+    card.value = await cardsStore.getUserCard(authUser.value.id, user.value.cardsDoublons[0].cardId);
+
+    // doublons list
+    if (!cards.value || cards.value.loading) {
+        return;
+    }
+
+    doublons.value = cards.value
+        .map(item => {
+            // Trouver tous les doublons correspondants et les ajouter à l'élément
+            const doublonsCorrespondants = user.value.cardsDoublons
+                .filter(doublon => doublon.cardId === item.id)
+                .map(doublon => doublon.doublonId);
+
+            return {
+                ...item,
+                doublonsIds: doublonsCorrespondants
+            };
+        })
+        .filter(item => item.doublonsIds.length > 0) // Filtrer les éléments sans doublons
+        .sort((a, b) => {
+            // Comparer sur la base du premier doublonId, si plusieurs existent
+            return b.doublonsIds[0] - a.doublonsIds[0];
+        });
+})
+
 const validate = async () => {
     // confirm action
     let confirm = window.confirm("Confirmer l'action ?");
@@ -62,12 +95,13 @@ const validate = async () => {
         await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
         await router.push('/cards');
+        await router.push('/upgrade');
     }
 }
 
 const addPts = (competence) => {
     // return if competencesToAdd sum is equal to maxPts or if competencesToAdd[competence] is equal to 10
-    if (Object.values(competencesToAdd.value).reduce((a, b) => a + b, 0) === maxPts.value || card.value.competences[competence] + competencesToAdd.value[competence] === 10) {
+    if (Object.values(competencesToAdd.value).reduce((a, b) => a + b, 0) >= maxPts.value || card.value.competences[competence] + competencesToAdd.value[competence] === 10) {
         return;
     }
     competencesToAdd.value[competence] += 1;
@@ -93,8 +127,8 @@ const removePts = (competence) => {
             </div>
             <p>Votre doublon est une <strong class="colorChange">{{ card.rarity }}</strong>, vous avez donc <strong class="red">{{maxPts}} Points</strong> à dépenser.</p>
         </div>
-        <CardListElement v-if="card" :card="card" class="cardElement not_draggable"/>
-        <div class="upgradeForm bg-dark-blur">
+
+        <div v-if="!isMaxed" class="upgradeForm bg-dark-blur">
             <div class="competences">
                 <div class="stat">
                     <div class="value">{{ card.competences.cuisine + competencesToAdd.cuisine}}</div>
@@ -134,40 +168,119 @@ const removePts = (competence) => {
             </div>
             <button class="validateBtn swipe-overlay-out" @click="validate()">Améliorer</button>
         </div>
+        <div v-else class="upgradeForm bg-dark-blur">
+            <p>Vous avez atteint le maximum de points à dépenser !</p>
+            <p>Vous pouvez alors obtenir de l'or en échange !</p>
+            <button class="validateBtn swipe-overlay-out" @click="validate()">Echanger <svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="17"/></button>
+        </div>
+        <div class="cardElement">
+            <Card :key="card.id"
+                  :id="card.id"
+                  :name="card.name"
+                  :description="card.description"
+                  :image-url="card.imageUrl"
+                  :competences="card.competences"
+                  :rarity="card.rarity"
+                  :collection="card.collection"
+                  :action="card.action"
+                  hide-favorite/>
+        </div>
+        <div class="radiance">
+            <div v-for="i in 6" :key="i" :class="[card.rarity, 'ray']" :style="{ transform: 'rotate(' + (i * 30) + 'deg)' }"></div>
+        </div>
+        <div class="doublons" v-if="doublons">
+            <ul class="doublons_list">
+                <li v-for="(doublon, index) in doublons" :key="doublon.id" class="doublonListItem" :class="{'firstDoublon': index === 0}">
+                    <span :class="doublon.rarity + '-text'">{{ doublon.name }}</span>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .UpgradeCardWrapper {
-    width: 100%;
-    height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 6rem 6rem 1fr 1fr;
-    align-items: center;
-    justify-items: center;
-    overflow: hidden;
+
+    @media (max-width: 1450px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 1200px) {
+        grid-template-columns: 1fr;
+    }
+
+    @media (max-width: 1023px) {
+        grid-template-columns: 1fr;
+        margin-top: 6rem;
+        grid-template-rows: 20rem 30rem;
+    }
 }
 
 .infos {
-    grid-column: 1 / 4;
-    grid-row: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    margin-bottom: 4rem;
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+}
+
+.radiance {
+    position: fixed;
+    width: 230%;
+    height: 230%;
+    top: 50%;
+    left: 51%;
+    transform: translateX(-75%) rotate(0deg); /* rotation initiale ajoutée ici */
+    pointer-events: none;
+    z-index: 0;
+
+    @media (max-width: 768px) {
+        width: 500%;
+    }
+}
+
+.ray {
+    position: absolute;
+    width: 50%;
+    height: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    left: 50%;
+    transform-origin: 50% 0;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
 }
 
 .cardElement {
     grid-column: 2;
-    grid-row: 3;
-    justify-self: center;
-    align-self: center;
+    grid-row: 1 / 3;
     border-radius: 1rem;
-    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 2;
+
+    @media (max-width: 1450px) {
+        grid-column: auto;
+    }
+
+    @media (max-width: 1200px) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    @media (max-width: 1023px) {
+        grid-column: auto;
+    }
 }
 
 .colorChange {
@@ -176,17 +289,88 @@ const removePts = (competence) => {
 }
 
 .upgradeForm {
-    grid-column: 2 / 3;
-    grid-row: 4;
-    display: grid;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+    position: relative;
+    grid-column: 1;
+    z-index: 1;
+    padding: 1rem;
+    margin: 1rem 1rem 10rem;
     border-radius: 1rem;
-    margin: 2rem;
-    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+
+    @media (max-width: 1450px) {
+        grid-column: auto;
+    }
+
+    @media (max-width: 1200px) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    @media (max-width: 1023px) {
+        grid-column: auto;
+    }
+}
+
+.doublons {
+    position: relative;
+    grid-column: 3;
+    grid-row: 1 / 3;
+    z-index: 1;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+
+    @media (max-width: 1450px) {
+        grid-column: auto;
+    }
+
+    @media (max-width: 1200px) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    @media (max-width: 1023px) {
+        grid-column: auto;
+    }
+}
+
+.doublons_list {
+    grid-area: stats;
+    overflow-y: auto;
+    max-height: 30rem;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.doublonListItem {
+    display: grid;
+    border-bottom: 1px solid rgba(199, 175, 175, 0.35);
+    width: 100%;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.firstDoublon {
+    font-size: 1.8rem;
+    background-color: var(--vt-c-green-1);
+    border-radius: 1rem;
+    padding-left: 0.5rem;
 }
 
 .validateBtn {

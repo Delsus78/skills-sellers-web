@@ -6,7 +6,6 @@ import {faCoins as moneyIcon} from "@fortawesome/free-solid-svg-icons";
 import {ref, watch} from "vue";
 import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import GearsBackground from "@/components/utilities/GearsBackground.vue";
-import InfoBulle from "@/components/utilities/InfoBulle.vue";
 
 const mainStore = useMainStore();
 const cardsStore = useCardsStore();
@@ -27,24 +26,42 @@ const changeSelectedCardsIds = (newSelectedCards) => {
 
     let ids = [];
     if (selectedCards.value !== null && selectedCards.value.length > 0) {
-        ids = selectedCards.value.map((card) => card.id);
+        ids = selectedCards.value;
     }
 
     emit("estimate", 'MACHINE', 0, ids);
 }
 
 const playOrRepair = () => {
+    console.log(actualUser.value.statRepairedObjectMachine)
+    console.log(selectedCards.value)
     if (actualUser.value.statRepairedObjectMachine === -1) {
         let ids = [];
         if (selectedCards.value !== null && selectedCards.value.length > 0) {
-            ids = selectedCards.value.map((card) => card.id);
+            ids = selectedCards.value;
         }
         emit("play", 'MACHINE', 0, ids);
+
+        setTimeout(() => {
+            cardsStore.getAllCardsFromUser(actualUser.value.id);
+        }, 1000);
+
+        gameResponse.value = {};
     } else if (actualUser.value.statRepairedObjectMachine === 0) {
         emit("play", 'MACHINE', 500, []);
     } else if (actualUser.value.statRepairedObjectMachine > 0){
         emit("play", 'MACHINE', 1000, []);
     }
+}
+
+const selectAllCardsWithIntelligenceAndNoAction = () => {
+    cards.value.forEach(card => {
+        if (card.competences.intelligence > 0 && card.action === null) {
+            selectedCards.value.push(card.id);
+        }
+    })
+    console.log(selectedCards.value);
+    emit("estimate", 'MACHINE', 0, selectedCards.value);
 }
 
 watch(gameResponse, () => {
@@ -64,6 +81,9 @@ watch(cards, () => {
         <div v-if="cards.loading">
             <p class="huge-text">Chargement des cartes...</p>
         </div>
+        <div v-else-if="gameResponse?.loading">
+            <p class="huge-text">Chargement du jeu...</p>
+        </div>
         <div v-else-if="game?.isRepairing" class="machineIsRepairing">
             <p class="huge-text">La machine est en train d'être réparée...</p>
         </div>
@@ -71,22 +91,27 @@ watch(cards, () => {
             <div class="titleDiv">
                 <div class="title">E. Zeiss - The Scientist</div>
                 <div class="subTitle">Machine broken edition</div>
-            </div>
-            <ListSelector v-if="actualUser.statRepairedObjectMachine === -1"
-                          class="cardsList" :objects="cards" title="Cartes"
-                          withFilters selected-action="reparer"/>
-            <div class="form_content" :class="{'large': actualUser.statRepairedObjectMachine > -1}">
-
                 <div class="description bg-dark-blur">
-                    <info-bulle>
-                        <p v-for="(r1, r2) in game.regles">
-                            {{ r2 }}  {{ r1 }}
-                        </p>
-                    </info-bulle>
                     {{ game.description }}
                 </div>
+            </div>
+            <ListSelector :cards="cards" v-if="actualUser.statRepairedObjectMachine === -1"
+                          withFilters
+                          selected-action="reparer"
+                          :init-selected-cards-ids="selectedCards"
+                          @resulted-list="changeSelectedCardsIds" />
+            <div class="form_content" :class="{'large': actualUser.statRepairedObjectMachine > -1}">
                 <div class="validate">
-                    <button class="btn btn-primary" @click="playOrRepair">Valider</button>
+                    <div class="buttons" v-if="actualUser.statRepairedObjectMachine === -1">
+                        <button class="btn btn-primary" @click="playOrRepair">Reparer</button>
+                        <button class="btn btn-primary" @click="selectAllCardsWithIntelligenceAndNoAction"
+                                v-tooltip:bottom.tooltip="'Sélectionne les cartes sans action et avec au moins 1 d\'intel'">
+                            Selection rapide
+                        </button>
+                    </div>
+                    <div class="buttons" v-else>
+                        <button class="btn btn-primary" @click="playOrRepair">Acheter</button>
+                    </div>
                     <div class="input_gold" v-if="actualUser.statRepairedObjectMachine > -1">
                         {{ actualUser.statRepairedObjectMachine === 0 ? '500' : '1000'}}
                         <svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
@@ -101,10 +126,6 @@ watch(cards, () => {
                         <p class="description shadow-white">Pour gagner un pack !</p>
                     </div>
                 </div>
-                <div class="selected_cards" v-if="actualUser.statRepairedObjectMachine === -1">
-                    <ListSelector class="selected_cardList" :objects="selectedCards" title="Cartes selectionnees"
-                                  @resulted-list="changeSelectedCardsIds" is-dropped-zone/>
-                </div>
                 <GearsBackground class="gearsBG" v-if="actualUser.statRepairedObjectMachine > -1"/>
             </div>
         </div>
@@ -113,11 +134,8 @@ watch(cards, () => {
 
 <style scoped>
 .machineRepair_content {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 9rem 44rem;
-    grid-gap: 1rem;
-    padding: 4rem;
+    margin-top: 5rem;
+    min-height: 80rem;
 }
 
 .titleDiv {
@@ -162,35 +180,60 @@ watch(cards, () => {
     margin-bottom: 1rem;
 }
 
-.cardsList {
-    z-index: 100;
-    margin: 0 !important;
-}
-
 .form_content {
+    position: fixed;
+    padding: 2rem;
+    bottom: 5rem;
+    right: 0;
     z-index: 100;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 0.6fr 1fr;
+    height: 20rem;
+    width: 40rem;
     gap: 10px;
     border-radius: 1rem;
-    padding: 1rem;
     background: radial-gradient(ellipse farthest-corner at right bottom, #d9d8d2 0%, #6f7696 8%, #918e8d 30%, #9b8c88 40%, transparent 80%),
     radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #7e7e7e 8%, #60705e 25%, #696364 62.5%, #5d4a1f 100%);
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.9);
-    overflow-y: hidden;
+    opacity: 0.9;
+
+    @media (max-width: 1023px) {
+        right: 0;
+        scale: 0.8;
+        bottom: 0;
+        opacity: 1;
+    }
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: center;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
 }
 
 .large {
-    grid-column: 1/ -1;
+    height: 30rem;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    padding: 3rem;
+    gap: 20px;
+    scale: 0.8;
+    opacity: 1;
 }
 
 .gearsBG {
-    grid-column: 1/ -1;
-    grid-row: 2;
-    z-index: -10;
+    position: absolute;
+    top: 0;
     opacity: 0.5;
     filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.9));
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
 }
 
 .description {
@@ -199,12 +242,8 @@ watch(cards, () => {
     font-size: 1.2em;
     font-family: 'Ubuntu', sans-serif;
     color: white;
-    overflow: auto;
-    display: flex;
-    align-items: center;
     text-align: center;
     font-weight: bold;
-    overflow-y: auto;
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
 }
 
@@ -223,27 +262,16 @@ watch(cards, () => {
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.9);
 }
 
-.selected_cards {
-    grid-column: 1 / -1;
-}
-
-.selected_cardList {
-    height: 100%;
-    margin: 0 !important;
-    grid-template-rows: 4rem 75%;
-    grid-template-areas:
-        "title" "cards";
-}
-
 ::v-deep(.selected_cardList .items-list) {
     height: 20rem;
 }
 
 .validate {
-    grid-column: 2 / 3;
-    display: flex;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 .validate button {
@@ -270,15 +298,13 @@ watch(cards, () => {
     cursor: not-allowed !important;
 }
 
-.form_content.large .validate {
-
-}
-
 .error {
-    font-size: 1.4em;
+    font-size: 1em;
     text-align: center;
-    font-family: 'Ubuntu', sans-serif;
-    margin-bottom: 1rem;
-    color: red;
+    color: darkred;
+
+    @media (max-width: 1023px) {
+        font-size: 0.8em;
+    }
 }
 </style>

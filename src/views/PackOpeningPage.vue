@@ -73,6 +73,10 @@ onMounted(async () => {
     transform: translateX(-75%) rotate(0deg); /* rotation initiale ajoutée ici */
     pointer-events: none;
     z-index: 0;
+
+    @media (max-width: 768px) {
+        width: 500%;
+    }
 }
 
 @keyframes rotate {
