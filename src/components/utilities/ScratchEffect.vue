@@ -6,83 +6,101 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, onUnmounted, computed} from 'vue';
 
 const scratchContainer = ref(null);
 const scratchCanvas = ref(null);
+let isDrawing = false;
+let lastX, lastY;
 
-const initializeScratchEffect = () => {
+const ctx = computed(() => {
     const canvas = scratchCanvas.value;
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
-    let lastX, lastY;
+    return canvas ? canvas.getContext('2d') : null;
+});
 
-    const resizeCanvas = () => {
-        canvas.width = scratchContainer.value.offsetWidth;
-        canvas.height = scratchContainer.value.offsetHeight;
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+const resizeCanvas = () => {
+    const canvas = scratchCanvas.value;
+    canvas.width = scratchContainer.value.offsetWidth;
+    canvas.height = scratchContainer.value.offsetHeight;
+    ctx.value.fillStyle = '#000000';
+    ctx.value.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Ajout du texte
-        ctx.font = '20px Arial'; // Vous pouvez ajuster la taille et le style de la police ici
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Gratte ici pour découvrir ta carte!', canvas.width / 2, canvas.height / 2);
-
-    };
-    resizeCanvas();
-
-    document.addEventListener('mousedown', (event) => {
-        isDrawing = true;
-        const rect = canvas.getBoundingClientRect();
-        lastX = event.clientX - rect.left;
-        lastY = event.clientY - rect.top;
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDrawing = false;
-        ctx.beginPath();
-    });
-
-    document.addEventListener('touchstart', (event) => {
-        isDrawing = true;
-        const rect = canvas.getBoundingClientRect();
-        lastX = event.touches[0].clientX - rect.left;
-        lastY = event.touches[0].clientY - rect.top;
-    });
-
-    document.addEventListener('touchend', () => {
-        isDrawing = false;
-        ctx.beginPath();
-    });
-
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('touchmove', draw);
-
-    function draw(event) {
-        if (!isDrawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.lineWidth = 100;
-        ctx.lineCap = 'round';
-
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-
-        // Mise à jour des coordonnées pour le prochain segment de grattage
-        lastX = x;
-        lastY = y;
-    }
-
+    // Ajout du texte
+    ctx.value.font = '20px Arial';
+    ctx.value.fillStyle = '#FFFFFF';
+    ctx.value.textAlign = 'center';
+    ctx.value.textBaseline = 'middle';
+    ctx.value.fillText('Gratte ici pour découvrir ta carte!', canvas.width / 2, canvas.height / 2);
 };
 
-onMounted(initializeScratchEffect);
+const handleStart = (clientX, clientY) => {
+    const canvas = scratchCanvas.value;
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    lastX = clientX - rect.left;
+    lastY = clientY - rect.top;
+};
+
+const handleMove = (clientX, clientY) => {
+    if (!isDrawing) return;
+    const canvas = scratchCanvas.value;
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.value.globalCompositeOperation = 'destination-out';
+    ctx.value.lineWidth = 100;
+    ctx.value.lineCap = 'round';
+    ctx.value.beginPath();
+    ctx.value.moveTo(lastX, lastY);
+    ctx.value.lineTo(x, y);
+    ctx.value.stroke();
+
+    lastX = x;
+    lastY = y;
+};
+
+const stopDrawing = () => {
+    isDrawing = false;
+    ctx.value.beginPath();
+};
+
+onMounted(() => {
+    const canvas = scratchCanvas.value;
+    if (canvas) {
+        resizeCanvas();
+        canvas.addEventListener('mousedown', (event) => handleStart(event.clientX, event.clientY));
+        canvas.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            handleStart(event.touches[0].clientX, event.touches[0].clientY);
+        });
+        canvas.addEventListener('mousemove', (event) => handleMove(event.clientX, event.clientY));
+        canvas.addEventListener('touchmove', (event) => {
+            event.preventDefault();
+            handleMove(event.touches[0].clientX, event.touches[0].clientY);
+        });
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+    }
+});
+
+onUnmounted(() => {
+    const canvas = scratchCanvas.value;
+    if (canvas) {
+        canvas.removeEventListener('mousedown', (event) => handleStart(event.clientX, event.clientY));
+        canvas.removeEventListener('touchstart', (event) => {
+            event.preventDefault();
+            handleStart(event.touches[0].clientX, event.touches[0].clientY);
+        });
+        canvas.removeEventListener('mousemove', (event) => handleMove(event.clientX, event.clientY));
+        canvas.removeEventListener('touchmove', (event) => {
+            event.preventDefault();
+            handleMove(event.touches[0].clientX, event.touches[0].clientY);
+        });
+        canvas.removeEventListener('mouseup', stopDrawing);
+        canvas.removeEventListener('touchend', stopDrawing);
+    }
+});
 
 </script>
 <style scoped>

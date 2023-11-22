@@ -20,6 +20,7 @@ import {
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
     faGear as settingsIcon,
+    faW as wordleIcon
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
@@ -104,6 +105,12 @@ const openSettingsTab = () => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/>
             </RouterLink>
+            <RouterLink :to="`/wordle`"
+                        :class="{selected: pageName === 'wordle'}"
+                        v-tooltip:bottom.tooltip="'Wordle'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="wordleIcon" :size="36"/>
+            </RouterLink>
             <a @click="openGiftCodePrompt"
                v-tooltip:bottom.tooltip="'Code cadeau'"
                class="nav-item"><svg-icon class="green" :fa-icon="giftCodeIcon" :size="36"/></a>
@@ -141,7 +148,7 @@ const openSettingsTab = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.8</span>
+        <span class="version-text prevent-select">Version 1.9</span>
     </div>
 </template>
 <style scoped>
@@ -166,7 +173,7 @@ h1 {
 }
 
 .navbar .nav-title {
-    width: 40rem;
+    width: 25rem;
     margin: 0 10px;
     text-decoration: none;
     display: flex;
@@ -186,7 +193,6 @@ h1 {
 
 .nav-item {
     color: white;
-    font-size: 2rem;
     font-weight: bold;
     margin: 0 10px;
     text-decoration: none;

@@ -38,7 +38,7 @@ export const useChatStore = defineStore({
                 this.connectedUsers = connectedUsers;
 
                 // play sound
-                await PlayAudio('connect');
+                //await PlayAudio('connect');
             });
 
             // Démarrer la connexion

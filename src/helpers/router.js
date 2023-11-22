@@ -12,7 +12,7 @@ import {
     RegisterView,
     ResetPasswordView,
     GamesView,
-    RulesView
+    RulesView, ActionView, WordleView
 } from '@/views';
 
 export const router = createRouter({
@@ -28,8 +28,10 @@ export const router = createRouter({
         { path: '/stats/:id', component: StatsView },
         { path: '/batiments', component: BuildingsView },
         { path: '/games', component: GamesView },
+        { path: '/wordle', component: WordleView },
         { path: '/opening', component: OpeningView },
-        { path: '/upgrade', component: UpgradeView }
+        { path: '/upgrade', component: UpgradeView },
+        { path: '/action/:actionType/:cardsIds?', component: ActionView },
     ]
 });
 

@@ -58,6 +58,7 @@ export const useNotificationStore = defineStore({
                 // refresh data
                 await useUsersStore().getUser(user.id);
                 await useCardsStore().getAllCardsFromUser(user.id);
+                await useUsersStore().getBuildingsOfUser(user.id);
             });
 
             // Démarrer la connexion
