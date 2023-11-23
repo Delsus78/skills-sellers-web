@@ -9,5 +9,7 @@ export { default as RegisterView } from './Register.vue';
 export { default as ResetPasswordView } from './ResetPassword.vue';
 export { default as GamesView } from './Games.vue';
 export { default as RulesView } from './Rules.vue';
+export { default as ActionView } from './NewAction.vue';
+export { default as WordleView } from './Wordle.vue';
 export { default as SatellitesView } from './Satellites.vue';
 export { default as RegistreView } from './Registre.vue';

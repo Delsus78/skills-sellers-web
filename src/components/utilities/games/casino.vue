@@ -1,14 +1,12 @@
 <script setup>
 import {useCardsStore, useGamesStore, useMainStore, useAuthStore} from "@/stores";
-import CardListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import {storeToRefs} from "pinia";
-import {computed, onBeforeMount, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import SpinWheel from "@/components/utilities/SpinWheel.vue";
 import {
     faCoins as moneyIcon
 } from "@fortawesome/free-solid-svg-icons";
-import InfoBulle from "@/components/utilities/InfoBulle.vue";
 const mainStore = useMainStore();
 const cardsStore = useCardsStore();
 const gamesStore = useGamesStore();
@@ -24,7 +22,6 @@ const btnDisabled = ref(false);
 const spin = ref(false);
 const showWin = ref(false);
 const spinWheelKey = ref(0);
-const selectedCardsKey = ref(0);
 const buttonDisabled = computed(() => {
     if (btnDisabled.value) {
         return true;
@@ -71,7 +68,7 @@ const reestimateGame = () => {
 
     // cards ok ?
     if (selectedCards.value !== null && selectedCards.value.length > 0) {
-        ids = selectedCards.value.map((card) => card.id);
+        ids = selectedCards.value;
     }
 
     emit("estimate", 'CASINO', actualBet, ids);
@@ -79,7 +76,7 @@ const reestimateGame = () => {
 
 const play = () => {
     showWin.value = false;
-    emit("play", 'CASINO', bet.value, [selectedCards.value[0].id]);
+    emit("play", 'CASINO', bet.value, selectedCards.value);
 }
 
 watch(gameResponse, (newVal) => {
@@ -98,17 +95,15 @@ watch(gameResponse, (newVal) => {
                 spin.value = false;
                 showWin.value = true;
 
-                if (newVal?.win) {
-                    selectedCards.value = [await cardsStore.getUserCard(user.value.id, selectedCards.value[0].id)];
-                    selectedCardsKey.value++;
-
-                    setTimeout(() => {
-                        reestimateGame();
-                    }, 3000);
-                } else {
-                    btnDisabled.value = false;
+                // refresh cards if we won
+                if (newVal.win) {
+                    await cardsStore.getUserCard(user.value.id, selectedCards.value[0]);
                 }
-
+                // reestimate
+                setTimeout(() => {
+                    btnDisabled.value = false;
+                    reestimateGame();
+                }, 2000);
             }, 6000);
         }, 500);
     }
@@ -123,21 +118,21 @@ watch(bet, reestimateGame);
             <p class="huge-text">Chargement des cartes...</p>
         </div>
         <div v-else class="casino_content">
-            <div class="cards">
-                <ListSelector class="cardsList" :objects="cards" title="Cartes"
-                              withFilters selected-action="charisme"/>
+            <div class="title">
+                CHARISMATIC CASINO
             </div>
-            <div class="title">CHARISMATIC CASINO</div>
             <div class="subTitle">The amazing one</div>
+            <div class="description bg-dark-blur">
+                {{ game.description }}
+            </div>
+            <ListSelector :cards="cards"
+                          :max-card-autorized="1"
+                          :removed-stats-at10="[{name:'charisme', value:8}]"
+                          withFilters
+                          selected-action="casino"
+                          @resulted-list="changeSelectedCardId" />
+
             <div class="form_content">
-                <div class="description bg-dark-blur">
-                    <info-bulle>
-                        <p v-for="(r1, r2) in game.regles">
-                            {{ r1 }}  {{ r2 }}
-                        </p>
-                    </info-bulle>
-                    {{ game.description }}
-                </div>
                 <div class="input_gold">
                     <input type="number" placeholder="Mise" v-model="bet"/>
                     <svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
@@ -153,13 +148,6 @@ watch(bet, reestimateGame);
                         {{ gameResponse?.win ? 'GAGNE' : 'PERDU' }}
                     </span>
                 </div>
-                <div class="selected_cards">
-                    <CardListSelector class="selected_cardList" title="" is-dropped-zone
-                                      :objects="selectedCards"
-                                      :max-card-autorized="1"
-                                      :key="selectedCardsKey"
-                                      @resulted-list="changeSelectedCardId"></CardListSelector>
-                </div>
                 <div class="validate">
                     <button class="btn btn-primary" :disabled="buttonDisabled"
                             @click="play">Valider</button>
@@ -172,38 +160,12 @@ watch(bet, reestimateGame);
     </div>
 </template>
 <style scoped>
-.casino {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 1920px;
-}
-
 .casino_content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 5fr;
-    gap: 10px;
-    width: 90%;
-}
-
-.cards {
-    grid-column: 1;
-    grid-row: 2;
-    z-index: 100;
-    width: 90%;
-}
-
-.cardsList {
-    width: 100%;
-    margin: 0 !important;
-    height: 100%;
+    margin-top: 5rem;
+    min-height: 80rem;
 }
 
 .title {
-    grid-column: 1/ 3;
-    grid-row: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -244,40 +206,45 @@ watch(bet, reestimateGame);
 }
 
 .form_content {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 0.5fr 1fr;
+    position: fixed;
+    padding: 2rem;
+    bottom: -5rem;
+    right: -10rem;
+    z-index: 100;
+    height: 40rem;
+    width: 60rem;
     gap: 10px;
     border-radius: 1rem;
-    padding: 1rem;
     background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
     radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-    z-index: 100;
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.9);
+    opacity: 0.9;
+    scale: 0.6;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        bottom: -5rem;
+        right: 0;
+    }
 }
 
 .description {
-    grid-column: 1;
     border-radius: 1rem;
     padding: 1rem;
     font-size: 1.2em;
     font-family: 'Ubuntu', sans-serif;
     color: white;
-    overflow: auto;
-    display: flex;
-    align-items: center;
     text-align: center;
     font-weight: bold;
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
 }
 
 .input_gold {
-    grid-column: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
+    margin: 0 20%;
 }
 
 .input_gold .money_icon {
@@ -289,6 +256,7 @@ watch(bet, reestimateGame);
     border-radius: 1rem;
     border: none;
     padding: 1rem;
+    width: 80%;
     font-size: 1.2em;
     font-family: 'Ubuntu', sans-serif;
     color: gold;
@@ -301,18 +269,8 @@ watch(bet, reestimateGame);
 }
 
 .wheel {
-    grid-column: 2;
-    grid-row: 1 / 3;
-    border-radius: 1rem;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-
-.spinWheel {
-    /* take all the place available with a margin of 1rem*/
-    width: calc(100% - 2rem);
-    height: calc(100% - 2rem);
 }
 
 .win {
@@ -322,21 +280,9 @@ watch(bet, reestimateGame);
     font-family: 'Big John', sans-serif;
     color: gold;
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
-
-}
-
-.selected_cards {
-    grid-column: 1;
-}
-
-.selected_cardList {
-    width: 100%;
-    margin: 0 !important;
-    height: 90%;
 }
 
 .validate {
-    grid-column: 2 / 3;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -347,7 +293,7 @@ watch(bet, reestimateGame);
     border: none;
     padding: 1rem;
     width: 80%;
-    margin: 0 auto;
+    margin: 1rem;
 
     font-size: 1.2em;
     font-family: 'Big John', sans-serif;
@@ -368,9 +314,6 @@ watch(bet, reestimateGame);
 
 .error {
     font-size: 1.4em;
-    text-align: center;
-    font-family: 'Ubuntu', sans-serif;
-    margin-bottom: 1rem;
-    color: red;
+    color: darkred;
 }
 </style>

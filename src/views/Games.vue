@@ -3,7 +3,6 @@ import { useGamesStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import Casino from "@/components/utilities/games/casino.vue";
 import MachineRepair from "@/components/utilities/games/machineRepair.vue";
-import wordle from "@/components/utilities/games/wordle.vue";
 
 const gamesStore = useGamesStore();
 const { game } = storeToRefs(gamesStore);
@@ -30,7 +29,6 @@ const estimate = (GameName, bet, cardIds) => {
                 @play="play" @estimate="estimate"/>
         <machine-repair v-if="game?.name.toLowerCase() === 'machine'"
                 @play="play" @estimate="estimate"/>
-        <wordle v-if="game?.name.toLowerCase() === 'wordle'"/>
     </div>
     <footer class="footer">
         <span></span>
@@ -38,12 +36,4 @@ const estimate = (GameName, bet, cardIds) => {
 </template>
 
 <style scoped>
-.games {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    min-width: 1920px;
-}
 </style>

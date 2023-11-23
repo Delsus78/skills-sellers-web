@@ -20,6 +20,7 @@ import {
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
     faGear as settingsIcon,
+    faW as wordleIcon
     faShield as satelliteIcon,
     faBookAtlas as registreIcon
 } from "@fortawesome/free-solid-svg-icons";
@@ -118,6 +119,12 @@ const openSettingsTab = () => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/>
             </RouterLink>
+            <RouterLink :to="`/wordle`"
+                        :class="{selected: pageName === 'wordle'}"
+                        v-tooltip:bottom.tooltip="'Wordle'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="wordleIcon" :size="36"/>
+            </RouterLink>
             <a @click="openGiftCodePrompt"
                v-tooltip:bottom.tooltip="'Code cadeau'"
                class="nav-item"><svg-icon class="green" :fa-icon="giftCodeIcon" :size="36"/></a>
@@ -200,7 +207,6 @@ h1 {
 
 .nav-item {
     color: white;
-    font-size: 2rem;
     font-weight: bold;
     margin: 0 10px;
     text-decoration: none;

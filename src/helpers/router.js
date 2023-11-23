@@ -12,6 +12,8 @@ import {
     RegisterView,
     ResetPasswordView,
     GamesView,
+    ActionView, 
+    WordleView,
     RulesView,
     SatellitesView,
     RegistreView
@@ -32,8 +34,10 @@ export const router = createRouter({
         { path: '/satellites', component: SatellitesView},
         { path: '/registre', component: RegistreView},
         { path: '/games', component: GamesView },
+        { path: '/wordle', component: WordleView },
         { path: '/opening', component: OpeningView },
-        { path: '/upgrade', component: UpgradeView }
+        { path: '/upgrade', component: UpgradeView },
+        { path: '/action/:actionType/:cardsIds?', component: ActionView },
     ]
 });
 
