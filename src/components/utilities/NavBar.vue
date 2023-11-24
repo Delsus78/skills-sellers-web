@@ -101,18 +101,6 @@ const openSettingsTab = () => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/>
             </RouterLink>
-            <RouterLink :to="`/satellites`"
-                        v-tooltip:bottom.tooltip="'Guerres et Protection'"
-                        :class="{selected: pageName === 'satellites'}"
-                        class="nav-item">
-                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="36"/>
-            </RouterLink>
-            <RouterLink :to="`/registre`"
-                        v-tooltip:bottom.tooltip="'Registre de planète'"
-                        :class="{selected: pageName === 'registre'}"
-                        class="nav-item">
-                <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="36"/>
-            </RouterLink>
             <RouterLink :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'"
