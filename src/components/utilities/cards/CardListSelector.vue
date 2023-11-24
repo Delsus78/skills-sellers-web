@@ -108,7 +108,7 @@ const { title, cards, initSelectedCardsIds, withFilters, selectedAction, maxCard
 const searchText = ref('');
 const collectionFilter = ref('');
 const rarityFilter = ref('');
-const actionFilter = ref('');
+const actionFilter = ref('!');
 const competenceFilter = ref('');
 
 const selectedCardsIds = ref(initSelectedCardsIds ?? []);
