@@ -150,7 +150,7 @@ const openSettingsTab = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 2.0 - SpaceWar Update</span>
+        <span class="version-text prevent-select">Version 1.9</span>
     </div>
 </template>
 <style scoped>
