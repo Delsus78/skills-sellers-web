@@ -21,6 +21,8 @@ import {
     faGifts as giftCodeIcon,
     faGear as settingsIcon,
     faW as wordleIcon
+    faShield as satelliteIcon,
+    faBookAtlas as registreIcon
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
@@ -59,7 +61,7 @@ const openSettingsTab = () => {
         <RouterLink class="nav-title" to="/">
             <TitleImage in-line/>
         </RouterLink>
-        <h1>{{ pageName }}</h1>
+        <h1>{{ pageName.charAt(0).toUpperCase() + pageName.slice(1) }}</h1>
         <div class="navbar-nav">
             <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening"
                         class="nav-item"
@@ -98,6 +100,18 @@ const openSettingsTab = () => {
                         :class="{selected: pageName === 'batiments'}"
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/satellites`"
+                        v-tooltip:bottom.tooltip="'Guerres et Protection'"
+                        :class="{selected: pageName === 'satellites'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/registre`"
+                        v-tooltip:bottom.tooltip="'Registre de planète'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="36"/>
             </RouterLink>
             <RouterLink :to="`/games`"
                         :class="{selected: pageName === 'games'}"
@@ -148,7 +162,7 @@ const openSettingsTab = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.9</span>
+        <span class="version-text prevent-select">Version 2.0 - SpaceWar Update</span>
     </div>
 </template>
 <style scoped>
@@ -173,7 +187,7 @@ h1 {
 }
 
 .navbar .nav-title {
-    width: 25rem;
+    width: 20rem;
     margin: 0 10px;
     text-decoration: none;
     display: flex;
