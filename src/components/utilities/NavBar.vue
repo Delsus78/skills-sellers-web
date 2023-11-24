@@ -20,7 +20,7 @@ import {
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
     faGear as settingsIcon,
-    faW as wordleIcon
+    faW as wordleIcon,
     faShield as satelliteIcon,
     faBookAtlas as registreIcon
 } from "@fortawesome/free-solid-svg-icons";
