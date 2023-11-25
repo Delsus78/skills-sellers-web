@@ -1,18 +1,28 @@
 <script setup>
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {useAuthStore} from "@/stores";
+import {useAuthStore, useUsersStore} from "@/stores";
 import SatelliteDisplayer from "@/components/utilities/satellites/SatelliteDisplayer.vue";
 const authStore = useAuthStore();
+const usersStore = useUsersStore();
 
 const { user: authUser } = storeToRefs(authStore);
+const { buildings } = storeToRefs(usersStore);
+
+usersStore.getBuildingsOfUser(authUser.value.id);
 
 </script>
 <template>
-  <div class="satellite_container">
-      <RandomPlanet class="planet" v-model="authUser.pseudo" :width="250" :height="250" :planet-id='1'/>
-      <SatelliteDisplayer class="satellite_displayer" :level="3"/>
-  </div>
+    <div v-if="buildings.loading">
+        <p class="huge-text">Chargement des bâtiments...</p>
+    </div>
+    <div v-else-if="buildings.error" class="huge-text text-danger">
+        Erreur lors du chargement des bâtiments: {{buildings.error}}
+    </div>
+    <div v-else class="satellite_container">
+        <RandomPlanet class="planet" v-model="authUser.pseudo" :width="250" :height="250" :planet-id='1'/>
+        <SatelliteDisplayer class="satellite_displayer" :level="buildings.satelliteLevel" :satellite-used="buildings.actualSatelliteUsed"/>
+    </div>
 </template>
 <style scoped>
 .satellite_container {

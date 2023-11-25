@@ -1,8 +1,12 @@
 <script setup>
 import { computed } from 'vue';
 
-const props = defineProps({
+const { level, circleRadius, satelliteSize, satelliteUsed } = defineProps({
     level: {
+        type: Number,
+        required: true
+    },
+    satelliteUsed: {
         type: Number,
         required: true
     },
@@ -16,18 +20,18 @@ const props = defineProps({
     }
 });
 
-const satellites = computed(() => Array.from({ length: props.level }, (_, i) => i + 1));
+const satellites = computed(() => Array.from({ length: level }, (_, i) => i + 1));
 
 // Calculez la taille totale nécessaire pour la viewBox
-const totalSize = props.circleRadius * 2 + props.satelliteSize * 2;
+const totalSize = circleRadius * 2 + satelliteSize * 2;
 const viewBoxSize = computed(() => `0 0 ${totalSize} ${totalSize}`);
 
 // Calculez la transformation pour centrer le groupe
 const groupTransform = computed(() => `translate(${totalSize / 2} ${totalSize / 2})`);
 
 const satelliteStyle = (n) => {
-    const angle = (360 / props.level) * n;
-    const distance = props.circleRadius; // La distance des satellites par rapport au centre
+    const angle = (360 / level) * n;
+    const distance = circleRadius; // La distance des satellites par rapport au centre
     return {
         transform: `rotate(${angle}deg) translate(${distance}px)`,
         animation: `orbit 10s linear infinite`
@@ -40,13 +44,13 @@ const satelliteStyle = (n) => {
         <div class="satellite_displayer">
             <svg :viewBox="viewBoxSize" width="100%" height="100%">
                 <defs>
-                    <circle id="satellite" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
+                    <circle id="satellite_empty" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
+                    <circle id="satellite_used" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
                 </defs>
                 <g :transform="groupTransform">
-                    <circle cx="0" cy="0" :r="props.circleRadius" fill="none" stroke="currentColor" stroke-width="1"></circle>
-                    <!-- Vous pouvez ajuster stroke-width ci-dessus pour rendre l'anneau plus visible -->
+                    <circle cx="0" cy="0" :r="circleRadius" fill="none" stroke="currentColor" stroke-width="1"></circle>
                     <g v-for="n in satellites" :key="n" :style="satelliteStyle(n)">
-                        <use xlink:href="#satellite" />
+                        <use xlink:href="#satellite_empty" />
                     </g>
                 </g>
             </svg>
