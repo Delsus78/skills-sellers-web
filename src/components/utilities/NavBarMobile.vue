@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 import {useAuthStore, useUsersStore, useGiftStore, useMainStore} from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {
     faArrowRightToBracket as leaveIcon,
     faHome as homeIcon,
@@ -18,7 +18,7 @@ import {
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
-    faBars as menuIcon, faW as wordleIcon
+    faBars as menuIcon, faW as wordleIcon, faTree as noelIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -53,6 +53,13 @@ const unrollNavBar = () => {
     isUnrolled.value = !isUnrolled.value;
 }
 
+const isChristmas = computed(() => {
+    const date = new Date();
+    console.log(date.getMonth());
+    console.log(date.getDate());
+    return date.getMonth() === 11 && date.getDate() <= 25;
+});
+
 </script>
 <template>
     <div v-if="isMobileSize" class="navbar-mobile top">
@@ -62,6 +69,12 @@ const unrollNavBar = () => {
         </div>
 
         <div class="mobile-nav-items" :class="{hidden: !isUnrolled}">
+            <RouterLink v-if="isChristmas"
+                        to="/special" class="nav-item" v-tooltip:bottom.tooltip="'NOEL'">
+                <span class="epicColored">
+                    <svg-icon :fa-icon="noelIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink class="nav-item" v-if="user.nbCardOpeningAvailable > 0" to="/opening"
                         v-tooltip:bottom.tooltip="'Pack Opening !'">
                 <span class="colored">

@@ -13,3 +13,4 @@ export { default as ActionView } from './NewAction.vue';
 export { default as WordleView } from './Wordle.vue';
 export { default as SatellitesView } from './Satellites.vue';
 export { default as RegistreView } from './Registre.vue';
+export { default as SpecialView } from './Special.vue';

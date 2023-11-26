@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore, useUsersStore, useGiftStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
@@ -22,7 +22,8 @@ import {
     faGear as settingsIcon,
     faW as wordleIcon,
     faShield as satelliteIcon,
-    faBookAtlas as registreIcon
+    faBookAtlas as registreIcon,
+    faTree as noelIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
@@ -54,6 +55,13 @@ const openSettingsTab = () => {
     isSettingsTabOpened.value = !isSettingsTabOpened.value;
 }
 
+const isChristmas = computed(() => {
+    const date = new Date();
+    console.log(date.getMonth());
+    console.log(date.getDate());
+    return date.getMonth() === 11 && date.getDate() <= 25;
+});
+
 </script>
 
 <template>
@@ -63,6 +71,12 @@ const openSettingsTab = () => {
         </RouterLink>
         <h1>{{ pageName.charAt(0).toUpperCase() + pageName.slice(1) }}</h1>
         <div class="navbar-nav">
+            <RouterLink v-if="isChristmas"
+                to="/special" class="nav-item" v-tooltip:bottom.tooltip="'NOEL'">
+                <span class="epicColored">
+                    <svg-icon :fa-icon="noelIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening"
                         class="nav-item"
                         v-tooltip:bottom.tooltip="'Pack Opening !'">

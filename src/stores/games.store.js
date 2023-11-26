@@ -40,6 +40,34 @@ export const useGamesStore = defineStore({
             "results": 0,
             "error": "",
             "win": true
+        },
+        christmas: {
+            "daysOpened": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
         }
     }),
     actions: {
@@ -114,6 +142,37 @@ export const useGamesStore = defineStore({
                     console.error(error);
                     return this.wordle = {error};
                 });
+        },
+        async getChristmasList(){
+            const { user } = useAuthStore();
+
+            this.christmas = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/christmas`;
+            this.christmas = await fetchWrapper.get(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return this.christmas = {error};
+                });
+        },
+        async openChristmasGift() {
+            const { user } = useAuthStore();
+
+            this.christmas = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/christmas`;
+            let response = await fetchWrapper.post(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return this.christmas = {error};
+                });
+
+            // refresh user ressources and cards
+            if (!response.error) {
+                await useUsersStore().getUser(user.id);
+                await useCardsStore().getAllCardsFromUser(user.id);
+                await useGamesStore().getChristmasList();
+            }
+
+            this.christmas = response;
         }
     }
 });
