@@ -17,6 +17,17 @@ export const useGamesStore = defineStore({
             regles: "Règles du jeu : \n",
             isRepairing: false
         },
+        wordle: {
+            id: 0,
+            name: "WORDLE",
+            description: "Jouez au wordle et gagnez des ressources !",
+            regles: "Règles du jeu : \n",
+            isRepairing: false
+        },
+        wordleResponse: {
+            "name": "string",
+
+        },
         gameResponse: {
             "name": "string",
             "chances": 0,
@@ -29,6 +40,34 @@ export const useGamesStore = defineStore({
             "results": 0,
             "error": "",
             "win": true
+        },
+        christmas: {
+            "daysOpened": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
         }
     }),
     actions: {
@@ -43,7 +82,6 @@ export const useGamesStore = defineStore({
                     return this.game = {error};
                 });
 
-            console.log(response)
             this.game = response;
         },
         async postGameDay(gameName, bet, cardsIds){
@@ -60,7 +98,6 @@ export const useGamesStore = defineStore({
             // refresh user ressources and cards
             if (!response.error) {
                 await useUsersStore().getUser(user.id);
-                await useCardsStore().getAllCardsFromUser(user.id);
             }
 
             this.gameResponse = response;
@@ -79,22 +116,63 @@ export const useGamesStore = defineStore({
         async validateWordForWordleGame(gameName, word){
             const { user } = useAuthStore();
 
-            this.gameResponse = { loading: true };
-            let usedUrl = baseUrl + `/${user.id}/gameOfTheDay/play`;
+            this.wordleResponse = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/wordle`;
             let response = await fetchWrapper.post(usedUrl, {Name:gameName, Bet:0, CardsIds:[], Word:word})
                 .catch(error => {
                     console.error(error);
-                    return this.gameResponse = {error};
+                    return this.wordleResponse = {error};
+                });
+
+            // refresh user ressources and cards
+            if (!response.error) {
+                await useUsersStore().getUser(user.id);
+                await useGamesStore().getWordle();
+            }
+
+            this.wordleResponse = response;
+        },
+        async getWordle(){
+            const { user } = useAuthStore();
+
+            this.wordleResponse = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/wordle`;
+            this.wordle = await fetchWrapper.get(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return this.wordle = {error};
+                });
+        },
+        async getChristmasList(){
+            const { user } = useAuthStore();
+
+            this.christmas = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/christmas`;
+            this.christmas = await fetchWrapper.get(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return this.christmas = {error};
+                });
+        },
+        async openChristmasGift() {
+            const { user } = useAuthStore();
+
+            this.christmas = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/christmas`;
+            let response = await fetchWrapper.post(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return this.christmas = {error};
                 });
 
             // refresh user ressources and cards
             if (!response.error) {
                 await useUsersStore().getUser(user.id);
                 await useCardsStore().getAllCardsFromUser(user.id);
-                await useGamesStore().getGameDay();
+                await useGamesStore().getChristmasList();
             }
 
-            this.gameResponse = response;
+            this.christmas = response;
         }
     }
 });

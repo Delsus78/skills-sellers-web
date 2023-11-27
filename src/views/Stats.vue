@@ -228,7 +228,7 @@ const handleSend = () => {
                     </span>
                 </li>
                 <li class="stat-item" :class="{'legendaire-text': stats.totalWordleWon.rank === 1}">
-                    <span>Nombre de Worldle gagnés</span>
+                    <span>Nombre de Wordle gagnés</span>
                     <span class="stat-item-value">
                         <span>{{ stats.totalWordleWon.stat }}</span>
                         <span>{{ stats.totalWordleWon.rank }}</span>

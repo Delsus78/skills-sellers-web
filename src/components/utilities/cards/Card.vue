@@ -5,13 +5,17 @@
         <svg-icon v-if="isFavorite" class="colorEffect shadow-white" :fa-icon="heartIcon" :size="36"/>
         <svg-icon v-else class="shadow-white" :fa-icon="heartEmptyIcon" :size="36"/>
     </a>
+    <a class="selectedToggle" @click="onClick" v-if="showSelection">
+        <svg-icon v-if="isSelected" class="colorEffect shadow-white" :fa-icon="selectedIcon" :size="36"/>
+        <svg-icon v-else class="shadow-white" :fa-icon="notSelectedIcon" :size="36"/>
+    </a>
     <div :class="['card', rarity, { active: isActive }]"
-         @click="toggleActive"
+         @click="onClick"
          data-tilt
          data-tilt-glare
          data-tilt-max-glare="0.2"
          data-tilt-scale="1">
-        <img :src="imageUrl" class="card-image" alt="Game Card" />
+        <img rel="preload" :src="imageUrl" class="card-image" alt="Game Card" />
         <div class="card-text card2">
             <div class="top-text">
                 <span :class="['rarity', rarity + '-text']">{{ rarity }}</span>
@@ -89,6 +93,17 @@
                 </p>
             </div>
             <div v-if="action" class="cancelAction red" @click="emit('cancelAction', action.id)">Annuler l'action</div>
+            <div v-else class="startAction">
+                <RouterLink :to="`/action/explorer/` + id">
+                    <div class="startActionText red">Partir en exploration</div>
+                </RouterLink>
+                <RouterLink :to="`/action/cuisiner/` + id">
+                    <div class="startActionText red">Partir en cuisine</div>
+                </RouterLink>
+                <RouterLink :to="`/action/muscler/` + id">
+                    <div class="startActionText red">Partir à la salle</div>
+                </RouterLink>
+            </div>
         </div>
     </div>
 
@@ -105,13 +120,28 @@ import {
     faArrowRight as leftArrowIcon,
     faEarthEurope as planetIcon,
     faHeartCircleCheck as heartIcon,
-    faHeart as heartEmptyIcon
+    faHeart as heartEmptyIcon,
+    faCircleCheck as selectedIcon,
+    faCirclePlus as notSelectedIcon, faW as wordleIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
+import {RouterLink} from "vue-router";
 
 const isActive = ref(false);
-const { id, name, imageUrl, description, collection, rarity, competences, action, isFavorite, hideFavorite } = defineProps({
+const {
+    id,
+    name,
+    imageUrl,
+    description,
+    collection,
+    rarity,
+    competences,
+    action,
+    isFavorite,
+    isSelected,
+    hideFavorite,
+    showSelection } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -162,14 +192,24 @@ const { id, name, imageUrl, description, collection, rarity, competences, action
         required: false,
         default: false
     },
+    isSelected: {
+        type: Boolean,
+        required: false,
+        default: null
+    },
     hideFavorite: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    showSelection: {
         type: Boolean,
         required: false,
         default: false
     }
 
 });
-const emit = defineEmits(['cancelAction', 'switchFavorite']);
+const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
 let intervalId;
@@ -195,9 +235,17 @@ function updateDates() {
     pourcentageRemainingTime.value = getPourcentageRemainingTime(action?.endTime, action?.createdAt);
 }
 
-function toggleActive() {
-    isActive.value = !isActive.value;
+function onClick() {
+
+    if (showSelection) {
+        // Si l'événement onClick est défini par le parent, émettez-le
+        emit('onClick', id);
+    } else {
+        // Sinon, exécutez la logique par défaut
+        isActive.value = !isActive.value;
+    }
 }
+
 
 function switchFavorite() {
     emit('switchFavorite');
@@ -248,6 +296,18 @@ function switchFavorite() {
 }
 
 .favoriteToggle svg {
+    color: white;
+    font-size: 2rem;
+}
+
+.selectedToggle {
+    position: absolute;
+    transform: translate(150%, 0);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.selectedToggle svg {
     color: white;
     font-size: 2rem;
 }
@@ -428,6 +488,19 @@ function switchFavorite() {
 
 .cancelAction:hover {
     transform: scale(1.2);
+    color: var(--vt-c-red-2);
+    filter: drop-shadow(0 0 4px var(--vt-c-red-2));
+}
+
+.startActionText {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-text);
+    text-align: center;
+    margin: 0;
+}
+
+.startActionText:hover {
     color: var(--vt-c-red-2);
     filter: drop-shadow(0 0 4px var(--vt-c-red-2));
 }

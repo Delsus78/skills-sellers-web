@@ -147,6 +147,7 @@ import {onBeforeUnmount, onMounted} from "vue";
         stars.forEach( placeStar );
     }
     const step = () => {
+        if (context === null) return;
         context.clearRect( 0, 0, width, height );
         update();
         render();

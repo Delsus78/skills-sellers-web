@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 import { useAuthStore, useUsersStore, useGiftStore } from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import TitleImage from "@/components/icons/TitleImage.vue";
 import {
     faArrowRightToBracket as leaveIcon,
@@ -20,6 +20,10 @@ import {
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
     faGear as settingsIcon,
+    faW as wordleIcon,
+    faShield as satelliteIcon,
+    faBookAtlas as registreIcon,
+    faTree as noelIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
@@ -51,6 +55,13 @@ const openSettingsTab = () => {
     isSettingsTabOpened.value = !isSettingsTabOpened.value;
 }
 
+const isChristmas = computed(() => {
+    const date = new Date();
+    console.log(date.getMonth());
+    console.log(date.getDate());
+    return date.getMonth() === 11 && date.getDate() <= 25;
+});
+
 </script>
 
 <template>
@@ -58,8 +69,14 @@ const openSettingsTab = () => {
         <RouterLink class="nav-title" to="/">
             <TitleImage in-line/>
         </RouterLink>
-        <h1>{{ pageName }}</h1>
+        <h1>{{ pageName.charAt(0).toUpperCase() + pageName.slice(1) }}</h1>
         <div class="navbar-nav">
+            <RouterLink v-if="isChristmas"
+                to="/special" class="nav-item" v-tooltip:bottom.tooltip="'NOEL'">
+                <span class="epicColored">
+                    <svg-icon :fa-icon="noelIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink v-if="user.nbCardOpeningAvailable > 0" to="/opening"
                         class="nav-item"
                         v-tooltip:bottom.tooltip="'Pack Opening !'">
@@ -104,6 +121,12 @@ const openSettingsTab = () => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="gamesIcon" :size="36"/>
             </RouterLink>
+            <RouterLink :to="`/wordle`"
+                        :class="{selected: pageName === 'wordle'}"
+                        v-tooltip:bottom.tooltip="'Wordle'"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="wordleIcon" :size="36"/>
+            </RouterLink>
             <a @click="openGiftCodePrompt"
                v-tooltip:bottom.tooltip="'Code cadeau'"
                class="nav-item"><svg-icon class="green" :fa-icon="giftCodeIcon" :size="36"/></a>
@@ -141,7 +164,7 @@ const openSettingsTab = () => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.8</span>
+        <span class="version-text prevent-select">Version 1.9</span>
     </div>
 </template>
 <style scoped>
@@ -166,7 +189,7 @@ h1 {
 }
 
 .navbar .nav-title {
-    width: 40rem;
+    width: 20rem;
     margin: 0 10px;
     text-decoration: none;
     display: flex;
@@ -186,7 +209,6 @@ h1 {
 
 .nav-item {
     color: white;
-    font-size: 2rem;
     font-weight: bold;
     margin: 0 10px;
     text-decoration: none;

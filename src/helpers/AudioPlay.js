@@ -1,5 +1,6 @@
 import msgSound from '../assets/sounds/msg_receive.mp3';
 import oof from '../assets/sounds/oof.mp3';
+import door from '../assets/sounds/door.mp3';
 
 export const PlayAudio = async (type) => {
     let audio = null;
