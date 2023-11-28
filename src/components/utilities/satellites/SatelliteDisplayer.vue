@@ -20,7 +20,9 @@ const { level, circleRadius, satelliteSize, satelliteUsed } = defineProps({
     }
 });
 
-const satellites = computed(() => Array.from({ length: level }, (_, i) => i + 1));
+const satellitesEmpty = computed(() => {
+    return level - satelliteUsed;
+    });
 
 // Calculez la taille totale nécessaire pour la viewBox
 const totalSize = circleRadius * 2 + satelliteSize * 2;
@@ -45,12 +47,15 @@ const satelliteStyle = (n) => {
             <svg :viewBox="viewBoxSize" width="100%" height="100%">
                 <defs>
                     <circle id="satellite_empty" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
-                    <circle id="satellite_used" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
+                    <circle id="satellite_used" cx="0" cy="0" :r="satelliteSize" fill="red"></circle>
                 </defs>
                 <g :transform="groupTransform">
                     <circle cx="0" cy="0" :r="circleRadius" fill="none" stroke="currentColor" stroke-width="1"></circle>
-                    <g v-for="n in satellites" :key="n" :style="satelliteStyle(n)">
+                    <g v-for="n in satellitesEmpty" :key="n" :style="satelliteStyle(n)">
                         <use xlink:href="#satellite_empty" />
+                    </g>
+                    <g v-for="n in satelliteUsed" :key="n" :style="satelliteStyle(n + satellitesEmpty)">
+                        <use xlink:href="#satellite_used" />
                     </g>
                 </g>
             </svg>

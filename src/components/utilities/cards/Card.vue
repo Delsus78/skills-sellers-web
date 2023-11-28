@@ -11,6 +11,7 @@
     </a>
     <div :class="['card', rarity, { active: isActive }]"
          @click="onClick"
+         ref="tiltCard"
          data-tilt
          data-tilt-glare
          data-tilt-max-glare="0.2"
@@ -24,8 +25,13 @@
             <h2 class="shadow-black">{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
+        <div class="card-power">
+            <div class="top-text">
+                <p v-if="competences.power" class="meethicColored powerText">{{ competences.power }} <svg-icon :fa-icon="satelliteIcon" :size="20"/></p>
+            </div>
+        </div>
         <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">
-            {{ action ? action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}
+            {{ action ? action.actionName === 'satellite' ? 'Satellite' : action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}
             <progress-bar v-if="action" :pourcentage="pourcentageRemainingTime" :text="clearRemainingTime"/>
         </footer>
         <div class="card-stats">
@@ -53,7 +59,7 @@
     </div>
     <div class="actionInfo bg-dark-blur" v-if="isActive">
         <div class="actionInfoText">
-            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
+            <h2 class="title huge-text shadow-white">{{ action ? action.actionName === 'satellite' ? 'Satellite' : action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
             <p class="date">{{ action ? 'Termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
             <p>{{ action ? format(action.endTime, "DD MMMM YYYY HH:mm:ss Z") : ''}}</p>
             <div v-for="(val, actionKey ) in action || {}">
@@ -122,7 +128,8 @@ import {
     faHeartCircleCheck as heartIcon,
     faHeart as heartEmptyIcon,
     faCircleCheck as selectedIcon,
-    faCirclePlus as notSelectedIcon, faW as wordleIcon,
+    faCirclePlus as notSelectedIcon,
+    faShield as satelliteIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
@@ -212,20 +219,31 @@ const {
 const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
+const tiltCard = ref(null);
 let intervalId;
+let tiltInstance;
 
 onMounted(() => {
-    VanillaTilt.init(document.querySelectorAll("[data-tilt]"),{
-        glare: true,
-        reverse: true,
-        "max-glare": 0.15
-    });
+    if (tiltCard.value) {
+        tiltInstance = new VanillaTilt(tiltCard.value, {
+            glare: true,
+            reverse: true,
+            "max-glare": 0.15
+        });
+    }
 
     intervalId = setInterval(updateDates, 1000);
 });
 
 onUnmounted(() => {
-    clearInterval(intervalId);  // Arrête l'intervalle lorsqu'on quitte le composant
+    if (tiltInstance) {
+        tiltInstance.destroy();
+    }
+
+    // Arrêter le setInterval
+    if (intervalId) {
+        clearInterval(intervalId);
+    }
 });
 
 function updateDates() {
@@ -400,6 +418,20 @@ function switchFavorite() {
     font-size:13px;
     font-weight: bold;
     font-family: "Big John", sans-serif;
+}
+
+.card-power {
+    grid-area: image;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    margin-left: 1rem;
+    filter: drop-shadow(0 0 0.1rem black);
+    transform: translateZ(30px) translateY(-7.5rem) translateX(-1.5rem);
 }
 
 .actif {

@@ -18,7 +18,11 @@ import {
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
-    faBars as menuIcon, faW as wordleIcon, faTree as noelIcon
+    faBars as menuIcon,
+    faW as wordleIcon,
+    faTree as noelIcon,
+    faShield as satelliteIcon,
+    faBookAtlas as registreIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -55,8 +59,6 @@ const unrollNavBar = () => {
 
 const isChristmas = computed(() => {
     const date = new Date();
-    console.log(date.getMonth());
-    console.log(date.getDate());
     return date.getMonth() === 11 && date.getDate() <= 25;
 });
 
@@ -106,6 +108,16 @@ const isChristmas = computed(() => {
                         v-tooltip:bottom.tooltip="'Batiments & Actions'"
                         :class="{selected: pageName === 'batiments'}">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="30"/>
+            </RouterLink>
+            <RouterLink class="nav-item" :to="`/satellites`"
+                        v-tooltip:bottom.tooltip="'Guerres et Protection'"
+                        :class="{selected: pageName === 'satellites'}">
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="30"/>
+            </RouterLink>
+            <RouterLink class="nav-item" :to="`/registre`"
+                        v-tooltip:bottom.tooltip="'Registre de planète'"
+                        :class="{selected: pageName === 'registre'}">
+                <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="30"/>
             </RouterLink>
             <RouterLink class="nav-item" :to="`/games`"
                         :class="{selected: pageName === 'games'}"

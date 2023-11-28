@@ -2,7 +2,7 @@
 
 import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import ActionForm from "@/components/utilities/actions/ActionForm.vue";
-import {onBeforeMount, onMounted, ref, watch} from "vue";
+import {onBeforeMount, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {storeToRefs} from "pinia";
 import {useActionsStore, useAuthStore, useCardsStore, useUsersStore} from "@/stores";
@@ -89,7 +89,7 @@ const setBatimentToUpgrade = async (batiment) => {
                         :removed-stats-at10="actionType === 'muscler' ? [{name:'force', value:10}] : []"
                         @resulted-list="onSelectedCardsChanged"/>
           <ActionForm class="actionForm" :action-name="actionType" :selected-cards="selectedCardsIds"
-                      :estimated-action="estimatedAction" :batiment-to-upgrade="{name: batimentToUpgrade}"
+                      :estimated-action="estimatedAction" :batiment-to-upgrade="{name: batimentToUpgrade, id: batimentToUpgrade}"
                       @cancel="cancelAction" @validate="sendAction" :key="estimatedAction"
                       @updateBatiment-to-upgrade="setBatimentToUpgrade"/>
       </div>
