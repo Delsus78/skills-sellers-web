@@ -43,10 +43,8 @@ const validate = () => {
 
 const handleUpdateOption = (option) => {
     batToUpDisplay.value = option;
-    emit('updateBatimentToUpgrade', batToUpDisplay.value.name);
+    emit('updateBatimentToUpgrade', batToUpDisplay.value.id);
 }
-
-
 
 </script>
 <template>
@@ -89,7 +87,10 @@ const handleUpdateOption = (option) => {
         </div>
       </div>
       <dropdown v-if='actionName === "ameliorer"' class="dropdown-batiments"
-                :options="[{name: 'cuisine'},{name: 'spatioport'},{name: 'salledesport'}]"
+                :options="[{name: 'Cuisine', id: 'cuisine'},
+                          {name: 'SpatioPort', id: 'spatioport'},
+                          {name: 'Salle de sport', id: 'salledesport'},
+                          {name: 'Satellite', id: 'satellite'}]"
                 placeholder="Choisissez un batiment à améliorer"
                 :selected="batimentToUpgrade"
                 v-on:updateOption="handleUpdateOption"></dropdown>

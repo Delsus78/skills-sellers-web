@@ -57,8 +57,6 @@ const openSettingsTab = () => {
 
 const isChristmas = computed(() => {
     const date = new Date();
-    console.log(date.getMonth());
-    console.log(date.getDate());
     return date.getMonth() === 11 && date.getDate() <= 25;
 });
 
@@ -115,6 +113,18 @@ const isChristmas = computed(() => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="36"/>
             </RouterLink>
+            <RouterLink :to="`/satellites`"
+                        v-tooltip:bottom.tooltip="'Guerres et Protection'"
+                        :class="{selected: pageName === 'satellites'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/registre`"
+                        v-tooltip:bottom.tooltip="'Registre de planète'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item">
+                <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="36"/>
+            </RouterLink>
             <RouterLink :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'"
@@ -164,7 +174,7 @@ const isChristmas = computed(() => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 1.9</span>
+        <span class="version-text prevent-select">Version 2.0 - SpaceWar Update</span>
     </div>
 </template>
 <style scoped>
