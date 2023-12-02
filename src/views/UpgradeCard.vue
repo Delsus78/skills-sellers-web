@@ -92,11 +92,12 @@ const validate = async () => {
     let confirm = window.confirm("Confirmer l'action ?");
 
     if (confirm) {
+        const noDoublonLeft = user.value.cardsDoublons?.length === 1;
         await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
         await router.push('/cards');
 
-        if (user.value.cardsDoublons?.length > 0) {
+        if (!noDoublonLeft) {
             await router.push('/upgrade');
         }
     }
