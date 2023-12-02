@@ -328,6 +328,7 @@ function selectCard(cardId) {
     gap: 16px;
     justify-content: center;
     align-items: center;
+    margin-top: 2rem;
 
     @media (max-width: 1910px) {
         grid-template-columns: repeat(3, 1fr);

@@ -30,6 +30,7 @@
                 <option value="force">Force</option>
                 <option value="exploration">Exploration</option>
                 <option value="intelligence">Intelligence</option>
+                <option value="power">Puissance</option>
             </select>
         </div>
         <div v-if="cards.length" class="cards">
@@ -118,11 +119,14 @@ const filteredList = computed(() => {
     }
 
     if (competenceFilter.value) {
-        result = result.sort((a, b) => {
-            const aCompetence = a.competences[competenceFilter.value.toLowerCase()];
-            const bCompetence = b.competences[competenceFilter.value.toLowerCase()];
-            return bCompetence - aCompetence;
-        });
+        if (competenceFilter.value === 'power')
+            result = result.sort((a, b) => b.competences.power - a.competences.power);
+        else
+            result = result.sort((a, b) => {
+                const aCompetence = a.competences[competenceFilter.value.toLowerCase()];
+                const bCompetence = b.competences[competenceFilter.value.toLowerCase()];
+                return bCompetence - aCompetence;
+            });
     }
 
     if (endingDateFilter.value) {
