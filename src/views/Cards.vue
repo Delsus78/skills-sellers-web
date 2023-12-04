@@ -44,6 +44,7 @@
                       :rarity="card.rarity"
                       :collection="card.collection"
                       :action="card.action"
+                      :weapon="card.weapon"
                       :isFavorite="favoritesIds.includes(card.id)"
                       @cancel-action="cancelAction" @switch-favorite="switchFavorite(card.id)"/>
             </div>

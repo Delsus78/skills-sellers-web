@@ -25,9 +25,17 @@
             <h2 class="shadow-black">{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
+        <div class="card-id">
+            <span class="collection-text">{{ id }}</span>
+        </div>
         <div class="card-power">
             <div class="top-text">
-                <p v-if="competences.power" class="meethicColored powerText">{{ competences.power }} <svg-icon :fa-icon="satelliteIcon" :size="20"/></p>
+                <p v-if="competences.power" class="meethicColored powerText">{{ competences.power }} <svg-icon :fa-icon="fireIcon" :size="24"/></p>
+            </div>
+        </div>
+        <div class="card-weapon">
+            <div class="top-text">
+                <p v-if="weapon" class="weaponText">{{ weapon.power }} <svg-icon :fa-icon="weaponIcon" :size="25"/></p>
             </div>
         </div>
         <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">
@@ -129,7 +137,8 @@ import {
     faHeart as heartEmptyIcon,
     faCircleCheck as selectedIcon,
     faCirclePlus as notSelectedIcon,
-    faShield as satelliteIcon,
+    faFire as fireIcon,
+    faGun as weaponIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
@@ -148,7 +157,8 @@ const {
     isFavorite,
     isSelected,
     hideFavorite,
-    showSelection } = defineProps({
+    showSelection,
+    weapon } = defineProps({
     id: {
         type: Number,
         required: true,
@@ -190,6 +200,11 @@ const {
         })
     },
     action: {
+        type: Object,
+        required: false,
+        default: () => {}
+    },
+    weapon: {
         type: Object,
         required: false,
         default: () => {}
@@ -420,8 +435,17 @@ function switchFavorite() {
     font-family: "Big John", sans-serif;
 }
 
+.card-id {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(1rem) translateY(0.5rem);
+    filter: drop-shadow(0 0 0.1rem black);
+}
+
 .card-power {
-    grid-area: image;
+    position: absolute;
     display: flex;
     align-items: end;
     justify-content: center;
@@ -429,9 +453,25 @@ function switchFavorite() {
     font-size: 1.5rem;
     font-weight: bold;
     font-family: "Big John", sans-serif;
-    margin-left: 1rem;
     filter: drop-shadow(0 0 0.1rem black);
-    transform: translateZ(30px) translateY(-7.5rem) translateX(-1.5rem);
+    transform: translateZ(30px) translateX(15.5rem) translateY(1.2rem);
+}
+
+.powerText {
+    filter: drop-shadow(0 0 0.1rem #ff0000) !important;
+}
+
+.card-weapon {
+    position: absolute;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    filter: drop-shadow(0 0 0.1rem black);
+    transform: translateZ(30px) translateX(1.5rem) translateY(1rem);
 }
 
 .actif {
