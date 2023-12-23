@@ -5,6 +5,10 @@ export const useMainStore = defineStore({
         backgroundColor: '#9f9f9f',
         isMobileSize: false,
         favoritesIds: JSON.parse(localStorage.getItem('favoritesIds') ?? '[]'),
+        showWeaponList: false,
+
+        // card to change weapon
+        cardIdToChange: null
     }),
     actions: {
         changeBackgroundColor(color) {
@@ -23,6 +27,17 @@ export const useMainStore = defineStore({
         removeFavoriteId(id) {
             this.favoritesIds = this.favoritesIds.filter(x => x !== id);
             localStorage.setItem('favoritesIds', JSON.stringify(this.favoritesIds));
+        },
+        toggleWeaponList(cardId) {
+            if (cardId) {
+                this.showWeaponList = !this.showWeaponList;
+            }
+            else this.showWeaponList = false;
+
+            if (this.showWeaponList)
+                this.cardIdToChange = cardId;
+            else
+                this.cardIdToChange = null;
         }
     }
 });

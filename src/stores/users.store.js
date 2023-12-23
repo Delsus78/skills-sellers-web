@@ -84,7 +84,8 @@ export const useUsersStore = defineStore({
             nbCards: 0,
             creatium: 0,
             or: 0,
-            nourriture: 0
+            nourriture: 0,
+            score: 0
         },
         buildings: {
             cuisineLevel: 1,

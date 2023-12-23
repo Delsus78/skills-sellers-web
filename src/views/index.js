@@ -13,4 +13,8 @@ export { default as ActionView } from './NewAction.vue';
 export { default as WordleView } from './Wordle.vue';
 export { default as SatellitesView } from './Satellites.vue';
 export { default as RegistreView } from './Registre.vue';
+export { default as FightReportsView } from './FightReports.vue';
 export { default as SpecialView } from './Special.vue';
+export { default as PlayersRegistreView } from './PlayersRegistre.vue';
+export { default as WeaponOpeningView } from './WeaponOpeningPage.vue';
+export { default as WeaponUpgradeView } from './WeaponUpgradePage.vue';

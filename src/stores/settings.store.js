@@ -16,17 +16,14 @@ export const useSettingsStore = defineStore({
         switchBGStarActive() {
             this.isStarsActive = !this.isStarsActive;
             localStorage.setItem('Settings_isStarsActive', JSON.stringify(this.isStarsActive));
-            console.log(this.isStarsActive);
         },
         switchNotifSoundActive() {
             this.isNotifSoundActive = !this.isNotifSoundActive;
             localStorage.setItem('Settings_isNotifSoundActive', JSON.stringify(this.isNotifSoundActive));
-            console.log(this.isNotifSoundActive);
         },
         switchGlobalChatSoundActive() {
             this.isGlobalChatSoundActive = !this.isGlobalChatSoundActive;
             localStorage.setItem('Settings_isGlobalChatSoundActive', JSON.stringify(this.isGlobalChatSoundActive));
-            console.log(this.isGlobalChatSoundActive);
         }
     }
 });

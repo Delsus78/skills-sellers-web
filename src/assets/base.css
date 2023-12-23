@@ -174,3 +174,25 @@ body {
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
+
+.clickable {
+    cursor: pointer;
+    transition: color 0.5s, filter 0.5s;
+}
+
+.clickable:hover {
+    color: var(--vt-c-white);
+    filter: drop-shadow(0 0 4px var(--vt-c-white-1));
+}
+
+.or {
+    color: yellow;
+}
+
+.food {
+    color: yellowgreen;
+}
+
+.creatium {
+    color: #2fc9e2;
+}

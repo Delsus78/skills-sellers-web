@@ -1,5 +1,6 @@
 <script setup>
 import {getFormattedRemainingTime} from "./DateFormator";
+import {computed} from "vue";
 const { title, date, content, id } = defineProps({
     title: {
         type: String,
@@ -80,6 +81,7 @@ const deleteNotification = () => {
 
 .notification .content {
     grid-area: content;
+    white-space: pre-line;
     display: flex;
     justify-content: space-between;
     align-items: center;

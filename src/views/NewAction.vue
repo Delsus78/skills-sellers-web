@@ -38,7 +38,6 @@ watch(() => cards.value, async () => {
 
 const refreshEstimatedAction = async () => {
     let cardsIds = selectedCardsIds.value;
-    console.log(cardsIds);
     if (cardsIds.length === 0) {
         estimatedAction.value = {};
         return;
@@ -50,7 +49,6 @@ const refreshEstimatedAction = async () => {
 const sendAction = async () => {
     let cardsIds = selectedCardsIds.value;
 
-    console.log(cardsIds);
     let params = actionType.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value} : {batimentToUpgrade: null};
     await actionsStore.postActionForCards(cardsIds, actionType.value, params);
 

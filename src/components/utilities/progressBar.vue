@@ -15,11 +15,14 @@ const { pourcentage, text } = defineProps({
 </script>
 <template>
     <div class="progress">
-        <div class="progress-bar" :style="{width: pourcentage + '%',
+        <div v-if='pourcentage <= 100' class="progress-bar" :style="{width: pourcentage + '%',
           'background-color': 'rgba('+(246-1.12 * pourcentage)+','
                                      +(58+1.66 * pourcentage)+','
                                      +(15+0.15 * pourcentage)+', 0.6)' }"></div>
-        <div class="progress-bar-text">{{ text }}</div>
+        <div v-else class="progress-bar" :style="{width: '100%',
+          'background-color': 'rgba(144, 0, 0, 0.6)' }"></div>
+        <div v-if='pourcentage <= 100' class="progress-bar-text">{{ text }}</div>
+        <div v-else class="progress-bar-text">BLOQUEE</div>
     </div>
 </template>
 <style scoped>

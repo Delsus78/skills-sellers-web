@@ -38,7 +38,7 @@ const cardInfo = ref({});
 onMounted(async () => {
     cardInfo.value = await actionsStore.postOpenCard();
     if (cardInfo.value?.doublon) {
-        await router.push('/upgrade');
+        await router.push('/upgrade/card');
     }
 });
 

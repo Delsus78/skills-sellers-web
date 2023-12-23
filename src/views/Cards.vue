@@ -19,9 +19,10 @@
                 <option value="ameliorer">Améliorer</option>
                 <option value="!">Ne fais rien</option>
             </select>
-            <select v-model="endingDateFilter">
-                <option value="">Trier par date ...</option>
+            <select v-model="otherFilter">
+                <option value="">Autres filtre ...</option>
                 <option value="endingsoon">Fin proche</option>
+                <option value="hasweapon">Possède une arme</option>
             </select>
             <select v-model="competenceFilter">
                 <option value="">Trier par compétence...</option>
@@ -45,10 +46,14 @@
                       :collection="card.collection"
                       :action="card.action"
                       :weapon="card.weapon"
+                      :power="card.power"
                       :isFavorite="favoritesIds.includes(card.id)"
-                      @cancel-action="cancelAction" @switch-favorite="switchFavorite(card.id)"/>
+                      @cancel-action="cancelAction"
+                      @switch-favorite="switchFavorite(card.id)"
+                      @decision="setExplorationDecision"
+                      @on-weapon-clicked="clickOnWeapon"
+                      @onClick="mainStore.toggleWeaponList(null)"/>
             </div>
-
         </div>
         <div v-if="cards.loading">
             <p class="huge-text">Chargement des cartes...</p>
@@ -77,7 +82,7 @@ const searchText = ref(filtersStore.filters?.searchText ?? '');
 const collectionFilter = ref(filtersStore.filters?.collectionFilter ?? '');
 const rarityFilter = ref(filtersStore.filters?.rarityFilter ?? '');
 const actionFilter = ref(filtersStore.filters?.actionFilter ?? '');
-const endingDateFilter = ref(filtersStore.filters?.endingDateFilter ?? '');
+const otherFilter = ref(filtersStore.filters?.otherFilter ?? '');
 const competenceFilter = ref(filtersStore.filters?.competenceFilter ?? '');
 
 const filteredList = computed(() => {
@@ -130,15 +135,19 @@ const filteredList = computed(() => {
             });
     }
 
-    if (endingDateFilter.value) {
+    if (otherFilter.value) {
         // fin proche
-        if (endingDateFilter.value === 'endingsoon') {
+        if (otherFilter.value === 'endingsoon') {
             result = result.filter(item => item.action?.endTime);
             result = result.sort((a, b) => {
                 const aDate = new Date(a.action?.endTime) - new Date();
                 const bDate = new Date(b.action?.endTime) - new Date();
                 return aDate - bDate;
             });
+        }
+
+        if (otherFilter.value === 'hasweapon') {
+            result = result.filter(item => item.weapon);
         }
     }
 
@@ -148,7 +157,7 @@ const filteredList = computed(() => {
         collectionFilter: collectionFilter.value,
         rarityFilter: rarityFilter.value,
         actionFilter: actionFilter.value,
-        endingDateFilter: endingDateFilter.value,
+        otherFilter: otherFilter.value,
         competenceFilter: competenceFilter.value,
     });
 
@@ -190,7 +199,7 @@ const resetFilters = () => {
     collectionFilter.value = '';
     rarityFilter.value = '';
     actionFilter.value = '';
-    endingDateFilter.value = '';
+    otherFilter.value = '';
     competenceFilter.value = '';
 
     filtersStore.setFilters({
@@ -198,11 +207,22 @@ const resetFilters = () => {
         collectionFilter: '',
         rarityFilter: '',
         actionFilter: '',
-        endingDateFilter: '',
+        otherFilter: '',
         competenceFilter: '',
     });
 }
 
+const setExplorationDecision = async (decision, actionId) => {
+    await actionsStore.postActionDecision(actionId, decision);
+}
+
+const changeWeaponOfCard = (cardId, weaponId) => {
+    cardsStore.postChangeWeapon(cardId, weaponId);
+}
+
+const clickOnWeapon = (cardId) => {
+    mainStore.toggleWeaponList(cardId);
+}
 </script>
 <style scoped>
 .cardsWrapper {

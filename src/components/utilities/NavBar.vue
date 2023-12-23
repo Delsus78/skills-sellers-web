@@ -15,7 +15,8 @@ import {
     faCubesStacked as creatiumIcon,
     faEarthEurope as planetIcon,
     faGift as giftIcon,
-    faAnglesUp as upgradeIcon,
+    faAnglesUp as doublonIcon,
+    faArrowUpWideShort as upgradeIcon,
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
@@ -23,7 +24,9 @@ import {
     faW as wordleIcon,
     faShield as satelliteIcon,
     faBookAtlas as registreIcon,
-    faTree as noelIcon,
+    faBookDead as fightIcon,
+    faPeopleArrows as playersRegistreIcon,
+    faTree as noelIcon, faGun as weaponIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
@@ -82,11 +85,25 @@ const isChristmas = computed(() => {
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="40" />
                 </span>
             </RouterLink>
-            <RouterLink v-if="user.cardsDoublons?.length > 0" to="/upgrade"
+            <RouterLink v-if="user.cardsDoublons?.length > 0" to="/upgrade/card"
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'"
                         class="nav-item">
                 <span class="colored">
-                    {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
+                    {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="doublonIcon" :size="40" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.nbWeaponUpgradeAvailable > 0" to="/upgrade/weapon"
+                        v-tooltip:bottom.tooltip="'Amélioration d\'arme disponible !'"
+                        class="nav-item">
+                <span class="colored">
+                    {{ user.nbWeaponUpgradeAvailable }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/weapon"
+                        v-tooltip:bottom.tooltip="'Nouvelle arme disponible !'"
+                        class="nav-item">
+                <span class="colored">
+                    {{ user.nbWeaponOpeningAvailable }}<svg-icon :fa-icon="weaponIcon" :size="40" />
                 </span>
             </RouterLink>
             <RouterLink to="/"
@@ -119,12 +136,26 @@ const isChristmas = computed(() => {
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="36"/>
             </RouterLink>
-            <RouterLink :to="`/registre`"
+            <RouterLink :to="`/registre/${authUser.id}`"
                         v-tooltip:bottom.tooltip="'Registre de planète'"
                         :class="{selected: pageName === 'registre'}"
                         class="nav-item">
                 <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="36"/>
             </RouterLink>
+
+            <RouterLink v-if="pageName === 'registre'" :to="`/registre/fightreports`"
+                        v-tooltip:bottom.tooltip="'Registre des combats'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre">
+                <svg-icon class="shadow-white" :fa-icon="fightIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink v-if="pageName === 'registre'" :to="`/registre/${authUser.id}/playersregistre`"
+                        v-tooltip:bottom.tooltip="'Registre des joueurs'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre second">
+                <svg-icon class="shadow-white" :fa-icon="playersRegistreIcon" :size="36"/>
+            </RouterLink>
+
             <RouterLink :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'"
@@ -171,6 +202,10 @@ const isChristmas = computed(() => {
             </span>
 
             <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
+            <span class="scoreDiv">
+                <span>Score de Guerre</span>
+                <span class="scoreText">{{ user.score }}</span>
+            </span>
         </div>
     </nav>
     <div class="version">
@@ -229,6 +264,24 @@ h1 {
     transition: transform 0.1s ease-in-out;
 }
 
+.nav-item.registre {
+    position: absolute;
+    transform: translate(16.5rem, 5rem) !important;
+
+    &:hover {
+        transform: translate(16.5rem, 5rem) scale(1.3) !important;
+    }
+}
+
+.nav-item.registre.second {
+    position: absolute;
+    transform: translate(19.5rem, 5rem) !important;
+
+    &:hover {
+        transform: translate(19.5rem, 5rem) scale(1.3) !important;
+    }
+}
+
 .nav-item:hover {
     transform: scale(1.3);
 }
@@ -265,6 +318,26 @@ h1 {
     font-size: 20px;
     font-weight: bold;
     text-shadow: 0 0 1rem var(--vt-c-white-dark);
+}
+
+.player-infos .scoreDiv {
+    position: fixed;
+    right: 3rem;
+    top: 0.5rem;
+    font-size: 20px;
+    text-shadow: 0 0 1rem var(--vt-c-white-dark);
+    z-index: 110;
+    /* center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+}
+
+.player-infos .scoreText {
+    position: fixed;
+    top: 2.5rem;
+    font-weight: bold;
 }
 
 .player-infos .logout {
@@ -346,19 +419,16 @@ h1 {
 .player-infos .or {
     right: 15rem;
     top: 4.8rem;
-    color: yellow;
 }
 
 .player-infos .food {
     right: 15rem;
     top: 6rem;
-    color: yellowgreen;
 }
 
 .player-infos .creatium {
     right: 15rem;
     top: 7.2rem;
-    color: #2fc9e2;
 }
 
 .player-infos .moved {

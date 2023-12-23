@@ -71,7 +71,36 @@ export const useActionsStore = defineStore({
 
                     return response;
                 });
-        }
+        },
+        async postActionDecision(actionId, decision) {
+            const { user } = useAuthStore();
+            let usedUrl = baseUrl + `${user.id}/actions/decision`;
+            return await fetchWrapper.post(usedUrl, {actionId, decision})
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                });
+        },
+        async postOpenWeapon() {
+            const { user } = useAuthStore();
+
+            let usedUrl = baseUrl + `${user.id}/actions/openweapon`;
+            return await fetchWrapper.post(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                }).then(async response => {
+                    if (response.error) return response;
+
+                    // refresh user ressources and cards
+                    await useUsersStore().getUser(user.id);
+
+                    // get image
+                    response.imageUrl = await useCardsStore().getWeaponImage(response.weaponId);
+
+                    return response;
+                });
+        },
     }
 });
 
