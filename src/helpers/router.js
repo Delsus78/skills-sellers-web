@@ -45,7 +45,7 @@ export const router = createRouter({
         { path: '/opening', component: OpeningView },
         { path: '/upgrade/card', component: UpgradeView },
         { path: '/upgrade/weapon', component: WeaponUpgradeView },
-        { path: '/weapon', component: WeaponOpeningView},
+        { path: '/opening/weapon', component: WeaponOpeningView},
 
         { path: '/action/:actionType/:cardsIds?', component: ActionView },
         { path: '/special', component: SpecialView }

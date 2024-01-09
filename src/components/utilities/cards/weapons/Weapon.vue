@@ -43,7 +43,6 @@ const onClick = () => {
 };
 
 </script>
-
 <template>
 <div class="weapon" :class="{ 'redbordered': desactivated }"
      @click="onClick"
@@ -59,6 +58,7 @@ const onClick = () => {
         <p class="weaponPower">{{ weapon.power }}<svg-icon :fa-icon="weaponIcon" :size="25"/></p>
         <p class="description">{{ weapon.description }}</p>
     </div>
+    <p class="userCardName meethicColored" v-if="weapon.userCardName">{{ weapon.userCardName }}</p>
 </div>
 </template>
 <style scoped>
@@ -86,6 +86,20 @@ const onClick = () => {
     border-radius: 18px 0 0 18px;
     transform-style: preserve-3d;
     transform: perspective(1000px) translateZ(-30px);
+}
+
+.userCardName {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    color: #f2f2f2;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    padding: 0.5rem;
+    border-radius: 0 0 0 18px;
+    backdrop-filter: blur(2px);
 }
 
 .weapon-text {

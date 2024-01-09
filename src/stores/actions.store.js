@@ -13,7 +13,11 @@ export const useActionsStore = defineStore({
         async postActionForCards(cardsIds, actionName, params) {
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/actions`;
-            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
+            return await fetchWrapper.post(usedUrl, {
+                cardsIds,
+                actionName,
+                batimentToUpgrade: params.batimentToUpgrade,
+                weaponToUpgradeId: params.weaponToUpgradeId})
                 .catch(error => {
                     console.error(error);
                     return {error};
@@ -28,7 +32,12 @@ export const useActionsStore = defineStore({
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/estimate/actions`;
 
-            return await fetchWrapper.post(usedUrl, {cardsIds, actionName, batimentToUpgrade: params.batimentToUpgrade})
+            console.log('params', params);
+            return await fetchWrapper.post(usedUrl, {
+                cardsIds,
+                actionName,
+                batimentToUpgrade: params.batimentToUpgrade,
+                weaponToUpgradeId: params.weaponToUpgradeId})
                 .catch(error => {
                     console.error(error);
                     return {error: error};

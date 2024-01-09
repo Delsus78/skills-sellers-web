@@ -168,5 +168,36 @@ export const useCardsStore = defineStore({
                 this.weapons = { error };
             }
         },
+        async getWeaponById(id) {
+            const { user } = useAuthStore();
+            const usedUrl = baseUrl + `Users/${user.id}/Weapons/${id}`;
+
+            try {
+                const weapon = await fetchWrapper.get(usedUrl);
+                weapon.imageUrl = await this.getWeaponImage(weapon.weaponId);  // Utiliser la nouvelle méthode getImage
+                return weapon;
+            } catch (error) {
+                console.error(error);
+                return { error };
+            }
+        },
+        async postUpgradeWeapon(weaponId) {
+            const { user } = useAuthStore();
+
+            let usedUrl = baseUrl + `Users/${user.id}/Weapons/${weaponId}/ameliorer`;
+
+            return await fetchWrapper.post(usedUrl)
+                .then(weapon => {
+                    // refresh user ressources and cards
+                    useUsersStore().getUser(user.id);
+                    useCardsStore().getWeapons();
+
+                    return weapon;
+                })
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                })
+        }
     }
 });

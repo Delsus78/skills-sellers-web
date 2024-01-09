@@ -41,6 +41,40 @@ const achievementsData = computed(() => {
     }));
 });
 
+const transformedStats = computed(() => {
+    let transformed = [];
+    const data = stats.value;
+
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const value = data[key];
+            if (typeof value === 'object' && value.title === undefined) {
+                // Si la valeur est un objet avec des sous-clés (comme totalCardsByRarity, totalResourcesMined, etc.)
+                for (const subKey in value) {
+                    if (value.hasOwnProperty(subKey)) {
+                        const subValue = value[subKey];
+                        if (typeof subValue === 'object' && subValue !== null && subValue.title) {
+                            transformed.push({title: subValue.title, stat: subValue.stat, rank: subValue.rank});
+                        }
+                    }
+                }
+            } else if (value.title) {
+                // Si la valeur est un objet simple
+                transformed.push({ title: value.title, stat: value.stat, rank: value.rank });
+            }
+        }
+    }
+
+    // speciales stats
+    transformed.forEach(stat => {
+        // totalCardsInBDD
+        if (stat.title === "Nombre total de cartes") {
+            stat.stat = `${stat.stat} / ${data.totalCardsInBDD}`;
+        }
+    });
+
+    return transformed;
+})
 
 const user = computed(() => {
     if (users.value.loading || users.value.error) return null;
@@ -101,137 +135,11 @@ const handleSend = () => {
                 </div>
             </div>
             <ul v-if="openedTab === 'stats'" class="stats-list">
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCards.rank === 1}">
-                    <span>Nombre total de cartes</span>
+                <li v-for="item in transformedStats" :key="item.key" class="stat-item" :class="{'legendaire-text': item.rank === 1}">
+                    <span>{{ item.title }}</span>
                     <span class="stat-item-value">
-                        <span>{{ stats.totalCards.stat }} / {{ stats.totalCardsInBDD}}</span>
-                        <span>{{ stats.totalCards.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.commune.rank === 1}">
-                    <span>Nombre de cartes communes</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.commune.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.commune.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.epic.rank === 1}">
-                    <span>Nombre de cartes épiques</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.epic.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.epic.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.legendaire.rank === 1}">
-                    <span>Nombre de cartes légendaires</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.legendaire.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.legendaire.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardWithAStatMaxed.rank === 1}">
-                    <span>Nombre de cartes avec une compétence maximisée</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardWithAStatMaxed.stat }}</span>
-                        <span>{{ stats.totalCardWithAStatMaxed.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsFull10.rank === 1}">
-                    <span>Nombre de cartes avec toutes les compétences à 10</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsFull10.stat }}</span>
-                        <span>{{ stats.totalCardsFull10.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalFailedCardsCauseOfCharisme.rank === 1}">
-                    <span>Nombre d'échecs dus au charisme lors d'explorations</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalFailedCardsCauseOfCharisme.stat }}</span>
-                        <span>{{ stats.totalFailedCardsCauseOfCharisme.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalDoublonsEarned.rank === 1}">
-                    <span>Nombre de doublons obtenus</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalDoublonsEarned.stat }}</span>
-                        <span>{{ stats.totalDoublonsEarned.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMessagesSent.rank === 1}">
-                    <span>Nombre de messages envoyés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMessagesSent.stat }}</span>
-                        <span>{{ stats.totalMessagesSent.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Creatium.rank === 1}">
-                    <span>Nombre de créatiums minés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalResourcesMined.Creatium.stat ?? "0" }}</span>
-                        <span>{{ stats.totalResourcesMined.Creatium.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Or.rank === 1}">
-                    <span>Nombre d'onces d'or minées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalResourcesMined.Or.stat ?? "0" }}</span>
-                        <span>{{ stats.totalResourcesMined.Or.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalBuildingsUpgraded.rank === 1}">
-                    <span>Nombre d'améliorations de bâtiments effectuées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalBuildingsUpgraded.stat }}</span>
-                        <span>{{ stats.totalBuildingsUpgraded.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalRocketLaunched.rank === 1}">
-                    <span>Nombre de fusées lancées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalRocketLaunched.stat }}</span>
-                        <span>{{ stats.totalRocketLaunched.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMealCooked.rank === 1}">
-                    <span>Nombre de repas préparés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMealCooked.stat }}</span>
-                        <span>{{ stats.totalMealCooked.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCollectionsCompleted.rank === 1}">
-                    <span>Nombre de collection complétées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCollectionsCompleted.stat }}</span>
-                        <span>{{ stats.totalCollectionsCompleted.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMachineUsed.rank === 1}">
-                    <span>Nombre de machine E. Zeiss utilisées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMachineUsed.stat }}</span>
-                        <span>{{ stats.totalMachineUsed.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalWinAtCharismeCasino.rank === 1}">
-                    <span>Nombre de charisme remporté au casino</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalWinAtCharismeCasino.stat }}</span>
-                        <span>{{ stats.totalWinAtCharismeCasino.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalLooseAtCharismeCasino.rank === 1}">
-                    <span>Nombre d'or perdu au casino</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalLooseAtCharismeCasino.stat }}</span>
-                        <span>{{ stats.totalLooseAtCharismeCasino.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalWordleWon.rank === 1}">
-                    <span>Nombre de Wordle gagnés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalWordleWon.stat }}</span>
-                        <span>{{ stats.totalWordleWon.rank }}</span>
+                        <span>{{ item.stat }}</span>
+                        <span>{{ item.rank }}</span>
                     </span>
                 </li>
             </ul>

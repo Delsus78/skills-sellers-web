@@ -22,7 +22,7 @@ import {
     faW as wordleIcon,
     faTree as noelIcon,
     faShield as satelliteIcon,
-    faBookAtlas as registreIcon, faBookDead as fightIcon, faPeopleArrows as playersRegistreIcon
+    faBookAtlas as registreIcon, faBookDead as fightIcon, faPeopleArrows as playersRegistreIcon, faGun as weaponIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -87,6 +87,13 @@ const isChristmas = computed(() => {
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'">
                 <span class="colored">
                     {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="30" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/opening/weapon"
+                        v-tooltip:bottom.tooltip="'Nouvelle arme disponible !'"
+                        class="nav-item">
+                <span class="colored">
+                    {{ user.nbWeaponOpeningAvailable }}<svg-icon :fa-icon="weaponIcon" :size="40" />
                 </span>
             </RouterLink>
             <RouterLink class="nav-item" to="/"

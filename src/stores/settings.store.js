@@ -4,6 +4,7 @@ export const useSettingsStore = defineStore({
     id: 'settings',
     state: () => ({
         filters: JSON.parse(localStorage.getItem('filtersCards')),
+        weaponsFilters: JSON.parse(localStorage.getItem('filtersWeapons')),
         isStarsActive: JSON.parse(localStorage.getItem('Settings_isStarsActive') ?? 'true'),
         isNotifSoundActive: JSON.parse(localStorage.getItem('Settings_isNotifSoundActive') ?? 'true'),
         isGlobalChatSoundActive: JSON.parse(localStorage.getItem('Settings_isGlobalChatSoundActive') ?? 'true'),
@@ -12,6 +13,10 @@ export const useSettingsStore = defineStore({
         setFilters(filters) {
             this.filters = filters;
             localStorage.setItem('filtersCards', JSON.stringify(filters));
+        },
+        setWeaponsFilters(filters) {
+            this.weaponsFilters = filters;
+            localStorage.setItem('filtersWeapons', JSON.stringify(filters));
         },
         switchBGStarActive() {
             this.isStarsActive = !this.isStarsActive;

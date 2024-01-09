@@ -99,7 +99,7 @@ const isChristmas = computed(() => {
                     {{ user.nbWeaponUpgradeAvailable }}<svg-icon :fa-icon="upgradeIcon" :size="40" />
                 </span>
             </RouterLink>
-            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/weapon"
+            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/opening/weapon"
                         v-tooltip:bottom.tooltip="'Nouvelle arme disponible !'"
                         class="nav-item">
                 <span class="colored">

@@ -72,11 +72,16 @@
             <p>{{ action ? format(action.endTime, "DD MMMM YYYY HH:mm:ss Z") : ''}}</p>
             <div v-for="(val, actionKey ) in action || {}">
                 <!-- Particular cases-->
-                <p v-if="actionKey === 'batimentToUpgrade'">
+                <p v-if="actionKey === 'batimentToUpgrade' && val !== null">
                     <span class="little_title">Bâtiment : </span>
                     <span class="value" v-if="val === 'salledesport'">Salle de Sport</span>
                     <span class="value" v-else-if="val === 'cuisine'">Cuisine</span>
                     <span class="value" v-else-if="val === 'spatioport'">Spatioport</span>
+                </p>
+                <p v-if="actionKey === 'weaponToUpgradeId' && val !== null">
+                    <span class="little_title">Arme : </span>
+                    <a class="value" v-if="upgradedWeapon === null" @click="onWeaponUpgradedClicked">voir</a>
+                    <span class="value" v-else>{{ upgradedWeapon.name }} {{ upgradedWeapon.power }} -> {{ upgradedWeapon.power +1 }}</span>
                 </p>
                 <p v-if="actionKey === 'isReturningToHome'">
                     <span class="little_title">Trajet : </span>
@@ -148,6 +153,15 @@ import {
 import ProgressBar from "@/components/utilities/progressBar.vue";
 import {RouterLink} from "vue-router";
 import ExplorationInfo from "@/components/utilities/cards/ExplorationInfo.vue";
+
+// show upgraded weapon
+import { useCardsStore } from "@/stores";
+const cardsStore = useCardsStore();
+
+const onWeaponUpgradedClicked = async () => {
+    upgradedWeapon.value = await cardsStore.getWeaponById(action.weaponToUpgradeId);
+}
+const upgradedWeapon = ref(null);
 
 const isActive = ref(false);
 const {

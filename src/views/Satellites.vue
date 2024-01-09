@@ -70,9 +70,17 @@ const contextPolitique = computed(() => {
         <div class="panel warInfo">
             <div class="DivTitle">Info de Guerre</div>
             <div class="container">
-                <span v-if="true">
-                    Aucune guerre en cours
-                </span>
+                <div v-if="true">
+                    <span>
+                        Aucune guerre en cours
+                    </span>
+                    <div class="discret">
+                        Pour lancer une guerre, cliquez sur le joueur/la planète cible dans votre registre
+                    </div>
+                </div>
+                <div v-else>
+
+                </div>
             </div>
         </div>
         <div class="planetInfo">
