@@ -81,8 +81,6 @@ usersStore.getUser(authUser.value.id).then(async (_) => {
                 rarity: card.rarity,
             };
         });
-
-    console.log(doublons.value);
 })
 
 const validate = async () => {
@@ -91,7 +89,7 @@ const validate = async () => {
     await router.push('/cards');
 
     if (user.value.cardsDoublons?.length > 0) {
-        await router.push('/upgrade');
+        await router.push('/upgrade/weapon');
     }
 }
 
@@ -179,6 +177,8 @@ const removePts = (competence) => {
                   :rarity="card.rarity"
                   :collection="card.collection"
                   :action="card.action"
+                  :weapon="card.weapon"
+                  :power="card.power"
                   hide-favorite/>
         </div>
         <div class="radiance">

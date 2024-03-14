@@ -92,6 +92,7 @@ onMounted(() => {
                             exploration: 8,
                             intelligence: 10
                         }"
+                      :power="30"
                       rarity="epic"
                       collection="Anthony 3/8"
                       description="TOUT LE TEMPS IL EST LA IL CASSE LES COUILLES CE SOLEIL DE MERDE VASY C PAS POSSIBLE G MAL AUX YEUX WOOOOW"

@@ -22,6 +22,11 @@
                 <option value="ameliorer">Améliorer</option>
                 <option value="!">Ne fais rien</option>
             </select>
+            <select v-model="otherFilter">
+                <option value="">Autres filtre ...</option>
+                <option value="endingsoon">Fin proche</option>
+                <option value="hasweapon">Possède une arme</option>
+            </select>
             <select v-model="competenceFilter">
                 <option value="">Trier par compétence...</option>
                 <option value="cuisine">Cuisine</option>
@@ -42,6 +47,8 @@
                       :rarity="card.rarity"
                       :collection="card.collection"
                       :action="card.action"
+                      :weapon="card.weapon"
+                      :power="card.power"
                       :isFavorite="favoritesIds.includes(card.id)"
                       :isSelected="selectedCardsIds.includes(card.id)"
                       show-selection
@@ -109,6 +116,7 @@ const searchText = ref('');
 const collectionFilter = ref('');
 const rarityFilter = ref('');
 const actionFilter = ref('!');
+const otherFilter = ref('');
 const competenceFilter = ref('');
 
 const selectedCardsIds = ref(initSelectedCardsIds ?? []);
@@ -159,6 +167,22 @@ const filteredList = computed(() => {
             const bCompetence = b.competences[competenceFilter.value.toLowerCase()];
             return bCompetence - aCompetence;
         });
+    }
+
+    if (otherFilter.value) {
+        // fin proche
+        if (otherFilter.value === 'endingsoon') {
+            result = result.filter(item => item.action?.endTime);
+            result = result.sort((a, b) => {
+                const aDate = new Date(a.action?.endTime) - new Date();
+                const bDate = new Date(b.action?.endTime) - new Date();
+                return aDate - bDate;
+            });
+        }
+
+        if (otherFilter.value === 'hasweapon') {
+            result = result.filter(item => item.weapon);
+        }
     }
 
     // sort favorites first
@@ -328,6 +352,7 @@ function selectCard(cardId) {
     gap: 16px;
     justify-content: center;
     align-items: center;
+    margin-top: 2rem;
 
     @media (max-width: 1910px) {
         grid-template-columns: repeat(3, 1fr);

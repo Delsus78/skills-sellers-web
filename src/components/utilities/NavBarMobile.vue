@@ -22,7 +22,7 @@ import {
     faW as wordleIcon,
     faTree as noelIcon,
     faShield as satelliteIcon,
-    faBookAtlas as registreIcon
+    faBookAtlas as registreIcon, faBookDead as fightIcon, faPeopleArrows as playersRegistreIcon, faGun as weaponIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -83,10 +83,17 @@ const isChristmas = computed(() => {
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="30" />
                 </span>
             </RouterLink>
-            <RouterLink class="nav-item" v-if="user.cardsDoublons?.length > 0" to="/upgrade"
+            <RouterLink class="nav-item" v-if="user.cardsDoublons?.length > 0" to="/upgrade/card"
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'">
                 <span class="colored">
                     {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="30" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/opening/weapon"
+                        v-tooltip:bottom.tooltip="'Nouvelle arme disponible !'"
+                        class="nav-item">
+                <span class="colored">
+                    {{ user.nbWeaponOpeningAvailable }}<svg-icon :fa-icon="weaponIcon" :size="40" />
                 </span>
             </RouterLink>
             <RouterLink class="nav-item" to="/"
@@ -114,11 +121,25 @@ const isChristmas = computed(() => {
                         :class="{selected: pageName === 'satellites'}">
                 <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="30"/>
             </RouterLink>
-            <RouterLink class="nav-item" :to="`/registre`"
+            <RouterLink class="nav-item" :to="`/registre/${authUser.id}`"
                         v-tooltip:bottom.tooltip="'Registre de planète'"
                         :class="{selected: pageName === 'registre'}">
                 <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="30"/>
             </RouterLink>
+
+            <RouterLink :to="`/registre/fightreports`"
+                        v-tooltip:bottom.tooltip="'Registre des combats'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre">
+                <svg-icon class="shadow-white" :fa-icon="fightIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/registre/${authUser.id}/playersregistre`"
+                        v-tooltip:bottom.tooltip="'Registre des joueurs'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre second">
+                <svg-icon class="shadow-white" :fa-icon="playersRegistreIcon" :size="36"/>
+            </RouterLink>
+
             <RouterLink class="nav-item" :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'">
@@ -139,8 +160,6 @@ const isChristmas = computed(() => {
                 <span class="pseudoText">{{authUser.pseudo}}</span>
                 <a @click="authStore.logout()"><svg-icon class="logout shadow-white" :fa-icon="leaveIcon" :size="26"/></a>
                 <RouterLink :to="`/rules`"><svg-icon class="rules" :fa-icon="rulesIcon" :size="26"/></RouterLink>
-                <div class="resources">
-                </div>
 
                 <span class="text food">
                     {{ user.nourriture }}
@@ -171,6 +190,7 @@ const isChristmas = computed(() => {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
+    user-select: none;
 }
 
 .navbar-mobile .openNavBar {

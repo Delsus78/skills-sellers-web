@@ -54,7 +54,7 @@ function updateDates() {
             <span class="cardRow">
                 <span>
                     <span :class="card.rarity + '-text'">{{ card.name }}</span>
-                    <span v-if="withPower" class="meethicColored powerText">{{ card.competences.power }} <svg-icon :fa-icon="satelliteIcon" :size="14"/></span>
+                    <span v-if="withPower" class="meethicColored powerText">{{ card.power }} <svg-icon :fa-icon="satelliteIcon" :size="14"/></span>
                 </span>
                 <progress-bar v-if="withEndDate && card.action" class="progressBar"
                     :pourcentage="pourcentageRemainingTimeForCards[card.id]"

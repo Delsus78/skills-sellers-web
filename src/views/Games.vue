@@ -1,10 +1,11 @@
 <script setup>
-import { useGamesStore } from "@/stores";
+import {useActionsStore, useGamesStore} from "@/stores";
 import { storeToRefs } from "pinia";
 import Casino from "@/components/utilities/games/casino.vue";
 import MachineRepair from "@/components/utilities/games/machineRepair.vue";
 
 const gamesStore = useGamesStore();
+const actionsStore = useActionsStore();
 const { game } = storeToRefs(gamesStore);
 gamesStore.getGameDay();
 
@@ -12,8 +13,12 @@ const play = (GameName, bet, cardIds) => {
     gamesStore.postGameDay(GameName, bet, cardIds);
 }
 
-const estimate = (GameName, bet, cardIds) => {
-    gamesStore.EstimateGameDay(GameName, bet, cardIds);
+const estimate = async (GameName, bet, cardIds) => {
+    if (GameName.toLowerCase() === "machine")
+        gamesStore.gameEstimation = await actionsStore.postEstimatedActionForCards(cardIds, "reparer", {});
+    else {
+        await gamesStore.EstimateGameDay(GameName, bet, cardIds);
+    }
 }
 
 </script>

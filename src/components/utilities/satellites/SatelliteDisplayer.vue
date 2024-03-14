@@ -44,10 +44,17 @@ const satelliteStyle = (n) => {
 <template>
     <div class="satellite_displayer_container">
         <div class="satellite_displayer">
-            <svg :viewBox="viewBoxSize" width="100%" height="100%">
+            <svg :viewBox="viewBoxSize" width="100%" height="100%" style="overflow: visible;">
                 <defs>
-                    <circle id="satellite_empty" cx="0" cy="0" :r="satelliteSize" fill="white"></circle>
-                    <circle id="satellite_used" cx="0" cy="0" :r="satelliteSize" fill="red"></circle>
+                    <image id="satellite_empty" xlink:href="src/assets/images/satellite.png"
+                           x="-75" y="-75" height="150" width="150" style="filter: grayscale(100%)" />
+                    <g id="satellite_used">
+                        <image xlink:href="src/assets/images/satellite.png"
+                               x="-75" y="-75" height="150" width="150"/>
+                        <image xlink:href="src/assets/images/satellite.png"
+                               x="-90" y="-90" height="180" width="180" style="
+                                   filter: blur(10px); opacity: 0.5;"/>
+                    </g>
                 </defs>
                 <g :transform="groupTransform">
                     <circle cx="0" cy="0" :r="circleRadius" fill="none" stroke="currentColor" stroke-width="1"></circle>

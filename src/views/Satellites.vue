@@ -1,7 +1,7 @@
 <script setup>
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {useAuthStore, useCardsStore, useUsersStore} from "@/stores";
+import {useAuthStore, useCardsStore, useUsersStore, useRegistreStore} from "@/stores";
 import SatelliteDisplayer from "@/components/utilities/satellites/SatelliteDisplayer.vue";
 import {RouterLink} from "vue-router";
 import TextCardList from "@/components/utilities/cards/textCardList.vue";
@@ -14,12 +14,15 @@ import {
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const cardsStore = useCardsStore();
+const registreStore = useRegistreStore();
 
 const { user: authUser } = storeToRefs(authStore);
 const { buildings } = storeToRefs(usersStore);
 const { cards } = storeToRefs(cardsStore);
+const { registreInfo } = storeToRefs(registreStore);
 
 usersStore.getBuildingsOfUser(authUser.value.id);
+registreStore.getRegistreInfo(authUser.value.id);
 
 const cardsInSatellites = computed(() => {
     let result = cards.value;
@@ -35,10 +38,19 @@ const cardsInSatellites = computed(() => {
 const puissanceTotale = computed(() => {
     let result = 0;
     cardsInSatellites.value.forEach(card => {
-        result += card.competences.power;
+        result += card.power;
     });
     return result;
 });
+
+const contextPolitique = computed(() => {
+    if (registreInfo.value.registres.filter(registre => registre.type === 1).length > 0) {
+        // menacé
+        return 1;
+    }
+
+    return 0;
+})
 
 </script>
 <template>
@@ -58,9 +70,17 @@ const puissanceTotale = computed(() => {
         <div class="panel warInfo">
             <div class="DivTitle">Info de Guerre</div>
             <div class="container">
-                <span v-if="true">
-                    Aucune guerre en cours
-                </span>
+                <div v-if="true">
+                    <span>
+                        Aucune guerre en cours
+                    </span>
+                    <div class="discret">
+                        Pour lancer une guerre, cliquez sur le joueur/la planète cible dans votre registre
+                    </div>
+                </div>
+                <div v-else>
+
+                </div>
             </div>
         </div>
         <div class="planetInfo">
@@ -94,8 +114,8 @@ const puissanceTotale = computed(() => {
             <div class="info">
                 <div class="title">Context politique actuel</div>
                 <div class="value">
-                    <span class="red" v-if="false">En Guerre <svg-icon :fa-icon="warIcon" :size="30"/></span>
-                    <span class="yellow" v-else-if="true">Menacé <svg-icon :fa-icon="satelliteIcon" :size="30"/></span>
+                    <span class="red" v-if="contextPolitique === 2">En Guerre <svg-icon :fa-icon="warIcon" :size="30"/></span>
+                    <span class="yellow" v-else-if="contextPolitique === 1">Menacé <svg-icon :fa-icon="satelliteIcon" :size="30"/></span>
                     <span class="green" v-else>Tranquille <svg-icon :fa-icon="heartIcon" :size="30"/></span>
                 </div>
             </div>

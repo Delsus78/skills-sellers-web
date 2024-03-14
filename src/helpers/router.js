@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import { useAuthStore } from '@/stores';
+import {useAuthStore, useMainStore} from '@/stores';
 import {
     HomeView,
     LoginView,
@@ -17,7 +17,12 @@ import {
     RulesView,
     SatellitesView,
     RegistreView,
-    SpecialView
+    SpecialView,
+    FightReportsView,
+    PlayersRegistreView,
+    WeaponOpeningView,
+    WeaponUpgradeView,
+    PlaceCosmeticView
 } from '@/views';
 
 export const router = createRouter({
@@ -33,11 +38,16 @@ export const router = createRouter({
         { path: '/stats/:id', component: StatsView },
         { path: '/batiments', component: BuildingsView },
         { path: '/satellites', component: SatellitesView},
-        { path: '/registre', component: RegistreView},
+        { path: '/registre/fightreports', component: FightReportsView },
+        { path: '/registre/:id/playersregistre', component: PlayersRegistreView },
+        { path: '/registre/:id', component: RegistreView},
         { path: '/games', component: GamesView },
         { path: '/wordle', component: WordleView },
         { path: '/opening', component: OpeningView },
-        { path: '/upgrade', component: UpgradeView },
+        { path: '/upgrade/card', component: UpgradeView },
+        { path: '/upgrade/weapon', component: WeaponUpgradeView },
+        { path: '/opening/weapon', component: WeaponOpeningView},
+        { path: '/cosmetic', component: PlaceCosmeticView},
         { path: '/action/:actionType/:cardsIds?', component: ActionView },
         { path: '/special', component: SpecialView }
     ]
@@ -53,4 +63,8 @@ router.beforeEach(async (to) => {
         auth.returnUrl = to.fullPath;
         return '/login';
     }
+
+    // close weapon page
+    const mainStore = useMainStore();
+    mainStore.toggleWeaponList(null);
 });

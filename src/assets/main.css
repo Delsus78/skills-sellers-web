@@ -204,7 +204,7 @@ strong {
   justify-content: space-between;
   font-size: 2rem;
   font-weight: bold;
-  margin:  2rem;
+  margin: 0.3rem;
   animation: colorChange 6s linear infinite;
 }
 
@@ -214,7 +214,6 @@ strong {
   justify-content: space-between;
   font-size: 2rem;
   font-weight: bold;
-  margin:  2rem;
   animation: epic-color-change 6s linear infinite;
 }
 
