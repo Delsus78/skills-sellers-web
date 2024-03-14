@@ -44,7 +44,7 @@ const refreshEstimatedAction = async () => {
         return;
     }
     let params = actionType.value === "ameliorer" ?
-        {batimentToUpgrade: batimentToUpgrade.value, weaponToUpgradeId: weaponToUpgrade.value.id}
+        {batimentToUpgrade: batimentToUpgrade.value, weaponToUpgradeId: weaponToUpgrade.value?.id}
       : {batimentToUpgrade: null, weaponToUpgradeId: null};
 
     estimatedAction.value = await actionsStore.postEstimatedActionForCards(cardsIds, actionType.value, params);
@@ -53,7 +53,7 @@ const refreshEstimatedAction = async () => {
 const sendAction = async () => {
     let cardsIds = selectedCardsIds.value;
 
-    let params = actionType.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value, weaponToUpgradeId: weaponToUpgrade.value.id} : {batimentToUpgrade: null};
+    let params = actionType.value === "ameliorer" ? {batimentToUpgrade: batimentToUpgrade.value, weaponToUpgradeId: weaponToUpgrade.value?.id} : {batimentToUpgrade: null};
     await actionsStore.postActionForCards(cardsIds, actionType.value, params);
 
     await usersStore.getBuildingsOfUser(authUser.value.id);

@@ -190,6 +190,7 @@ const isChristmas = computed(() => {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
+    user-select: none;
 }
 
 .navbar-mobile .openNavBar {

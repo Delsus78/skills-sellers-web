@@ -1,6 +1,6 @@
 <script setup>
 import {storeToRefs} from "pinia";
-import { useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore } from "@/stores";
+import {useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore, useCosmeticStore} from "@/stores";
 import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
@@ -11,7 +11,9 @@ import {
     faPaperPlane as sendIcon,
     faGift as giftIcon,
     faInfinity as infinityIcon,
+    faEarth as showPlanetIcon,
 faArrowTrendUp as statIcon} from "@fortawesome/free-solid-svg-icons";
+import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -20,16 +22,20 @@ const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const notifStore = useNotificationStore();
 const achievementsStore = useAchievementsStore();
+const cosmeticStore = useCosmeticStore();
 const { stats, users } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { achievements } = storeToRefs(achievementsStore);
+const { cosmeticsDisplayed } = storeToRefs(cosmeticStore);
 const messageToSend = ref("");
 // stats or achievements
 const openedTab = ref("stats");
+const showPlanet = ref(false);
 
 usersStore.getAllUsers();
 usersStore.getStatsOfUser(userId);
 achievementsStore.getAchievementsOfUser(userId);
+cosmeticStore.getComseticsOfUser(userId);
 
 const achievementsData = computed(() => {
     return Object.entries(achievements.value).map(([key, value]) => ({
@@ -156,7 +162,7 @@ const handleSend = () => {
                     </span>
                 </li>
             </ul>
-        </div>
+        </div >
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
         <div v-else class="SendNotification bg-dark-blur">
             <div class="SendNotification_header">
@@ -174,7 +180,11 @@ const handleSend = () => {
                 <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
             </div>
         </div>
-        <RandomPlanet class="planetBuilding" :model-value="user?.pseudo" :width="850" :height="850" :planet-id='1'/>
+        <PlanetWithCosmetics class="planetBuilding" v-if="cosmeticsDisplayed != null" :style="{'z-index': showPlanet ? 100 : -1}"
+                             :height="850" :width="850" :player-pseudo="authUser.pseudo" :cosmetics-displayed="cosmeticsDisplayed"/>
+        <div class="arrow-show-planet">
+            <svg-icon :fa-icon="showPlanetIcon" :size="36" @click="showPlanet = !showPlanet"/>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -439,5 +449,20 @@ const handleSend = () => {
     border-radius: 1rem;
     font-size: 1.8em;
     font-family: 'Big John', sans-serif;
+}
+
+.arrow-show-planet {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: gold;
+    font-size: 1.8em;
+    font-family: 'Big John', sans-serif;
+}
+
+.arrow-show-planet:hover {
+    color: white;
+    cursor: pointer;
 }
 </style>

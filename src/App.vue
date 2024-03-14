@@ -44,7 +44,7 @@ watch(path, () => {
     <background v-if="(!isMobileSize || !authStore.user) && (isStarsActive ?? true)" :color="backgroundColor" :key="backgroundColor"/>
     <NavBar v-if="authStore.user && !isMobileSize" :page-name="path"/>
     <NavBarMobile v-if="authStore.user && isMobileSize" :page-name="path"/>
-    <RouterView/>
+    <RouterView :key="$route.fullPath"/>
 </template>
 
 <style>

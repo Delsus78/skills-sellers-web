@@ -203,7 +203,7 @@ const isChristmas = computed(() => {
 
             <RandomPlanet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
             <span class="scoreDiv">
-                <span>Score de Guerre</span>
+                <span>Score</span>
                 <span class="scoreText">{{ user.score }}</span>
             </span>
         </div>
@@ -226,6 +226,7 @@ const isChristmas = computed(() => {
     background-size: 100% 1px; /* 2px est l'épaisseur de la "bordure". Ajustez selon vos besoins */
     background-repeat: no-repeat;
     background-position: bottom;
+    user-select: none;
 }
 
 h1 {

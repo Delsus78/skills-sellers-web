@@ -18,3 +18,4 @@ export { default as SpecialView } from './Special.vue';
 export { default as PlayersRegistreView } from './PlayersRegistre.vue';
 export { default as WeaponOpeningView } from './WeaponOpeningPage.vue';
 export { default as WeaponUpgradeView } from './WeaponUpgradePage.vue';
+export { default as PlaceCosmeticView } from './PlaceCosmetic.vue';

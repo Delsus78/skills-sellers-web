@@ -11,3 +11,4 @@ export * from './gift.store';
 export * from './achievement.store';
 export * from './settings.store';
 export * from './registres.store';
+export * from './cosmetic.store';

@@ -36,8 +36,8 @@ export const useCardsStore = defineStore({
             }
         },
         async getWeaponImage(weaponId) {
-            if (this.imageCache[weaponId]) {
-                return this.imageCache[weaponId];  // Retourner l'image du cache si elle est présente
+            if (this.imageCache[1000 + weaponId]) { // les armes ont des id > 1000 pour le cache
+                return this.imageCache[1000 + weaponId];  // Retourner l'image du cache si elle est présente
             }
 
             try {
@@ -48,7 +48,7 @@ export const useCardsStore = defineStore({
                             'max-age=3600');
 
                 const imageUrl = URL.createObjectURL(response);
-                this.imageCache = { ...this.imageCache, [weaponId]: imageUrl };  // Mettre en cache l'image
+                this.imageCache = { ...this.imageCache, [1000 + weaponId]: imageUrl };  // Mettre en cache l'image
                 return imageUrl;
             } catch (error) {
                 console.error(error);

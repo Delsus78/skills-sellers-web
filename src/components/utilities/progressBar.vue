@@ -1,5 +1,5 @@
 <script setup>
-const { pourcentage, text } = defineProps({
+const { pourcentage, text, endedText } = defineProps({
     pourcentage: {
         type: Number,
         required: true,
@@ -10,6 +10,11 @@ const { pourcentage, text } = defineProps({
         required: true,
         default: '99h 99m 99s'
     },
+    endedText: {
+        type: String,
+        required: false,
+        default: 'BLOQUEE'
+    }
 });
 
 </script>
@@ -22,7 +27,7 @@ const { pourcentage, text } = defineProps({
         <div v-else class="progress-bar" :style="{width: '100%',
           'background-color': 'rgba(144, 0, 0, 0.6)' }"></div>
         <div v-if='pourcentage <= 100' class="progress-bar-text">{{ text }}</div>
-        <div v-else class="progress-bar-text">BLOQUEE</div>
+        <div v-else class="progress-bar-text">{{endedText}}</div>
     </div>
 </template>
 <style scoped>
