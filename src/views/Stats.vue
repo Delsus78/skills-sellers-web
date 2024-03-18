@@ -12,8 +12,12 @@ import {
     faGift as giftIcon,
     faInfinity as infinityIcon,
     faEarth as showPlanetIcon,
-faArrowTrendUp as statIcon} from "@fortawesome/free-solid-svg-icons";
+    faArrowTrendUp as statIcon,
+    faBurger as foodIcon,
+    faCubesStacked as creatiumIcon, faShield as satelliteIcon,
+} from "@fortawesome/free-solid-svg-icons";
 import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
+import {format, getClearRemainingTime} from "@/components/utilities/DateFormator";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -84,13 +88,19 @@ const transformedStats = computed(() => {
 
 const user = computed(() => {
     if (users.value.loading || users.value.error) return null;
-    return users.value.find(u => u.id.toString() === userId);
+    const userReturned = users.value.find(u => u.id.toString() === userId);
+    return userReturned;
 });
 
 const handleSend = () => {
     notifStore.sendMessageToUser(userId, messageToSend.value);
     messageToSend.value = "";
 }
+
+const isWarTimeoutInDate = computed(() => {
+    if (!user.value) return false;
+    return new Date(user.value.warTimeout) > new Date();
+});
 
 </script>
 <template>
@@ -108,10 +118,25 @@ const handleSend = () => {
     </div>
     <div v-else class="Stats">
         <div class="User_info bg-dark-blur">
+            <div class="war_time_out_display" v-if="user.warTimeout && isWarTimeoutInDate">
+                Termine le {{format(user.warTimeout, "DD MMMM YYYY HH:mm:ss Z")}}
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="26"/>
+            </div>
             <div class="User_header">
                 <h1 class="DivTitle">
                     {{ user?.pseudo ?? "Chargement..." }}
                 </h1>
+                <div class="user_resources">
+                    <span class="text food">
+                        {{ user.nourriture }}<svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
+                    </span>
+                    <span class="text or">
+                        {{ user.or }}<svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
+                    </span>
+                    <span class="text creatium">
+                        {{ user.creatium }} <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="Stats_content bg-dark-blur">
@@ -181,7 +206,7 @@ const handleSend = () => {
             </div>
         </div>
         <PlanetWithCosmetics class="planetBuilding" v-if="cosmeticsDisplayed != null" :style="{'z-index': showPlanet ? 100 : -1}"
-                             :height="850" :width="850" :player-pseudo="authUser.pseudo" :cosmetics-displayed="cosmeticsDisplayed"/>
+                             :height="850" :width="850" :player-pseudo="user?.pseudo" :cosmetics-displayed="cosmeticsDisplayed"/>
         <div class="arrow-show-planet">
             <svg-icon :fa-icon="showPlanetIcon" :size="36" @click="showPlanet = !showPlanet"/>
         </div>
@@ -200,6 +225,10 @@ const handleSend = () => {
         grid-template-rows: 4rem 5rem 50rem 50rem;
         row-gap: 2rem;
     }
+}
+
+.text {
+    text-shadow: 0 0 0.5rem var(--vt-c-white-dark);
 }
 
 .planetBuilding {
@@ -439,6 +468,24 @@ const handleSend = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
+}
+
+.user_resources {
+    display: flex;
+    gap: 2rem;
+}
+
+.war_time_out_display {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    color: gold;
+    gap: 1rem;
+    border-radius: 1rem;
+    font-family: 'Big John', sans-serif;
 }
 
 .input_gold {
@@ -453,12 +500,10 @@ const handleSend = () => {
 
 .arrow-show-planet {
     position: absolute;
+    top: 15rem;
     display: flex;
-    align-items: center;
-    gap: 1rem;
     color: gold;
     font-size: 1.8em;
-    font-family: 'Big John', sans-serif;
 }
 
 .arrow-show-planet:hover {

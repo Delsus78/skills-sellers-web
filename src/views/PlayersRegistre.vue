@@ -4,6 +4,7 @@ import {storeToRefs} from "pinia";
 import {useRoute} from "vue-router";
 import RegistreElement from "@/components/utilities/RegistreElement.vue";
 import {computed} from "vue";
+import {router} from "@/helpers";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -14,7 +15,11 @@ registreStore.getRegistreInfo(userId);
 
 const playerRegistres = computed(() => {
     return registreInfo.value.registres?.filter(registre => registre.type === 0);
-});
+})
+
+function attackRegistre(registreId) {
+    router.push({path: '/bataille', query: {registreCibleId: registreId}});
+}
 
 </script>
 
@@ -32,7 +37,8 @@ const playerRegistres = computed(() => {
                     JOUEURS
                 </div>
                 <div class="registresList">
-                    <RegistreElement :registre="registre" v-for="registre in playerRegistres" :key="registre.id" />
+                    <RegistreElement :registre="registre" v-for="registre in playerRegistres" :key="registre.id"
+                                     interact-btn-text="Attaquer" @interact="attackRegistre"/>
                 </div>
             </div>
         </div>

@@ -77,19 +77,6 @@ export const useCardsStore = defineStore({
                 this.cards = { error };
             }
         },
-        async getCardById(id) {
-            this.card = { loading: true };
-            const usedUrl = baseUrl + `Cards/${id}`;
-
-            try {
-                const card = await fetchWrapper.get(usedUrl);
-                card.imageUrl = await this.getImage(card.id);  // Utiliser la nouvelle méthode getImage
-                this.card = card;
-            } catch (error) {
-                console.error(error);
-                this.card = { error };
-            }
-        },
         async getUserCard(id, cardId) {
             let usedUrl = baseUrl + `Users/${id}/Cards/${cardId}`;
             return fetchWrapper.get(usedUrl)

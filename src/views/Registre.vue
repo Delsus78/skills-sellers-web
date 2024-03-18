@@ -1,9 +1,10 @@
 <script setup>
-import {useRegistreStore} from "@/stores";
+import {useRegistreStore, useBattleStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import {useRoute} from "vue-router";
 import RegistreElement from "@/components/utilities/RegistreElement.vue";
 import {computed, onBeforeMount} from "vue";
+import {router} from "@/helpers";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -13,10 +14,6 @@ const { registreInfo } = storeToRefs(registreStore);
 
 onBeforeMount(() => {
     registreStore.getRegistreInfo(userId);
-});
-
-const playerRegistres = computed(() => {
-    return registreInfo.value.registres.filter(registre => registre.type === 0);
 });
 
 const hostileRegistres = computed(() => {
@@ -35,6 +32,9 @@ function cancelTrade(registreId) {
     registreStore.deleteFriendlyRegistre(registreId);
 }
 
+function attackRegistre(registreId) {
+    router.push({path: '/bataille', query: {registreCibleId: registreId}});
+}
 
 </script>
 
@@ -61,15 +61,19 @@ function cancelTrade(registreId) {
               </div>
               <div class="registresList">
                   <RegistreElement :registre="registre" v-for="registre in friendlyRegistres" :key="registre.id"
-                    @cancel-trade="cancelTrade"/>
+                    interact-btn-text="Annuler le trade" @interact="cancelTrade"/>
               </div>
           </div>
           <div class="hostile registres bg-dark-blur">
               <div class="DivTitle">
                   HOSTILES
               </div>
+              <p class="discret">
+                  Défense des registres hostiles : 5 fois les valeurs ici.
+              </p>
               <div class="registresList">
-                  <RegistreElement :registre="registre" v-for="registre in hostileRegistres" :key="registre.id" />
+                  <RegistreElement :registre="registre" v-for="registre in hostileRegistres" :key="registre.id"
+                                   interact-btn-text="Attaquer" @interact="attackRegistre"/>
               </div>
           </div>
       </div>

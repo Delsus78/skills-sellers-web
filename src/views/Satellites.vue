@@ -71,11 +71,11 @@ const contextPolitique = computed(() => {
             <div class="DivTitle">Info de Guerre</div>
             <div class="container">
                 <div v-if="true">
-                    <span>
-                        Aucune guerre en cours
+                    <span class="infoText">
+                        Aucune bataille en cours
                     </span>
                     <div class="discret">
-                        Pour lancer une guerre, cliquez sur le joueur/la planète cible dans votre registre
+                        Pour lancer une bataille, cliquez sur le joueur/la planète cible dans votre registre
                     </div>
                 </div>
                 <div v-else>
@@ -90,9 +90,13 @@ const contextPolitique = computed(() => {
                                 :satellite-used="buildings.actualSatelliteUsed"/>
         </div>
         <div class="panel satelliteCards">
-            <div class="DivTitle">Cartes en orbite</div>
+            <div class="DivTitle" style="margin-bottom: 0;">Cartes en orbite</div>
             <div class="container">
-                <text-card-list :cards="cardsInSatellites" withPower withEndDate/>
+                <div class="discret">
+                    Une carte en orbite vous protègera de toutes attaques sur vous !
+                    Attention, aucun remboursement sur la nourriture déboursée par l'envoi d'une carte ne sera effectué.
+                </div>
+                <text-card-list class="cardsDisplayedList" :cards="cardsInSatellites" withPower withEndDate/>
                 <div class="setCardInSatellite">
                     <RouterLink :to="`/action/satellite/`">
                     <div class="goToText red">Ajouter des cartes</div>
@@ -112,7 +116,7 @@ const contextPolitique = computed(() => {
                 </div>
             </div>
             <div class="info">
-                <div class="title">Context politique actuel</div>
+                <div class="title">Context actuel</div>
                 <div class="value">
                     <span class="red" v-if="contextPolitique === 2">En Guerre <svg-icon :fa-icon="warIcon" :size="30"/></span>
                     <span class="yellow" v-else-if="contextPolitique === 1">Menacé <svg-icon :fa-icon="satelliteIcon" :size="30"/></span>
@@ -193,27 +197,27 @@ const contextPolitique = computed(() => {
     justify-content: center;
     align-items: center;
     color: white;
+    height: 25rem;
 }
 
 .warInfo {
     grid-column: 1;
 }
 
-.warInfo .container {
+.container {
     width: 100%;
+    text-align: center;
+}
+
+.infoText {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--color-text);
-    text-align: center;
     margin: 0;
 }
 
 .satelliteCards {
     grid-column: 3;
-}
-
-.satelliteCards .container {
-    width: 100%;
 }
 
 .defenseInfos {
@@ -256,5 +260,11 @@ const contextPolitique = computed(() => {
 .goToText:hover {
     color: var(--vt-c-red-2);
     filter: drop-shadow(0 0 4px var(--vt-c-red-2));
+}
+
+.cardsDisplayedList {
+    max-height: 10rem;
+    overflow-y: auto;
+
 }
 </style>

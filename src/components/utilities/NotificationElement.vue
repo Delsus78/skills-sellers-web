@@ -28,7 +28,7 @@ const deleteNotification = () => {
 </script>
 
 <template>
-  <div class="notification" :class="{'legendaire-text special': title.includes('DM') || title.includes('SPECIAL')}">
+  <div class="notification" :class="{'legendaire-text special': title.includes('DM') || title.includes('SPECIAL'), 'meethicColored special': title.includes('GUERRE')}">
       <div class="title">
           <strong>{{ title }}</strong>
       </div>
@@ -62,6 +62,10 @@ const deleteNotification = () => {
 .special {
     border: 1px solid #ff0000;
     box-shadow: 0 0 10px rgba(169, 24, 24, 0.5);
+}
+
+.meethicColored {
+    color: #ffffff !important;
 }
 
 .notification .title {

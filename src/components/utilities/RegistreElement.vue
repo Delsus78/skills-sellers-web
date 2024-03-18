@@ -11,20 +11,30 @@ import {
     faCubesStacked as creatiumIcon
 } from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
+import AffinityIcon from "@/components/utilities/cards/weapons/AffinityIcon.vue";
+import ValidationButton from "@/components/utilities/ValidationButton.vue";
 
-const showMoreInfo = ref(false);
+const showMoreInfo = ref(isShowMoreInfo);
 
 const {
-    registre
+    registre, interactBtnText, isShowMoreInfo
 } = defineProps({
     registre: {
         type: Object,
         required: true,
         default: () => {}
+    },
+    interactBtnText: {
+        type: String,
+        default: 'Attaquer'
+    },
+    isShowMoreInfo: {
+        type: Boolean,
+        default: false
     }
 });
 
-const emit = defineEmits(['cancelTrade']);
+const emit = defineEmits(['interact']);
 </script>
 
 <template>
@@ -57,18 +67,29 @@ const emit = defineEmits(['cancelTrade']);
                           </span>
                       </li>
                   </ul>
+                  <div class="infoCase">
+                      <a class="meethicColored attackBtn" style="font-size: 1rem; font-weight: bold;"
+                         @click="emit('interact', registre.id)">{{interactBtnText}}</a>
+                  </div>
               </div>
               <!-- HOSTILE -->
               <div v-if="registre.type === 1">
-                  <div class="infos">
-                      <div class="infoCase meethicColored powerText">
+                  <ul class="infos">
+                      <li class="infoCase meethicColored powerText">
                           <span class="infoValue">{{ registre.cardPower }}</span>
                           <span><svg-icon :fa-icon="fireIcon" :size="35"/></span>
-                      </div>
-                      <div class="infoCase meethicColored powerText">
+                      </li>
+                      <li class="infoCase meethicColored powerText">
                           <span class="infoValue">{{ registre.cardWeaponPower }}</span>
                           <span><svg-icon :fa-icon="weaponIcon" :size="35"/></span>
-                      </div>
+                      </li>
+                      <li class="infoCase">
+                          <AffinityIcon class="weapon-affinity" :affinity-id="registre.affinity" :size="35"/>
+                      </li>
+                  </ul>
+                  <div class="infoCase">
+                      <a class="meethicColored attackBtn" style="font-size: 1rem; font-weight: bold;"
+                         @click="emit('interact', registre.id)">{{interactBtnText}}</a>
                   </div>
               </div>
               <!-- NEUTRAL -->
@@ -105,7 +126,7 @@ const emit = defineEmits(['cancelTrade']);
                   </div>
                   <div class="infoCase">
                       <a class="meethicColored" style="font-size: 1rem; font-weight: bold;"
-                       @click="emit('cancelTrade', registre.id)">Annuler le trade</a>
+                       @click="emit('interact', registre.id)">{{interactBtnText}}</a>
                   </div>
               </div>
           </div>
@@ -147,6 +168,12 @@ const emit = defineEmits(['cancelTrade']);
     font-weight: 300;
 }
 
+.weapon-affinity {
+    z-index: 3;
+    color: greenyellow;
+    filter: drop-shadow(0 0 4px var(--vt-c-white-dark));
+}
+
 .moreInfoContent {
     display: flex;
     flex-direction: column;
@@ -180,6 +207,18 @@ const emit = defineEmits(['cancelTrade']);
     align-items: center;
 }
 
+.attackBtn {
+    padding: 0.5rem 5rem;
+    background-image: linear-gradient(to right, transparent, rgb(87, 11, 11), transparent);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.attackBtn:hover {
+    background-size: 100% 5px;
+}
+
 .moreInfo {
     background-color: transparent;
     border: none;
@@ -200,6 +239,12 @@ const emit = defineEmits(['cancelTrade']);
     display: grid;
     grid-auto-flow: column;
 
+}
+
+.btns {
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: center;
 }
 
 .infoCase {

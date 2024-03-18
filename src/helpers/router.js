@@ -22,7 +22,7 @@ import {
     PlayersRegistreView,
     WeaponOpeningView,
     WeaponUpgradeView,
-    PlaceCosmeticView
+    PlaceCosmeticView, BatailleView
 } from '@/views';
 
 export const router = createRouter({
@@ -49,7 +49,8 @@ export const router = createRouter({
         { path: '/opening/weapon', component: WeaponOpeningView},
         { path: '/cosmetic', component: PlaceCosmeticView},
         { path: '/action/:actionType/:cardsIds?', component: ActionView },
-        { path: '/special', component: SpecialView }
+        { path: '/special', component: SpecialView },
+        { path: '/bataille', component: BatailleView }
     ]
 });
 

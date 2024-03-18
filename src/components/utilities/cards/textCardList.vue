@@ -3,8 +3,9 @@ import {faShield as satelliteIcon} from "@fortawesome/free-solid-svg-icons";
 import ProgressBar from "@/components/utilities/progressBar.vue";
 import {getClearRemainingTime, getPourcentageRemainingTime} from "@/components/utilities/DateFormator";
 import {onBeforeMount, onUnmounted, ref} from "vue";
+import AffinityIcon from "@/components/utilities/cards/weapons/AffinityIcon.vue";
 
-const { cards, highlightFirstCard, withPower, withEndDate } = defineProps({
+const { cards, highlightFirstCard, withPower, withAffinity, withEndDate } = defineProps({
     cards: {
         type: Array,
         required: true,
@@ -16,6 +17,11 @@ const { cards, highlightFirstCard, withPower, withEndDate } = defineProps({
         default: false
     },
     withPower: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    withAffinity: {
         type: Boolean,
         required: false,
         default: false
@@ -52,10 +58,9 @@ function updateDates() {
     <ul class="cards_list">
         <li v-for="(card, index) in cards" :key="card.id" class="cardsListItem" :class="{'firstCard': index === 0 && highlightFirstCard}">
             <span class="cardRow">
-                <span>
                     <span :class="card.rarity + '-text'">{{ card.name }}</span>
                     <span v-if="withPower" class="meethicColored powerText">{{ card.power }} <svg-icon :fa-icon="satelliteIcon" :size="14"/></span>
-                </span>
+                    <span v-if="withAffinity && card.weapon" class="affinityIcon"><AffinityIcon class="weapon-affinity" :affinity-id="card.weapon.affinity" :size="25"/></span>
                 <progress-bar v-if="withEndDate && card.action" class="progressBar"
                     :pourcentage="pourcentageRemainingTimeForCards[card.id]"
                     :text="clearRemainingTimeForCards[card.id]"/>
@@ -84,7 +89,14 @@ function updateDates() {
 .powerText {
     font-size: 1.2rem;
     font-weight: 800;
-    margin-left: 1rem;
+    margin: 0 1rem;
+}
+
+.affinityIcon {
+    margin: 0 0.5rem;
+    z-index: 3;
+    color: greenyellow;
+    filter: drop-shadow(0 0 4px var(--vt-c-white-dark));
 }
 
 .progressBar {

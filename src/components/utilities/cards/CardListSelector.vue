@@ -116,7 +116,7 @@ const searchText = ref('');
 const collectionFilter = ref('');
 const rarityFilter = ref('');
 const actionFilter = ref('!');
-const otherFilter = ref('');
+const otherFilter = ref(selectedAction === "guerre" ? 'hasweapon' : '');
 const competenceFilter = ref('');
 
 const selectedCardsIds = ref(initSelectedCardsIds ?? []);

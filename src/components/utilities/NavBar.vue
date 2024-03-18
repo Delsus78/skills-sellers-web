@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { useAuthStore, useUsersStore, useGiftStore } from "@/stores";
+import {useAuthStore, useUsersStore, useGiftStore, useBattleStore} from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
 import {computed, ref} from 'vue';
@@ -26,16 +26,21 @@ import {
     faBookAtlas as registreIcon,
     faBookDead as fightIcon,
     faPeopleArrows as playersRegistreIcon,
-    faTree as noelIcon, faGun as weaponIcon,
+    faTree as noelIcon,
+    faGun as weaponIcon,
+    faSkullCrossbones as warInviteIcon
 } from "@fortawesome/free-solid-svg-icons";
 import Settings from "@/components/utilities/settings.vue";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const giftStore = useGiftStore();
+const battleStore = useBattleStore();
 const { user: authUser } = storeToRefs(authStore);
 const { actualUser: user } = storeToRefs(usersStore);
+const { invitedWar } = storeToRefs(battleStore);
 
 usersStore.getUser(authUser.value.id);
+battleStore.GetInvitedInAWar();
 
 const isHovered = ref(false);
 const isSettingsTabOpened = ref(false);
@@ -72,6 +77,12 @@ const isChristmas = computed(() => {
         </RouterLink>
         <h1>{{ pageName.charAt(0).toUpperCase() + pageName.slice(1) }}</h1>
         <div class="navbar-nav">
+            <RouterLink v-if="invitedWar?.isInvitationPending"
+                        to="/bataille?invitation=true" class="nav-item" v-tooltip:bottom.tooltip="'INVITATION A UNE GUERRE'">
+                <span class="meethicColored">
+                    <svg-icon :fa-icon="warInviteIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink v-if="isChristmas"
                 to="/special" class="nav-item" v-tooltip:bottom.tooltip="'NOEL'">
                 <span class="epicColored">

@@ -105,7 +105,7 @@
                     <span class="value">{{ val.toFixed(2) }}% </span>
                 </p>
             </div>
-            <div v-if="action" class="cancelAction red" @click="emit('cancelAction', action.id)">Annuler l'action</div>
+            <div v-if="action" class="cancelAction red" @click="cancelAction();">Annuler l'action</div>
             <div v-else class="startAction">
                 <RouterLink :to="`/action/explorer/` + id">
                     <div class="startActionText red">Partir en exploration</div>
@@ -155,7 +155,7 @@ import {RouterLink} from "vue-router";
 import ExplorationInfo from "@/components/utilities/cards/ExplorationInfo.vue";
 
 // show upgraded weapon
-import { useCardsStore } from "@/stores";
+import {useBattleStore, useCardsStore} from "@/stores";
 const cardsStore = useCardsStore();
 
 const onWeaponUpgradedClicked = async () => {
@@ -260,6 +260,7 @@ const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick', 'decision
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
 const tiltCard = ref(null);
+const battleStore = useBattleStore();
 let intervalId;
 let tiltInstance;
 
@@ -316,6 +317,13 @@ function setDecisionForExploration(decision) {
     emit('decision', decision, action.id);
 }
 
+function cancelAction() {
+
+    if (action.actionName === 'guerre*')
+        battleStore.cancelBattle(action.warId);
+    else
+        emit('cancelAction', action.id);
+}
 </script>
 <style scoped>
 
