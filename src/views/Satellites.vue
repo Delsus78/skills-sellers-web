@@ -116,7 +116,7 @@ const contextPolitique = computed(() => {
                 </div>
             </div>
             <div class="info">
-                <div class="title">Context actuel</div>
+                <div class="title">Contexte actuel</div>
                 <div class="value">
                     <span class="red" v-if="contextPolitique === 2">En Guerre <svg-icon :fa-icon="warIcon" :size="30"/></span>
                     <span class="yellow" v-else-if="contextPolitique === 1">Menacé <svg-icon :fa-icon="satelliteIcon" :size="30"/></span>

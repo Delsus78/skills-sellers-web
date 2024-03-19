@@ -44,7 +44,7 @@ export const useCosmeticStore = defineStore({
 
             let usedUrl = baseUrl + `buy/${user.id}/${cosmeticId}`;
 
-            await fetchWrapper.post(usedUrl, {coordinateX: x, coordinateY: y, size: size})
+            await fetchWrapper.post(usedUrl, {coordinateX: Math.round(x), coordinateY: Math.round(y), size: size})
                 .catch(error => {
                     console.error(error);
                     return {error};
@@ -59,7 +59,7 @@ export const useCosmeticStore = defineStore({
 
             let usedUrl = baseUrl + `place/${user.id}/${entityId}`;
 
-            await fetchWrapper.post(usedUrl, {coordinateX: x, coordinateY: y, size: size})
+            await fetchWrapper.post(usedUrl, {coordinateX: Math.round(x), coordinateY: Math.round(y), size: size})
                 .catch(error => {
                     console.error(error);
                     return {error};
