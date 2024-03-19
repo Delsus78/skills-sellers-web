@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
 import Card from "@/components/utilities/cards/Card.vue";
+import TextCardList from "@/components/utilities/cards/textCardList.vue";
 
 const authStore = useAuthStore();
 const cardsStore = useCardsStore();
@@ -68,28 +69,23 @@ usersStore.getUser(authUser.value.id).then(async (_) => {
         return;
     }
 
-    doublons.value = cards.value
-        .map(item => {
-            // Trouver tous les doublons correspondants et les ajouter à l'élément
-            const doublonsCorrespondants = user.value.cardsDoublons
-                .filter(doublon => doublon.cardId === item.id)
-                .map(doublon => doublon.doublonId);
-
-            return {
-                ...item,
-                doublonsIds: doublonsCorrespondants
-            };
-        })
-        .filter(item => item.doublonsIds.length > 0) // Filtrer les éléments sans doublons
+    doublons.value = user.value.cardsDoublons
         .sort((a, b) => {
-            // Comparer sur la base du premier doublonId, si plusieurs existent
-            return b.doublonsIds[0] - a.doublonsIds[0];
+            return b.doublonId - a.doublonId;
+        })
+        .map((doublon) => {
+            const card = cards.value.find((card) => card.id === doublon.cardId);
+            return {
+                ...doublon,
+                name: card.name,
+                rarity: card.rarity,
+            };
         });
 })
 
 const validate = async () => {
-    // confirm action
-    let confirm = window.confirm("Confirmer l'action ?");
+    await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
+
 
     if (confirm) {
         const noDoublonLeft = user.value.cardsDoublons?.length === 1;
@@ -187,17 +183,15 @@ const removePts = (competence) => {
                   :rarity="card.rarity"
                   :collection="card.collection"
                   :action="card.action"
+                  :weapon="card.weapon"
+                  :power="card.power"
                   hide-favorite/>
         </div>
         <div class="radiance">
             <div v-for="i in 6" :key="i" :class="[card.rarity, 'ray']" :style="{ transform: 'rotate(' + (i * 30) + 'deg)' }"></div>
         </div>
         <div class="doublons" v-if="doublons">
-            <ul class="doublons_list">
-                <li v-for="(doublon, index) in doublons" :key="doublon.id" class="doublonListItem" :class="{'firstDoublon': index === 0}">
-                    <span :class="doublon.rarity + '-text'">{{ doublon.name }}</span>
-                </li>
-            </ul>
+            <text-card-list :cards="doublons" highlight-first-card/>
         </div>
     </div>
 </template>
@@ -350,31 +344,6 @@ const removePts = (competence) => {
     @media (max-width: 1023px) {
         grid-column: auto;
     }
-}
-
-.doublons_list {
-    grid-area: stats;
-    overflow-y: auto;
-    max-height: 30rem;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.doublonListItem {
-    display: grid;
-    border-bottom: 1px solid rgba(199, 175, 175, 0.35);
-    width: 100%;
-    align-items: center;
-    font-size: 1.5rem;
-}
-
-.firstDoublon {
-    font-size: 1.8rem;
-    background-color: var(--vt-c-green-1);
-    border-radius: 1rem;
-    padding-left: 0.5rem;
 }
 
 .validateBtn {

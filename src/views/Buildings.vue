@@ -1,5 +1,5 @@
 <script setup>
-import {useUsersStore, useAuthStore, useMarchandStore} from "@/stores";
+import {useUsersStore, useAuthStore, useMarchandStore, useCosmeticStore} from "@/stores";
 import {storeToRefs} from "pinia";
 import BatimentElement from "@/components/utilities/BatimentElement.vue";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
@@ -7,16 +7,20 @@ import {ref} from "vue";
 import MarchandRocket from "@/components/utilities/MarchandRocket.vue";
 import BonnBouff from "@/components/utilities/BonnBouff.vue";
 import {router} from "@/helpers";
+import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
+import {faEarth as showPlanetIcon} from "@fortawesome/free-solid-svg-icons";
 const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const marchandStore = useMarchandStore();
-
+const cosmeticStore = useCosmeticStore();
 const { buildings } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { offer } = storeToRefs(marchandStore);
+const { cosmeticsDisplayed } = storeToRefs(cosmeticStore);
 
 marchandStore.getMarchandOffer();
 usersStore.getBuildingsOfUser(authUser.value.id);
+cosmeticStore.getComseticsOfUser(authUser.value.id);
 
 const bonnBouffopen = ref(false);
 
@@ -68,8 +72,8 @@ const tradeWithBonnBouff = () => {
                              :info-supp="{ 'SpatioPort utilisé(s)': buildings.actualSpatioPortUsed}"/>
 
         </div>
-        <RandomPlanet class="planetBuilding" v-model="authUser.pseudo" :width="850" :height="850" :planet-id='1'/>
-
+        <PlanetWithCosmetics class="planetBuilding" v-if="cosmeticsDisplayed != null"
+                             :height="850" :width="850" :player-pseudo="authUser.pseudo" :cosmetics-displayed="cosmeticsDisplayed"/>
         <div v-if="(!buildings.loading || !buildings.error || offer.loading)
                         && buildings.nbBuyMarchandToday < buildings.nbBuyMarchandMaxPerDay"
              class="marchandRocket"
@@ -79,6 +83,9 @@ const tradeWithBonnBouff = () => {
         </div>
         <div v-if="bonnBouffopen">
             <BonnBouff @close="switchOpenBonnBouff" @buy="tradeWithBonnBouff" :offer="offer"/>
+        </div>
+        <div class="arrow-show-planet">
+            <svg-icon :fa-icon="showPlanetIcon" :size="86" @click="router.push('/cosmetic')"/>
         </div>
     </div>
 </template>
@@ -196,4 +203,19 @@ const tradeWithBonnBouff = () => {
     }
 }
 
+.arrow-show-planet {
+    position: fixed;
+    align-items: center;
+    justify-items: center;
+    color: gold;
+    font-family: 'Big John', sans-serif;
+
+    bottom: 6rem;
+    left: 6rem;
+}
+
+.arrow-show-planet:hover {
+    color: white;
+    cursor: pointer;
+}
 </style>

@@ -18,7 +18,11 @@ import {
     faDice as gamesIcon,
     faBook as rulesIcon,
     faGifts as giftCodeIcon,
-    faBars as menuIcon, faW as wordleIcon, faTree as noelIcon
+    faBars as menuIcon,
+    faW as wordleIcon,
+    faTree as noelIcon,
+    faShield as satelliteIcon,
+    faBookAtlas as registreIcon, faBookDead as fightIcon, faPeopleArrows as playersRegistreIcon, faGun as weaponIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
@@ -55,8 +59,6 @@ const unrollNavBar = () => {
 
 const isChristmas = computed(() => {
     const date = new Date();
-    console.log(date.getMonth());
-    console.log(date.getDate());
     return date.getMonth() === 11 && date.getDate() <= 25;
 });
 
@@ -81,10 +83,17 @@ const isChristmas = computed(() => {
                     {{ user.nbCardOpeningAvailable }}<svg-icon :fa-icon="giftIcon" :size="30" />
                 </span>
             </RouterLink>
-            <RouterLink class="nav-item" v-if="user.cardsDoublons?.length > 0" to="/upgrade"
+            <RouterLink class="nav-item" v-if="user.cardsDoublons?.length > 0" to="/upgrade/card"
                         v-tooltip:bottom.tooltip="'Amélioration disponible !'">
                 <span class="colored">
                     {{ user.cardsDoublons?.length }}<svg-icon :fa-icon="upgradeIcon" :size="30" />
+                </span>
+            </RouterLink>
+            <RouterLink v-if="user.nbWeaponOpeningAvailable > 0" to="/opening/weapon"
+                        v-tooltip:bottom.tooltip="'Nouvelle arme disponible !'"
+                        class="nav-item">
+                <span class="colored">
+                    {{ user.nbWeaponOpeningAvailable }}<svg-icon :fa-icon="weaponIcon" :size="40" />
                 </span>
             </RouterLink>
             <RouterLink class="nav-item" to="/"
@@ -107,6 +116,30 @@ const isChristmas = computed(() => {
                         :class="{selected: pageName === 'batiments'}">
                 <svg-icon class="shadow-white" :fa-icon="planetIcon" :size="30"/>
             </RouterLink>
+            <RouterLink class="nav-item" :to="`/satellites`"
+                        v-tooltip:bottom.tooltip="'Guerres et Protection'"
+                        :class="{selected: pageName === 'satellites'}">
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="30"/>
+            </RouterLink>
+            <RouterLink class="nav-item" :to="`/registre/${authUser.id}`"
+                        v-tooltip:bottom.tooltip="'Registre de planète'"
+                        :class="{selected: pageName === 'registre'}">
+                <svg-icon class="shadow-white" :fa-icon="registreIcon" :size="30"/>
+            </RouterLink>
+
+            <RouterLink :to="`/registre/fightreports`"
+                        v-tooltip:bottom.tooltip="'Registre des combats'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre">
+                <svg-icon class="shadow-white" :fa-icon="fightIcon" :size="36"/>
+            </RouterLink>
+            <RouterLink :to="`/registre/${authUser.id}/playersregistre`"
+                        v-tooltip:bottom.tooltip="'Registre des joueurs'"
+                        :class="{selected: pageName === 'registre'}"
+                        class="nav-item registre second">
+                <svg-icon class="shadow-white" :fa-icon="playersRegistreIcon" :size="36"/>
+            </RouterLink>
+
             <RouterLink class="nav-item" :to="`/games`"
                         :class="{selected: pageName === 'games'}"
                         v-tooltip:bottom.tooltip="'Jeux'">
@@ -127,8 +160,6 @@ const isChristmas = computed(() => {
                 <span class="pseudoText">{{authUser.pseudo}}</span>
                 <a @click="authStore.logout()"><svg-icon class="logout shadow-white" :fa-icon="leaveIcon" :size="26"/></a>
                 <RouterLink :to="`/rules`"><svg-icon class="rules" :fa-icon="rulesIcon" :size="26"/></RouterLink>
-                <div class="resources">
-                </div>
 
                 <span class="text food">
                     {{ user.nourriture }}
@@ -159,6 +190,7 @@ const isChristmas = computed(() => {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
+    user-select: none;
 }
 
 .navbar-mobile .openNavBar {

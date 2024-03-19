@@ -1,7 +1,7 @@
 import { toast } from "vue3-toastify";
 import { defineStore } from 'pinia';
 import * as signalR from '@microsoft/signalr';
-import { useAuthStore, useCardsStore, useUsersStore } from '@/stores';
+import {useAuthStore, useBattleStore, useCardsStore, useUsersStore} from '@/stores';
 import {fetchWrapper} from "@/helpers";
 import {PlayAudio} from "@/helpers/AudioPlay";
 
@@ -57,8 +57,50 @@ export const useNotificationStore = defineStore({
 
                 // refresh data
                 await useUsersStore().getUser(user.id);
-                await useCardsStore().getAllCardsFromUser(user.id);
-                await useUsersStore().getBuildingsOfUser(user.id);
+
+                console.log(notification);
+                if (notification.type.includes("cards"))
+                    await useCardsStore().getAllCardsFromUser(user.id);
+                if (notification.type.includes("onecard"))
+                    await useCardsStore().getUserCard(user.id, notification.relatedId);
+                if (notification.type.includes("buildings"))
+                    await useUsersStore().getBuildingsOfUser(user.id);
+                if (notification.type.includes("weapons"))
+                    await useCardsStore().getWeapons();
+                if (notification.type.includes("oneweapon"))
+                    await useCardsStore().getWeaponById(notification.relatedId);
+            });
+
+            this.connection.on("WarNotification", async (notification) => {
+                this.addNotification(notification);
+
+                // vue toast
+                toast.info(`<strong style="color: #d0de21;">${notification.title}</strong> : <br/> ${notification.message}`,
+                    {
+                        dangerouslyHTMLString: true,
+                        icon: "⚔",
+                        progressStyle: {
+                            background: "#FF0000FF",
+                        }
+                    });
+
+                // play sound
+                await PlayAudio('oof');
+
+                // refresh data
+                await useUsersStore().getUser(user.id);
+                await useBattleStore().GetInvitedInAWar();
+
+                if (notification.type.includes("cards"))
+                    await useCardsStore().getAllCardsFromUser(user.id);
+                if (notification.type.includes("onecard"))
+                    await useCardsStore().getUserCard(user.id, notification.relatedId);
+                if (notification.type.includes("buildings"))
+                    await useUsersStore().getBuildingsOfUser(user.id);
+                if (notification.type.includes("weapons"))
+                    await useCardsStore().getWeapons();
+                if (notification.type.includes("oneweapon"))
+                    await useCardsStore().getWeaponById(notification.relatedId);
             });
 
             // Démarrer la connexion

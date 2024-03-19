@@ -44,6 +44,12 @@ a,
   transition: 0.4s;
 }
 
+.yellow {
+  text-decoration: none;
+  color: var(--vt-c-yellow-1);
+  transition: 0.4s;
+}
+
 .blue {
     text-decoration: none;
     color: var(--vt-c-blue-1);
@@ -91,6 +97,33 @@ a,
 
 .commun-text {
   animation: commun-color-change 6s linear infinite;
+}
+
+@keyframes meethicColorChange {
+  0% {
+    color: #ff0000;
+    filter: drop-shadow(0 0 0.2rem #ff0000);
+  }
+  20% {
+    color: #9f6100;
+    filter: drop-shadow(0 0 0.4rem #9f6100);
+  }
+  40% {
+    color: #721414;
+    filter: drop-shadow(0 0 0.2rem #721414);
+  }
+  60% {
+    color: #9a454c;
+    filter: drop-shadow(0 0 0.4rem #9a454c);
+  }
+  80% {
+    color: #ad0000;
+    filter: drop-shadow(0 0 0.2rem #ad0000);
+  }
+  100% {
+    color: #ff0000;
+    filter: drop-shadow(0 0 0.4rem #ff0000);
+  }
 }
 
 @keyframes colorChange {
@@ -171,7 +204,7 @@ strong {
   justify-content: space-between;
   font-size: 2rem;
   font-weight: bold;
-  margin:  2rem;
+  margin: 0.3rem;
   animation: colorChange 6s linear infinite;
 }
 
@@ -181,8 +214,11 @@ strong {
   justify-content: space-between;
   font-size: 2rem;
   font-weight: bold;
-  margin:  2rem;
   animation: epic-color-change 6s linear infinite;
+}
+
+.meethicColored {
+  animation: meethicColorChange 6s linear infinite;
 }
 
 @media (min-width: 1024px) {

@@ -14,7 +14,7 @@ gamesStore.getWordle();
 const word = ref("");
 const keys =  ['A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
                'Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
-               'W', 'X', 'C', 'V', 'B', 'N', '.', '-',
+               'W', 'X', 'C', 'V', 'B', 'N', '.', '-', '+', ',',
                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const showKeyboard = true;
 
@@ -22,13 +22,7 @@ const handleKeydown = (event) => {
     if (wordle.value.words.length === 5 || wordle.value.isWin) return;
 
     // setting up allowed keys
-    const allowedKeys = ["Enter", "-", ".", "Backspace"];
-    for (let i = 0; i < 10; i++) {
-        allowedKeys.push(i.toString());  // Ajouter les chiffres
-    }
-    for (let i = 65; i <= 90; i++) {
-        allowedKeys.push(String.fromCharCode(i)); // Ajouter les lettres A-Z
-    }
+    const allowedKeys = [...keys, 'Enter', 'Backspace'];
     for (let i = 97; i <= 122; i++) {
         allowedKeys.push(String.fromCharCode(i)); // Ajouter les lettres a-z
     }
