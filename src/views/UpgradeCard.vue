@@ -86,10 +86,16 @@ usersStore.getUser(authUser.value.id).then(async (_) => {
 const validate = async () => {
     await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
-    await router.push('/cards');
 
-    if (user.value.cardsDoublons?.length > 0) {
-        await router.push('/upgrade/weapon');
+    if (confirm) {
+        const noDoublonLeft = user.value.cardsDoublons?.length === 1;
+        await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
+
+        await router.push('/cards');
+
+        if (!noDoublonLeft) {
+            await router.push('/upgrade');
+        }
     }
 }
 
