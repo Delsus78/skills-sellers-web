@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import satelliteImg from '@/assets/images/SkillsSellers.png';
+import satelliteImg from '@/assets/images/satellite.png';
 
 const { level, circleRadius, satelliteSize, satelliteUsed } = defineProps({
     level: {
