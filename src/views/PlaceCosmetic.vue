@@ -69,6 +69,10 @@ const moveCosmetic = (e) => {
     const x = e.clientX;
     const y = e.clientY;
 
+    // if mouse is on the button, return
+    if (e.target.classList.contains('validate')) {
+        return;
+    }
 
     const actualX = x - centerOfThePlanetInTheScreen.value.x;
     const actualY = y - centerOfThePlanetInTheScreen.value.y;
