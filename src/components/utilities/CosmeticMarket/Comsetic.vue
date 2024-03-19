@@ -11,7 +11,7 @@ const { cosmeticId } = defineProps({
 
 const imagePath = computed(() => {
     const matchedPath = Object.keys(imagesImports).find(path =>
-        path.includes(`${cosmeticId}.png`)
+        path.endsWith(`/${cosmeticId}.png`)
     );
     return matchedPath ? imagesImports[matchedPath].default : '';
 });
