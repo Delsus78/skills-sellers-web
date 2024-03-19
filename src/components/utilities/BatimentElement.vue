@@ -1,5 +1,4 @@
 <script setup>
-
 import {computed} from "vue";
 const imagesImports = import.meta.glob('../../assets/images/*.png', {eager: true});
 
