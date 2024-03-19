@@ -1,6 +1,6 @@
 <script setup>
-import {computed, defineProps, onMounted, ref} from 'vue';
-const imagesImports = import.meta.glob('../../assets/images/*.png', {eager: true});
+import {computed, defineProps, onBeforeMount, ref} from 'vue';
+const imagesImports = import.meta.glob('../../../assets/images/cosmetics/*.png', {eager: true});
 
 const { cosmeticId } = defineProps({
     cosmeticId: {
@@ -9,10 +9,6 @@ const { cosmeticId } = defineProps({
     }
 });
 
-
-onMounted(() => {
-
-});
 const imagePath = computed(() => {
     const matchedPath = Object.keys(imagesImports).find(path =>
         path.includes(`${cosmeticId}.png`)
