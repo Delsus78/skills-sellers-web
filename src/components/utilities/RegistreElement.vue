@@ -14,8 +14,6 @@ import {router} from "@/helpers";
 import AffinityIcon from "@/components/utilities/cards/weapons/AffinityIcon.vue";
 import ValidationButton from "@/components/utilities/ValidationButton.vue";
 
-const showMoreInfo = ref(isShowMoreInfo);
-
 const {
     registre, interactBtnText, isShowMoreInfo
 } = defineProps({
@@ -33,6 +31,8 @@ const {
         default: false
     }
 });
+
+const showMoreInfo = ref(isShowMoreInfo);
 
 const emit = defineEmits(['interact']);
 </script>
