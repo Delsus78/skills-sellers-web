@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import satelliteImg from '@/assets/images/satellite.png';
 
 const { level, circleRadius, satelliteSize, satelliteUsed } = defineProps({
     level: {
@@ -46,12 +47,12 @@ const satelliteStyle = (n) => {
         <div class="satellite_displayer">
             <svg :viewBox="viewBoxSize" width="100%" height="100%" style="overflow: visible;">
                 <defs>
-                    <image id="satellite_empty" xlink:href="src/assets/images/satellite.png"
+                    <image id="satellite_empty" :xlink:href="satelliteImg"
                            x="-75" y="-75" height="150" width="150" style="filter: grayscale(100%)" />
                     <g id="satellite_used">
-                        <image xlink:href="src/assets/images/satellite.png"
+                        <image :xlink:href="satelliteImg"
                                x="-75" y="-75" height="150" width="150"/>
-                        <image xlink:href="src/assets/images/satellite.png"
+                        <image :xlink:href="satelliteImg"
                                x="-90" y="-90" height="180" width="180" style="
                                    filter: blur(10px); opacity: 0.5;"/>
                     </g>

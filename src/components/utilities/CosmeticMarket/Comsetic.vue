@@ -1,5 +1,6 @@
 <script setup>
-import {defineProps, onMounted, ref} from 'vue';
+import {computed, defineProps, onMounted, ref} from 'vue';
+const imagesImports = import.meta.glob('../../assets/images/*.png', {eager: true});
 
 const { cosmeticId } = defineProps({
     cosmeticId: {
@@ -8,19 +9,16 @@ const { cosmeticId } = defineProps({
     }
 });
 
-const imagePath = ref('');
 
 onMounted(() => {
-    // Vite spécifique pour le chargement dynamique des images
-    import(`../../../assets/images/cosmetics/${cosmeticId}.png`)
-        .then((module) => {
-            imagePath.value = module.default;
-        })
-        .catch((error) => {
-            console.error("Failed to load image", error);
-        });
-});
 
+});
+const imagePath = computed(() => {
+    const matchedPath = Object.keys(imagesImports).find(path =>
+        path.includes(`${cosmeticId}.png`)
+    );
+    return matchedPath ? imagesImports[matchedPath].default : '';
+});
 
 </script>
 <template>
