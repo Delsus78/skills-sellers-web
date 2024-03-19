@@ -29,7 +29,6 @@ export const useBattleStore = defineStore({
 
             this.invitedWar = await fetchWrapper.get(usedUrl)
                 .catch(error => {
-                    console.error(error);
                     return {error: error};
                 });
         },
