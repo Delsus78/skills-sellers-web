@@ -1,6 +1,6 @@
 <script setup>
 import {storeToRefs} from "pinia";
-import { useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore } from "@/stores";
+import {useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore, useCosmeticStore} from "@/stores";
 import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
 import Notifications from "@/components/utilities/Notifications.vue";
@@ -11,7 +11,13 @@ import {
     faPaperPlane as sendIcon,
     faGift as giftIcon,
     faInfinity as infinityIcon,
-faArrowTrendUp as statIcon} from "@fortawesome/free-solid-svg-icons";
+    faEarth as showPlanetIcon,
+    faArrowTrendUp as statIcon,
+    faBurger as foodIcon,
+    faCubesStacked as creatiumIcon, faShield as satelliteIcon,
+} from "@fortawesome/free-solid-svg-icons";
+import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
+import {format, getClearRemainingTime} from "@/components/utilities/DateFormator";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -20,16 +26,20 @@ const usersStore = useUsersStore();
 const authStore = useAuthStore();
 const notifStore = useNotificationStore();
 const achievementsStore = useAchievementsStore();
+const cosmeticStore = useCosmeticStore();
 const { stats, users } = storeToRefs(usersStore);
 const { user: authUser } = storeToRefs(authStore);
 const { achievements } = storeToRefs(achievementsStore);
+const { cosmeticsDisplayed } = storeToRefs(cosmeticStore);
 const messageToSend = ref("");
 // stats or achievements
 const openedTab = ref("stats");
+const showPlanet = ref(false);
 
 usersStore.getAllUsers();
 usersStore.getStatsOfUser(userId);
 achievementsStore.getAchievementsOfUser(userId);
+cosmeticStore.getComseticsOfUser(userId);
 
 const achievementsData = computed(() => {
     return Object.entries(achievements.value).map(([key, value]) => ({
@@ -41,16 +51,56 @@ const achievementsData = computed(() => {
     }));
 });
 
+const transformedStats = computed(() => {
+    let transformed = [];
+    const data = stats.value;
+
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const value = data[key];
+            if (typeof value === 'object' && value.title === undefined) {
+                // Si la valeur est un objet avec des sous-clés (comme totalCardsByRarity, totalResourcesMined, etc.)
+                for (const subKey in value) {
+                    if (value.hasOwnProperty(subKey)) {
+                        const subValue = value[subKey];
+                        if (typeof subValue === 'object' && subValue !== null && subValue.title) {
+                            transformed.push({title: subValue.title, stat: subValue.stat, rank: subValue.rank});
+                        }
+                    }
+                }
+            } else if (value.title) {
+                // Si la valeur est un objet simple
+                transformed.push({ title: value.title, stat: value.stat, rank: value.rank });
+            }
+        }
+    }
+
+    // speciales stats
+    transformed.forEach(stat => {
+        // totalCardsInBDD
+        if (stat.title === "Nombre total de cartes") {
+            stat.stat = `${stat.stat} / ${data.totalCardsInBDD}`;
+        }
+    });
+
+    return transformed;
+})
 
 const user = computed(() => {
     if (users.value.loading || users.value.error) return null;
-    return users.value.find(u => u.id.toString() === userId);
+    const userReturned = users.value.find(u => u.id.toString() === userId);
+    return userReturned;
 });
 
 const handleSend = () => {
     notifStore.sendMessageToUser(userId, messageToSend.value);
     messageToSend.value = "";
 }
+
+const isWarTimeoutInDate = computed(() => {
+    if (!user.value) return false;
+    return new Date(user.value.warTimeout) > new Date();
+});
 
 </script>
 <template>
@@ -68,10 +118,25 @@ const handleSend = () => {
     </div>
     <div v-else class="Stats">
         <div class="User_info bg-dark-blur">
+            <div class="war_time_out_display" v-if="user.warTimeout && isWarTimeoutInDate">
+                Termine le {{format(user.warTimeout, "DD MMMM YYYY HH:mm:ss Z")}}
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="26"/>
+            </div>
             <div class="User_header">
                 <h1 class="DivTitle">
                     {{ user?.pseudo ?? "Chargement..." }}
                 </h1>
+                <div class="user_resources">
+                    <span class="text food">
+                        {{ user.nourriture }}<svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
+                    </span>
+                    <span class="text or">
+                        {{ user.or }}<svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
+                    </span>
+                    <span class="text creatium">
+                        {{ user.creatium }} <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="Stats_content bg-dark-blur">
@@ -101,137 +166,11 @@ const handleSend = () => {
                 </div>
             </div>
             <ul v-if="openedTab === 'stats'" class="stats-list">
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCards.rank === 1}">
-                    <span>Nombre total de cartes</span>
+                <li v-for="item in transformedStats" :key="item.key" class="stat-item" :class="{'legendaire-text': item.rank === 1}">
+                    <span>{{ item.title }}</span>
                     <span class="stat-item-value">
-                        <span>{{ stats.totalCards.stat }} / {{ stats.totalCardsInBDD}}</span>
-                        <span>{{ stats.totalCards.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.commune.rank === 1}">
-                    <span>Nombre de cartes communes</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.commune.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.commune.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.epic.rank === 1}">
-                    <span>Nombre de cartes épiques</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.epic.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.epic.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsByRarity.legendaire.rank === 1}">
-                    <span>Nombre de cartes légendaires</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsByRarity.legendaire.stat ?? "0" }}</span>
-                        <span>{{ stats.totalCardsByRarity.legendaire.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardWithAStatMaxed.rank === 1}">
-                    <span>Nombre de cartes avec une compétence maximisée</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardWithAStatMaxed.stat }}</span>
-                        <span>{{ stats.totalCardWithAStatMaxed.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCardsFull10.rank === 1}">
-                    <span>Nombre de cartes avec toutes les compétences à 10</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCardsFull10.stat }}</span>
-                        <span>{{ stats.totalCardsFull10.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalFailedCardsCauseOfCharisme.rank === 1}">
-                    <span>Nombre d'échecs dus au charisme lors d'explorations</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalFailedCardsCauseOfCharisme.stat }}</span>
-                        <span>{{ stats.totalFailedCardsCauseOfCharisme.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalDoublonsEarned.rank === 1}">
-                    <span>Nombre de doublons obtenus</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalDoublonsEarned.stat }}</span>
-                        <span>{{ stats.totalDoublonsEarned.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMessagesSent.rank === 1}">
-                    <span>Nombre de messages envoyés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMessagesSent.stat }}</span>
-                        <span>{{ stats.totalMessagesSent.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Creatium.rank === 1}">
-                    <span>Nombre de créatiums minés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalResourcesMined.Creatium.stat ?? "0" }}</span>
-                        <span>{{ stats.totalResourcesMined.Creatium.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalResourcesMined.Or.rank === 1}">
-                    <span>Nombre d'onces d'or minées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalResourcesMined.Or.stat ?? "0" }}</span>
-                        <span>{{ stats.totalResourcesMined.Or.rank ?? "?" }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalBuildingsUpgraded.rank === 1}">
-                    <span>Nombre d'améliorations de bâtiments effectuées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalBuildingsUpgraded.stat }}</span>
-                        <span>{{ stats.totalBuildingsUpgraded.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalRocketLaunched.rank === 1}">
-                    <span>Nombre de fusées lancées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalRocketLaunched.stat }}</span>
-                        <span>{{ stats.totalRocketLaunched.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMealCooked.rank === 1}">
-                    <span>Nombre de repas préparés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMealCooked.stat }}</span>
-                        <span>{{ stats.totalMealCooked.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalCollectionsCompleted.rank === 1}">
-                    <span>Nombre de collection complétées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalCollectionsCompleted.stat }}</span>
-                        <span>{{ stats.totalCollectionsCompleted.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalMachineUsed.rank === 1}">
-                    <span>Nombre de machine E. Zeiss utilisées</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalMachineUsed.stat }}</span>
-                        <span>{{ stats.totalMachineUsed.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalWinAtCharismeCasino.rank === 1}">
-                    <span>Nombre de charisme remporté au casino</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalWinAtCharismeCasino.stat }}</span>
-                        <span>{{ stats.totalWinAtCharismeCasino.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalLooseAtCharismeCasino.rank === 1}">
-                    <span>Nombre d'or perdu au casino</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalLooseAtCharismeCasino.stat }}</span>
-                        <span>{{ stats.totalLooseAtCharismeCasino.rank }}</span>
-                    </span>
-                </li>
-                <li class="stat-item" :class="{'legendaire-text': stats.totalWordleWon.rank === 1}">
-                    <span>Nombre de Wordle gagnés</span>
-                    <span class="stat-item-value">
-                        <span>{{ stats.totalWordleWon.stat }}</span>
-                        <span>{{ stats.totalWordleWon.rank }}</span>
+                        <span>{{ item.stat }}</span>
+                        <span>{{ item.rank }}</span>
                     </span>
                 </li>
             </ul>
@@ -248,7 +187,7 @@ const handleSend = () => {
                     </span>
                 </li>
             </ul>
-        </div>
+        </div >
         <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
         <div v-else class="SendNotification bg-dark-blur">
             <div class="SendNotification_header">
@@ -266,7 +205,11 @@ const handleSend = () => {
                 <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
             </div>
         </div>
-        <RandomPlanet class="planetBuilding" :model-value="user?.pseudo" :width="850" :height="850" :planet-id='1'/>
+        <PlanetWithCosmetics class="planetBuilding" v-if="cosmeticsDisplayed != null" :style="{'z-index': showPlanet ? 100 : -1}"
+                             :height="850" :width="850" :player-pseudo="user?.pseudo" :cosmetics-displayed="cosmeticsDisplayed"/>
+        <div class="arrow-show-planet">
+            <svg-icon :fa-icon="showPlanetIcon" :size="36" @click="showPlanet = !showPlanet"/>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -282,6 +225,10 @@ const handleSend = () => {
         grid-template-rows: 4rem 5rem 50rem 50rem;
         row-gap: 2rem;
     }
+}
+
+.text {
+    text-shadow: 0 0 0.5rem var(--vt-c-white-dark);
 }
 
 .planetBuilding {
@@ -521,6 +468,24 @@ const handleSend = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
+}
+
+.user_resources {
+    display: flex;
+    gap: 2rem;
+}
+
+.war_time_out_display {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    color: gold;
+    gap: 1rem;
+    border-radius: 1rem;
+    font-family: 'Big John', sans-serif;
 }
 
 .input_gold {
@@ -531,5 +496,18 @@ const handleSend = () => {
     border-radius: 1rem;
     font-size: 1.8em;
     font-family: 'Big John', sans-serif;
+}
+
+.arrow-show-planet {
+    position: absolute;
+    top: 15rem;
+    display: flex;
+    color: gold;
+    font-size: 1.8em;
+}
+
+.arrow-show-planet:hover {
+    color: white;
+    cursor: pointer;
 }
 </style>

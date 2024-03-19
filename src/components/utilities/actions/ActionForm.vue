@@ -5,9 +5,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import dropdown from 'vue-dropdowns';
 import {getFormattedRemainingTime} from '../DateFormator';
-const emit = defineEmits(['validate', 'cancel', 'updateBatimentToUpgrade']);
+import WeaponList from "@/components/utilities/cards/weapons/WeaponList.vue";
+const emit = defineEmits(['validate', 'cancel', 'updateElementToUpgrade']);
 
-const { actionName, selectedCards, estimatedAction, batimentToUpgrade } = defineProps({
+const { actionName, selectedCards, estimatedAction, elementToUpgrade } = defineProps({
     actionName: {
         type: String,
         required: true,
@@ -23,7 +24,7 @@ const { actionName, selectedCards, estimatedAction, batimentToUpgrade } = define
         required: false,
         default: () => {}
     },
-    batimentToUpgrade: {
+    elementToUpgrade: {
         type: Object,
         required: false,
         default: () => {}
@@ -31,7 +32,8 @@ const { actionName, selectedCards, estimatedAction, batimentToUpgrade } = define
 });
 
 const error = ref(estimatedAction.error);
-const batToUpDisplay = ref(batimentToUpgrade);
+const upgradeSelected = ref(elementToUpgrade);
+const showWeaponList = ref(false);
 
 const validate = () => {
     if (selectedCards.length === 0) {
@@ -42,11 +44,25 @@ const validate = () => {
 }
 
 const handleUpdateOption = (option) => {
-    batToUpDisplay.value = option;
-    emit('updateBatimentToUpgrade', batToUpDisplay.value.name);
+    upgradeSelected.value = option;
+
+    if (upgradeSelected.value.id === 'arme') {
+        showWeaponList.value = true;
+        return;
+    }
+    showWeaponList.value = false;
+
+    emit('updateElementToUpgrade', 'batiment', upgradeSelected.value.id);
 }
 
+const handleUpdateWeapon = (weapon) => {
+    upgradeSelected.value = weapon.name;
+    emit('updateElementToUpgrade', 'weapon', weapon);
+}
 
+const handleCloseWeaponList = () => {
+    showWeaponList.value = false;
+}
 
 </script>
 <template>
@@ -89,21 +105,34 @@ const handleUpdateOption = (option) => {
         </div>
       </div>
       <dropdown v-if='actionName === "ameliorer"' class="dropdown-batiments"
-                :options="[{name: 'cuisine'},{name: 'spatioport'},{name: 'salledesport'}]"
-                placeholder="Choisissez un batiment à améliorer"
-                :selected="batimentToUpgrade"
+                :options="[{name: 'Cuisine', id: 'cuisine'},
+                          {name: 'SpatioPort', id: 'spatioport'},
+                          {name: 'Salle de sport', id: 'salledesport'},
+                          {name: 'Satellite', id: 'satellite'},
+                          {name: 'Arme', id: 'arme'}]"
+                placeholder="Choisissez un element à améliorer"
+                :selected="elementToUpgrade"
                 v-on:updateOption="handleUpdateOption"></dropdown>
       <div class="buttons">
           <button class="validate swipe-overlay-out" @click="validate" :class="{disabled: error}">Valider</button>
           <div class="leave red" @click="emit('cancel')"><svg-icon :fa-icon="leaveIcon" :size="45"/></div>
       </div>
-      <div class="errorInfo">
-          <span class="red">{{ error }}</span>
+      <div class="errorInfo" v-if="error">
+          <span class="red discret shadow-black" style="text-align: center; font-size: 1rem;">{{ error }}</span>
       </div>
   </div>
+  <WeaponList v-if="showWeaponList" class="weapon-list" with-custom-click no-desact no-remove-btn
+              @click-on-weapon="handleUpdateWeapon" @leave="handleCloseWeaponList" />
 </template>
 <style scoped>
 .actionForm {
+    position: fixed;
+    bottom: 6rem;
+    right: 0;
+    padding: 2rem;
+    height: 20rem;
+    width: 50rem;
+    z-index: 100;
     display: grid;
     grid-template-rows: 22% 50% 20%;
     grid-template-areas: "title" "estimations" "buttons";
@@ -113,10 +142,19 @@ const handleUpdateOption = (option) => {
     overflow: hidden;
 
     @media (max-width: 1023px) {
+        width: 100%;
+        height: 20rem;
+        bottom: 1rem;
         grid-template-rows: 20% 50% 20%;
         grid-template-areas: "title" "estimations" "buttons";
         grid-template-columns: 1fr;
     }
+}
+
+.weapon-list {
+    position: fixed;
+    left: 10rem;
+    right: auto;
 }
 
 .little_title {
@@ -153,7 +191,6 @@ const handleUpdateOption = (option) => {
 }
 
 .validate {
-    transition: all 0.2s ease-in-out;
     z-index: 100;
 
     @media (max-width: 1023px) {
@@ -188,7 +225,6 @@ const handleUpdateOption = (option) => {
     border-width: 2px;
     border-style: solid;
     color: var(--vt-c-green-1);
-    transition: all 0.2s ease-in-out;
     font-size: 1.2rem;
     font-weight: 800;
     z-index: 300;
@@ -210,11 +246,13 @@ const handleUpdateOption = (option) => {
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     background: transparent;
     backdrop-filter: blur(5px);
+    transform: translate(0, -2rem);
 }
 
 :deep(.dropdown-menu li a) {
     color: var(--vt-c-white-1);
     font-size: 0.8rem;
+    line-height: 0.8rem;
     font-weight: 800;
     z-index: 300;
 }
@@ -222,7 +260,7 @@ const handleUpdateOption = (option) => {
 :deep(.dropdown-menu li a:hover) {
     transform: scale(1.2);
     background: transparent;
-    color: var(--vt-c-green-1);
+    transition: all 0s;
 }
 
 .estimations {
@@ -246,6 +284,9 @@ const handleUpdateOption = (option) => {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid var(--vt-c-red-2);
+    backdrop-filter: drop-shadow(0 0 4px var(--vt-c-red-dark));
 }
 
 .disabled {

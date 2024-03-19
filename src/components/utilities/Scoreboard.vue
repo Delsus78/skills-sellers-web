@@ -16,7 +16,7 @@
         <div class="headers-list">
             <span></span>
             <span>Joueur</span>
-            <span>Cartes</span>
+            <span>Score</span>
         </div>
 
         <ul class="player-list">
@@ -24,31 +24,41 @@
                 :key="player.id"
                 class="player-item" :class="
                 {
-                    'legendaire-text': player.nbCards === maxCardNumber,
-                    'epic-text': player.nbCards >= secondQuartile && player.nbCards < maxCardNumber,
-                    'commun-text': player.nbCards >= firstQuartile && player.nbCards < secondQuartile
+                    'legendaire-text': index === winning,
+                    'epic-text': index <= challenger && index > winning,
+                    'commun-text': index <= opening && index > challenger
                 }"
                 @click="router.push('/stats/'+player.id);">
                 <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
-                <span>{{ player.nbCards }}</span>
+                <span>{{ player.score }}</span>
             </li>
         </ul>
-        <div class="footer-scoreboard">
-            <p>Dernière mise à jour : {{ lastUpdate }}</p>
+        <div class="footer-scoreboard" v-if="actualSeason && !actualSeason.loading">
+            <p>SAISON {{actualSeason.id}}</p>
+            <progress-bar class="progressBar" v-if="pourcentageRemainingTime != null"
+                          :pourcentage="pourcentageRemainingTime"
+                          :text="seasonRemainingTime" ended-text="TERMINEE"/>
         </div>
     </div>
 </template>
 <script setup>
-import {defineProps, ref} from 'vue';
+import {defineProps, onBeforeMount, onUnmounted, ref, toRef} from 'vue';
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
+import ProgressBar from "@/components/utilities/progressBar.vue";
+import {getClearRemainingTime, getPourcentageRemainingTime} from "@/components/utilities/DateFormator";
+import {storeToRefs} from "pinia";
+import {useMainStore} from "@/stores";
+const mainStore = useMainStore();
 
 const emit = defineEmits(['reload']);
 
-const maxCardNumber = 150;
-const secondQuartile = 100;
-const firstQuartile = 50;
+const { actualSeason } = storeToRefs(mainStore);
+
+const winning = 0;
+const challenger = 2;
+const opening = 5;
 
 const { players } = defineProps({
     players: {
@@ -57,10 +67,25 @@ const { players } = defineProps({
     }
 });
 
-const lastUpdate = ref(new Date().toLocaleString());
+
+let intervalId;
+const seasonRemainingTime = ref(null);
+const pourcentageRemainingTime = ref(null);
+
+onBeforeMount(() => {
+    intervalId = setInterval(updateDates, 1000);
+});
+onUnmounted(() => {
+    if (intervalId) clearInterval(intervalId);
+});
+
+function updateDates() {
+    if (!actualSeason.value || actualSeason.loading) return;
+    seasonRemainingTime.value = getClearRemainingTime(actualSeason.value.scheduledEndDate);
+    pourcentageRemainingTime.value = getPourcentageRemainingTime(actualSeason.value.scheduledEndDate, actualSeason.value.startedDate);
+}
 
 const reload = () => {
-    lastUpdate.value = new Date().toLocaleString();
     emit('reload');
 };
 
@@ -164,5 +189,14 @@ const reload = () => {
     font-size: 1rem;
     color: #737272;  /* Nuance de gris foncé pour le texte */
     text-shadow: 0 0 0.5rem #000000;  /* Ombre portée du texte */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.progressBar {
+    max-width: 20rem;
 }
 </style>

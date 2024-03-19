@@ -2,7 +2,10 @@
 
 import {useCardsStore, useGamesStore, useMainStore, useUsersStore} from "@/stores";
 import {storeToRefs} from "pinia";
-import {faCoins as moneyIcon} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCoins as moneyIcon,
+    faCubesStacked as creatiumIcon
+} from "@fortawesome/free-solid-svg-icons";
 import {ref, watch} from "vue";
 import ListSelector from "@/components/utilities/cards/CardListSelector.vue";
 import GearsBackground from "@/components/utilities/GearsBackground.vue";
@@ -32,10 +35,8 @@ const changeSelectedCardsIds = (newSelectedCards) => {
     emit("estimate", 'MACHINE', 0, ids);
 }
 
-const playOrRepair = () => {
-    console.log(actualUser.value.statRepairedObjectMachine)
-    console.log(selectedCards.value)
-    if (actualUser.value.statRepairedObjectMachine === -1) {
+const start = () => {
+    if (!game?.isRepairing) {
         let ids = [];
         if (selectedCards.value !== null && selectedCards.value.length > 0) {
             ids = selectedCards.value;
@@ -47,10 +48,6 @@ const playOrRepair = () => {
         }, 1000);
 
         gameResponse.value = {};
-    } else if (actualUser.value.statRepairedObjectMachine === 0) {
-        emit("play", 'MACHINE', 500, []);
-    } else if (actualUser.value.statRepairedObjectMachine > 0){
-        emit("play", 'MACHINE', 1000, []);
     }
 }
 
@@ -60,7 +57,6 @@ const selectAllCardsWithIntelligenceAndNoAction = () => {
             selectedCards.value.push(card.id);
         }
     })
-    console.log(selectedCards.value);
     emit("estimate", 'MACHINE', 0, selectedCards.value);
 }
 
@@ -95,38 +91,38 @@ watch(cards, () => {
                     {{ game.description }}
                 </div>
             </div>
-            <ListSelector :cards="cards" v-if="actualUser.statRepairedObjectMachine === -1"
+            <ListSelector :cards="cards" v-if="!game?.isRepairing"
                           withFilters
                           selected-action="reparer"
                           :init-selected-cards-ids="selectedCards"
                           @resulted-list="changeSelectedCardsIds" />
-            <div class="form_content" :class="{'large': actualUser.statRepairedObjectMachine > -1}">
+            <div class="form_content">
                 <div class="validate">
-                    <div class="buttons" v-if="actualUser.statRepairedObjectMachine === -1">
-                        <button class="btn btn-primary" @click="playOrRepair">Reparer</button>
+                    <div class="buttons" v-if="!game?.isRepairing">
+                        <button class="btn btn-primary" @click="start">Construire</button>
                         <button class="btn btn-primary" @click="selectAllCardsWithIntelligenceAndNoAction"
                                 v-tooltip:bottom.tooltip="'Sélectionne les cartes sans action et avec au moins 1 d\'intel'">
                             Selection rapide
                         </button>
                     </div>
-                    <div class="buttons" v-else>
-                        <button class="btn btn-primary" @click="playOrRepair">Acheter</button>
+                    <div v-if="!game?.isRepairing">
+                        <p class="description shadow-white">Chances : {{ gameEstimation?.gains?.chances }}</p>
                     </div>
-                    <div class="input_gold" v-if="actualUser.statRepairedObjectMachine > -1">
-                        {{ actualUser.statRepairedObjectMachine === 0 ? '500' : '1000'}}
-                        <svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
+                    <div class="prices">
+                        <div class="or">
+                            {{ game.orPrice }}
+                            <svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
+                        </div>
+                        <div class="creatium">
+                            {{ game.creatiumPrice }}
+                            <svg-icon :fa-icon="creatiumIcon" class="creatium_icon" :size="40"/>
+                        </div>
                     </div>
                     <div v-if="gameEstimation.error || gameResponse.error">
                         <p class="error shadow-white">{{ gameEstimation.error }} {{ gameResponse.error }}</p>
                     </div>
-                    <div v-if="actualUser.statRepairedObjectMachine === -1">
-                        <p class="description shadow-white">Chances : {{  gameEstimation?.chances?.toFixed(2) }} %</p>
-                    </div>
-                    <div v-else>
-                        <p class="description shadow-white">Pour gagner un pack !</p>
-                    </div>
                 </div>
-                <GearsBackground class="gearsBG" v-if="actualUser.statRepairedObjectMachine > -1"/>
+                <GearsBackground class="gearsBG"/>
             </div>
         </div>
     </div>
@@ -247,11 +243,16 @@ watch(cards, () => {
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
 }
 
-.input_gold {
+.prices {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: gold;
+}
+
+.prices .or,.creatium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.9));
     border-radius: 1rem;
@@ -260,6 +261,14 @@ watch(cards, () => {
     font-size: 1.8em;
     font-family: 'Big John', sans-serif;
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.9);
+}
+
+.prices .or {
+    color: gold;
+}
+
+.prices .creatium {
+    color: #9ab0ff;
 }
 
 ::v-deep(.selected_cardList .items-list) {

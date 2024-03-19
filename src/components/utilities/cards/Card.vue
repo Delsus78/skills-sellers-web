@@ -11,6 +11,7 @@
     </a>
     <div :class="['card', rarity, { active: isActive }]"
          @click="onClick"
+         ref="tiltCard"
          data-tilt
          data-tilt-glare
          data-tilt-max-glare="0.2"
@@ -24,8 +25,21 @@
             <h2 class="shadow-black">{{ name }}</h2>
             <p>{{ description }}</p>
         </div>
+        <div class="card-id">
+            <span class="collection-text">{{ id }}</span>
+        </div>
+        <div class="card-power">
+            <div class="top-text">
+                <p v-if="power" class="meethicColored powerText">{{ power }} <svg-icon :fa-icon="fireIcon" :size="24"/></p>
+            </div>
+        </div>
+        <div class="card-weapon">
+            <div class="top-text">
+                <p v-if="weapon" class="weaponText">{{ weapon.power }} <svg-icon :fa-icon="weaponIcon" :size="25"/></p>
+            </div>
+        </div>
         <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">
-            {{ action ? action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}
+            {{ action ? action.actionName === 'satellite' ? 'Satellite' : action.actionName === 'reparer' ? 'Construit une arme' : action.actionName.slice(0, -1) : 'NE FAIT RIEN' }}
             <progress-bar v-if="action" :pourcentage="pourcentageRemainingTime" :text="clearRemainingTime"/>
         </footer>
         <div class="card-stats">
@@ -53,22 +67,21 @@
     </div>
     <div class="actionInfo bg-dark-blur" v-if="isActive">
         <div class="actionInfoText">
-            <h2 class="title huge-text shadow-white">{{ action ? action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
+            <h2 class="title huge-text shadow-white">{{ action ? action.actionName === 'satellite' ? 'Satellite' : action.actionName === 'reparer' ? 'Construit une arme' : action.actionName.slice(0, -1).charAt(0).toUpperCase() + action.actionName.slice(0, -1).slice(1) : 'Ne fait rien' }}</h2>
             <p class="date">{{ action ? 'Termine ' + getFormattedRemainingTime(action.endTime) : '' }}</p>
             <p>{{ action ? format(action.endTime, "DD MMMM YYYY HH:mm:ss Z") : ''}}</p>
             <div v-for="(val, actionKey ) in action || {}">
                 <!-- Particular cases-->
-                <p v-if="actionKey === 'planetName'">
-                    <span class="little_title">Planète : </span>
-                    <span class="value">{{ val.charAt(0).toUpperCase() + val.slice(1) }}</span>
-                    <RandomPlanet class="planetArrival"
-                                  :model-value="val.charAt(0).toUpperCase() + val.slice(1)" :height="200" :width="200" :planet-id="3"/>
-                </p>
-                <p v-if="actionKey === 'batimentToUpgrade'">
+                <p v-if="actionKey === 'batimentToUpgrade' && val !== null">
                     <span class="little_title">Bâtiment : </span>
                     <span class="value" v-if="val === 'salledesport'">Salle de Sport</span>
                     <span class="value" v-else-if="val === 'cuisine'">Cuisine</span>
                     <span class="value" v-else-if="val === 'spatioport'">Spatioport</span>
+                </p>
+                <p v-if="actionKey === 'weaponToUpgradeId' && val !== null">
+                    <span class="little_title">Arme : </span>
+                    <a class="value" v-if="upgradedWeapon === null" @click="onWeaponUpgradedClicked">voir</a>
+                    <span class="value" v-else>{{ upgradedWeapon.name }} {{ upgradedWeapon.power }} -> {{ upgradedWeapon.power +1 }}</span>
                 </p>
                 <p v-if="actionKey === 'isReturningToHome'">
                     <span class="little_title">Trajet : </span>
@@ -92,7 +105,7 @@
                     <span class="value">{{ val.toFixed(2) }}% </span>
                 </p>
             </div>
-            <div v-if="action" class="cancelAction red" @click="emit('cancelAction', action.id)">Annuler l'action</div>
+            <div v-if="action" class="cancelAction red" @click="cancelAction();">Annuler l'action</div>
             <div v-else class="startAction">
                 <RouterLink :to="`/action/explorer/` + id">
                     <div class="startActionText red">Partir en exploration</div>
@@ -106,10 +119,21 @@
             </div>
         </div>
     </div>
-
+    <ExplorationInfo class="explorationInfo"
+                     v-if="isActive && action && action.actionName === 'explorer'"
+                     :action="action" @decision="setDecisionForExploration"/>
+    <Weapon class="weaponInfo"
+            v-if="isActive && weapon"
+            :weapon="weapon" @click="onWeaponClicked"/>
+    <div class="weaponInfo emptyWeapon"
+         v-if="isActive && !weapon"
+          @click="onWeaponClicked">
+        <svg-icon :fa-icon="weaponIcon" :size="25"/>
+    </div>
 </template>
 
 <script setup>
+import Weapon from "@/components/utilities/cards/weapons/Weapon.vue";
 import {VanillaTilt} from "../VanillaTilt";
 import {onMounted, onUnmounted} from "vue";
 import { ref } from "vue";
@@ -122,11 +146,22 @@ import {
     faHeartCircleCheck as heartIcon,
     faHeart as heartEmptyIcon,
     faCircleCheck as selectedIcon,
-    faCirclePlus as notSelectedIcon, faW as wordleIcon,
+    faCirclePlus as notSelectedIcon,
+    faFire as fireIcon,
+    faGun as weaponIcon,
 } from "@fortawesome/free-solid-svg-icons";
-import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import ProgressBar from "@/components/utilities/progressBar.vue";
 import {RouterLink} from "vue-router";
+import ExplorationInfo from "@/components/utilities/cards/ExplorationInfo.vue";
+
+// show upgraded weapon
+import {useBattleStore, useCardsStore} from "@/stores";
+const cardsStore = useCardsStore();
+
+const onWeaponUpgradedClicked = async () => {
+    upgradedWeapon.value = await cardsStore.getWeaponById(action.weaponToUpgradeId);
+}
+const upgradedWeapon = ref(null);
 
 const isActive = ref(false);
 const {
@@ -141,7 +176,9 @@ const {
     isFavorite,
     isSelected,
     hideFavorite,
-    showSelection } = defineProps({
+    showSelection,
+    weapon,
+    power} = defineProps({
     id: {
         type: Number,
         required: true,
@@ -187,6 +224,16 @@ const {
         required: false,
         default: () => {}
     },
+    weapon: {
+        type: Object,
+        required: false,
+        default: () => {}
+    },
+    power: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     isFavorite: {
         type: Boolean,
         required: false,
@@ -209,23 +256,35 @@ const {
     }
 
 });
-const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick']);
+const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick', 'decision', 'onWeaponClicked']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
+const tiltCard = ref(null);
+const battleStore = useBattleStore();
 let intervalId;
+let tiltInstance;
 
 onMounted(() => {
-    VanillaTilt.init(document.querySelectorAll("[data-tilt]"),{
-        glare: true,
-        reverse: true,
-        "max-glare": 0.15
-    });
+    if (tiltCard.value) {
+        tiltInstance = new VanillaTilt(tiltCard.value, {
+            glare: true,
+            reverse: true,
+            "max-glare": 0.15
+        });
+    }
 
     intervalId = setInterval(updateDates, 1000);
 });
 
 onUnmounted(() => {
-    clearInterval(intervalId);  // Arrête l'intervalle lorsqu'on quitte le composant
+    if (tiltInstance) {
+        tiltInstance.destroy();
+    }
+
+    // Arrêter le setInterval
+    if (intervalId) {
+        clearInterval(intervalId);
+    }
 });
 
 function updateDates() {
@@ -246,11 +305,25 @@ function onClick() {
     }
 }
 
+function onWeaponClicked() {
+    emit('onWeaponClicked', id);
+}
 
 function switchFavorite() {
     emit('switchFavorite');
 }
 
+function setDecisionForExploration(decision) {
+    emit('decision', decision, action.id);
+}
+
+function cancelAction() {
+
+    if (action.actionName === 'guerre*')
+        battleStore.cancelBattle(action.warId);
+    else
+        emit('cancelAction', action.id);
+}
 </script>
 <style scoped>
 
@@ -374,15 +447,34 @@ function switchFavorite() {
     margin-right: 10px;
 }
 
-.planetArrival {
+
+.weaponInfo {
+    z-index: 10;
     position: fixed;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 102;
+    left: 2rem;
+    bottom: 4rem;
+    border: 1px solid white;
+    border-radius: 15px;
+    color:white;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
 }
 
+.emptyWeapon {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 1rem;
+    margin: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.emptyWeapon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
 .card-image {
     grid-area: image;
     width: 100%;
@@ -400,6 +492,45 @@ function switchFavorite() {
     font-size:13px;
     font-weight: bold;
     font-family: "Big John", sans-serif;
+}
+
+.card-id {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(1rem) translateY(0.5rem);
+    filter: drop-shadow(0 0 0.1rem black);
+}
+
+.card-power {
+    position: absolute;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    filter: drop-shadow(0 0 0.1rem black);
+    transform: translateZ(30px) translateX(15.5rem) translateY(1.2rem);
+}
+
+.powerText {
+    filter: drop-shadow(0 0 0.1rem #ff0000) !important;
+}
+
+.card-weapon {
+    position: absolute;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: "Big John", sans-serif;
+    filter: drop-shadow(0 0 0.1rem black);
+    transform: translateZ(30px) translateX(1.5rem) translateY(1rem);
 }
 
 .actif {
@@ -480,7 +611,6 @@ function switchFavorite() {
     color: var(--color-text);
 }
 
-
 .cancelAction {
     position: absolute;
     transition: all 0.2s ease-in-out;
@@ -502,6 +632,11 @@ function switchFavorite() {
 
 .startActionText:hover {
     color: var(--vt-c-red-2);
+    filter: drop-shadow(0 0 4px var(--vt-c-red-2));
+}
+
+.weaponText {
+    color: black;
     filter: drop-shadow(0 0 4px var(--vt-c-red-2));
 }
 </style>

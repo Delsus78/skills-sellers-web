@@ -1,5 +1,6 @@
 <script setup>
 import {getFormattedRemainingTime} from "./DateFormator";
+import {computed} from "vue";
 const { title, date, content, id } = defineProps({
     title: {
         type: String,
@@ -27,7 +28,7 @@ const deleteNotification = () => {
 </script>
 
 <template>
-  <div class="notification" :class="{'legendaire-text special': title.includes('DM') || title.includes('SPECIAL')}">
+  <div class="notification" :class="{'legendaire-text special': title.includes('DM') || title.includes('SPECIAL'), 'meethicColored special': title.includes('GUERRE')}">
       <div class="title">
           <strong>{{ title }}</strong>
       </div>
@@ -63,6 +64,10 @@ const deleteNotification = () => {
     box-shadow: 0 0 10px rgba(169, 24, 24, 0.5);
 }
 
+.meethicColored {
+    color: #ffffff !important;
+}
+
 .notification .title {
     grid-area: title;
     display: flex;
@@ -80,6 +85,7 @@ const deleteNotification = () => {
 
 .notification .content {
     grid-area: content;
+    white-space: pre-line;
     display: flex;
     justify-content: space-between;
     align-items: center;
