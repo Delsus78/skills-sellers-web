@@ -220,7 +220,7 @@ const isChristmas = computed(() => {
         </div>
     </nav>
     <div class="version">
-        <span class="version-text prevent-select">Version 2.0 - SpaceWar Update</span>
+        <span class="version-text prevent-select">Version 2.1 - SpaceWar Update</span>
     </div>
 </template>
 <style scoped>

@@ -71,6 +71,9 @@ function attackRegistre(registreId) {
               <p class="discret">
                   Défense des registres hostiles : 5 fois les valeurs ici.
               </p>
+              <p class="discret">
+                  Si un registre dépasse 40 (power + weapon), sa défense sera divisé en cartes de 40 power et une pour le reste.
+              </p>
               <div class="registresList">
                   <RegistreElement :registre="registre" v-for="registre in hostileRegistres" :key="registre.id"
                                    interact-btn-text="Attaquer" @interact="attackRegistre"/>

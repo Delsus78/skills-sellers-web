@@ -33,8 +33,6 @@ const imageUrl = computed(() => {
     const matchedPath = Object.keys(imagesImports).find(path =>
         path.includes(`${imageName}.png`)
     );
-    console.log(matchedPath, imagesImports[matchedPath], imagesImports)
-
     return matchedPath ? imagesImports[matchedPath].default : '';
 });
 

@@ -69,9 +69,9 @@ export const useActionsStore = defineStore({
                     // refresh user ressources and cards
                     await useUsersStore().getUser(user.id);
 
-                    // if the response is null
-                    if (response === '') {
-                        return {doublon: true};
+                    // if doublon
+                    if (response.isDoublon) {
+                        return {doublon: true, transformedInGold : response.isDoublonFullUpgrade};
                     } else {
                         await useCardsStore().getAllCardsFromUser(user.id);
                         const imgRep = await fetchWrapperJpeg.get(`${import.meta.env.VITE_API_URL}/Images/${response.id}`);
