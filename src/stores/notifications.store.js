@@ -141,7 +141,7 @@ export const useNotificationStore = defineStore({
         async sendMessageToUser(id, message) {
             const { user} = useAuthStore();
             let usedUrl = baseUrl + `Users/${user.id}/notification/${id}`;
-            await fetchWrapper.post(usedUrl, {title:'', message})
+            await fetchWrapper.post(usedUrl, {title:'', message, type:""})
                 .catch(error => {
                     console.error(error);
                     return error;
