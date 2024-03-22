@@ -6,6 +6,7 @@ import { useUsersStore, useMainStore } from "@/stores";
 import GlobalChat from "@/components/utilities/GlobalChat.vue";
 import {computed, onMounted, ref} from "vue";
 import TitleImage from "@/components/icons/TitleImage.vue";
+import Notifications from "@/components/utilities/Notifications.vue";
 const usersStore = useUsersStore();
 const mainStore = useMainStore();
 const { users } = storeToRefs(usersStore);
@@ -34,8 +35,9 @@ const reloadScoreboardPanel = () => {
 <template>
   <div class="Home">
       <GlobalChat class="GlobalChat"/>
+      <Notifications class="Notifications"/>
       <div class="WelcomeDiv">
-          <TitleImage />
+          <TitleImage in-line/>
           <h2 class="WelcomeTitle" v-if="randomTodayRecipe">Une petite recette ?</h2>
           <a :href="randomTodayRecipe.url" target="_blank">
               <p class="WelcomeText">{{ randomTodayRecipe.recipeName }}</p>
@@ -120,9 +122,8 @@ a {
 }
 
 .GlobalChat {
-    transform: perspective(1000px) rotateX(0deg) rotateY(12.5deg);
-    grid-row: 2 / 4;
-    width: 30rem;
+    grid-row: 2 / 3;
+    width: 34rem;
 
     @media (max-width: 1023px) {
         width: 100%;
@@ -131,4 +132,14 @@ a {
     }
 }
 
+.Notifications {
+    grid-row: 3 / 4;
+    width: 34rem;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        grid-row: 3;
+        transform: rotateY(0deg);
+    }
+}
 </style>

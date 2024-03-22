@@ -1,7 +1,7 @@
 <script setup>
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
-import {useAuthStore, useCardsStore, useUsersStore, useRegistreStore} from "@/stores";
+import {useAuthStore, useCardsStore, useUsersStore, useRegistreStore, useBattleStore} from "@/stores";
 import SatelliteDisplayer from "@/components/utilities/satellites/SatelliteDisplayer.vue";
 import {RouterLink} from "vue-router";
 import TextCardList from "@/components/utilities/cards/textCardList.vue";
@@ -11,10 +11,12 @@ import {
     faSkull as warIcon,
     faHeart as heartIcon
 } from "@fortawesome/free-solid-svg-icons";
+import {getFormattedRemainingTime} from "@/components/utilities/DateFormator";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const cardsStore = useCardsStore();
 const registreStore = useRegistreStore();
+const battleStore = useBattleStore();
 
 const { user: authUser } = storeToRefs(authStore);
 const { buildings } = storeToRefs(usersStore);
@@ -44,6 +46,12 @@ const puissanceTotale = computed(() => {
 });
 
 const contextPolitique = computed(() => {
+    console.log(registreInfo.value)
+    if (registreInfo.value.war !== null) {
+        // en guerre
+        return 2;
+    }
+
     if (registreInfo.value.registres.filter(registre => registre.type === 1).length > 0) {
         // menacé
         return 1;
@@ -51,6 +59,10 @@ const contextPolitique = computed(() => {
 
     return 0;
 })
+
+const cancelWar = () => {
+    battleStore.cancelBattle(registreInfo.value.war.id);
+}
 
 </script>
 <template>
@@ -70,7 +82,7 @@ const contextPolitique = computed(() => {
         <div class="panel warInfo">
             <div class="DivTitle">Info de Guerre</div>
             <div class="container">
-                <div v-if="true">
+                <div v-if="!registreInfo.war">
                     <span class="infoText">
                         Aucune bataille en cours
                     </span>
@@ -78,8 +90,25 @@ const contextPolitique = computed(() => {
                         Pour lancer une bataille, cliquez sur le joueur/la planète cible dans votre registre
                     </div>
                 </div>
+                <div v-else-if="registreInfo.war.isInvitationPending">
+                    <span class="infoText">
+                        Invitation en attente
+                    </span>
+                    <div class="commun-text">
+                        <p>Vous avez été invité à une bataille par <strong class="red">{{registreInfo.war.registreTarget.name}}</strong></p>
+                        <p>Vous avez pour l'instant <strong class="red">{{registreInfo.war.userAllies.length}}</strong> alliés</p>
+                    </div>
+                </div>
                 <div v-else>
-
+                    <span class="infoText">
+                        Bataille en cours
+                    </span>
+                    <div class="commun-text">
+                        <p>Vous êtes en guerre contre <strong class="red">{{registreInfo.war.registreTarget.name}}</strong></p>
+                        <p>La bataille a été lancée <strong class="red">{{getFormattedRemainingTime(registreInfo.war.createdAt)}}</strong></p>
+                        <p>Vous avez pour l'instant <strong class="red">{{registreInfo.war.userAllies.length}}</strong> alliés</p>
+                        <a v-if="authUser.id === registreInfo.war.userCreator.id" class="meethicColored" @click="cancelWar">Tu peux annuler ici ta guerre.</a>
+                    </div>
                 </div>
             </div>
         </div>
