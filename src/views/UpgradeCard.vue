@@ -50,6 +50,9 @@ watch(card, () => {
     if (card.value.rarity === "legendaire") {
         maxPts.value = 3;
     }
+    if (card.value.rarity === "meethic") {
+        maxPts.value = 4;
+    }
 })
 
 usersStore.getUser(authUser.value.id).then(async (_) => {
@@ -86,16 +89,10 @@ usersStore.getUser(authUser.value.id).then(async (_) => {
 const validate = async () => {
     await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
 
+    await router.push('/cards');
 
-    if (confirm) {
-        const noDoublonLeft = user.value.cardsDoublons?.length === 1;
-        await cardsStore.postUpgradeCard(competencesToAdd.value, card.value.id);
-
-        await router.push('/cards');
-
-        if (!noDoublonLeft) {
-            await router.push('/upgrade');
-        }
+    if (user.value.cardsDoublons?.length > 0) {
+        await router.push('/upgrade/weapon');
     }
 }
 

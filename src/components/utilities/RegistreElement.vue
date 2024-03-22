@@ -8,11 +8,13 @@ import {
     faGun as weaponIcon,
     faBurger as nourritureIcon,
     faCoins as orIcon,
-    faCubesStacked as creatiumIcon
+    faCubesStacked as creatiumIcon, faHeartCircleCheck as heartIcon, faHeart as heartEmptyIcon
 } from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
 import AffinityIcon from "@/components/utilities/cards/weapons/AffinityIcon.vue";
-import ValidationButton from "@/components/utilities/ValidationButton.vue";
+import {useRegistreStore} from "@/stores";
+
+const registreStore = useRegistreStore();
 
 const {
     registre, interactBtnText, isShowMoreInfo
@@ -33,13 +35,20 @@ const {
 });
 
 const showMoreInfo = ref(isShowMoreInfo);
+const isFavorite = ref(registre.isFavorite ?? false);
+
+const switchFavorite = async () => {
+
+    await registreStore.postFavoriteRegistre(registre.id);
+    isFavorite.value = !isFavorite.value;
+}
 
 const emit = defineEmits(['interact']);
 </script>
 
 <template>
   <div class="registre">
-      <div class="row1" @click="showMoreInfo = !showMoreInfo">
+      <div class="row1">
           <div>
               <div class="titre" :class="[{'blue': registre.type === 0}, {'red': registre.type === 1}, {'green': registre.type === 3}]">
                   {{ registre.name.charAt(0).toUpperCase() + registre.name.slice(1) }}
@@ -49,7 +58,11 @@ const emit = defineEmits(['interact']);
               </div>
           </div>
         <div class="buttons">
-            <button class="moreInfo">
+            <a class="favoriteToggle" @click="switchFavorite($event)" v-if="registre.type === 2">
+                <svg-icon v-if="isFavorite" class="colorEffect shadow-white" :fa-icon="heartIcon" :size="16"/>
+                <svg-icon v-else class="shadow-white" :fa-icon="heartEmptyIcon" :size="16"/>
+            </a>
+            <button class="moreInfo" @click="showMoreInfo = !showMoreInfo;">
                 <svg-icon v-if="showMoreInfo" class="shadow-black" :fa-icon="chevronUpIcon" :size="18"/>
                 <svg-icon v-else class="shadow-black" :fa-icon="chevronDownIcon" :size="18"/>
             </button>

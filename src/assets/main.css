@@ -95,11 +95,15 @@ a,
   animation: legendaire-color-change 6s linear infinite;
 }
 
+.meethic-text {
+  animation: meethic-color-change 6s linear infinite;
+}
+
 .commun-text {
   animation: commun-color-change 6s linear infinite;
 }
 
-@keyframes meethicColorChange {
+@keyframes meethic-color-change {
   0% {
     color: #ff0000;
     filter: drop-shadow(0 0 0.2rem #ff0000);
@@ -218,7 +222,7 @@ strong {
 }
 
 .meethicColored {
-  animation: meethicColorChange 6s linear infinite;
+  animation: meethic-color-change 6s linear infinite;
 }
 
 @media (min-width: 1024px) {

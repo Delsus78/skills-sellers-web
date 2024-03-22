@@ -9,6 +9,7 @@
                 <option value="commune">Commune</option>
                 <option value="epic">Épique</option>
                 <option value="legendaire">Légendaire</option>
+                <option value="meethic">Meethic</option>
             </select>
             <select v-model="actionFilter">
                 <option value="">Filtrer par action...</option>
@@ -16,6 +17,7 @@
                 <option value="cuisiner">Cuisiner</option>
                 <option value="muscler">Muscler</option>
                 <option value="reparer">Réparer</option>
+                <option value="guerre">Guerre</option>
                 <option value="ameliorer">Améliorer</option>
                 <option value="!">Ne fais rien</option>
             </select>

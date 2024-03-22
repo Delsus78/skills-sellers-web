@@ -55,6 +55,17 @@ export const useRegistreStore = defineStore({
             response.sort((a, b) => (a.id > b.id) ? -1 : 1);
 
             return this.fightReports = response;
+        },
+        async postFavoriteRegistre(registreId) {
+            const { user } = useAuthStore();
+            let usedUrl = baseUrl + `${user.id}/favorite/${registreId}`;
+            return await fetchWrapper.post(usedUrl)
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                }).then(response => {
+                    return response;
+                });
         }
     }
 });
