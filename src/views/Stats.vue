@@ -36,6 +36,7 @@ const showPlanet = ref(false);
 
 usersStore.getAllUsers();
 cosmeticStore.getComseticsOfUser(userId);
+usersStore.getStatsOfUser(userId);
 
 const achievementsData = computed(() => {
     return Object.entries(achievements.value).map(([key, value]) => ({
@@ -108,10 +109,6 @@ const openStatistics = () => {
     openedTab.value = 'stats';
 }
 
-const reload = () => {
-    usersStore.getStatsOfUser(userId);
-}
-
 </script>
 <template>
     <div class="Stats">
@@ -162,10 +159,7 @@ const reload = () => {
                 </div>
             </div>
 
-            <div v-if="transformedStats.length === 0" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                <svg-icon class="shadow-white" @click="reload" :fa-icon="homeIcon" :size="34" style="cursor: pointer;"/>
-            </div>
-            <ul v-else-if="openedTab === 'stats'" class="stats-list">
+            <ul v-if="openedTab === 'stats'" class="stats-list">
                 <li v-for="item in transformedStats" :key="item.key" class="stat-item" :class="{'legendaire-text': item.rank === 1}">
                     <span>{{ item.title }}</span>
                     <span class="stat-item-value">
