@@ -17,6 +17,7 @@
             <span></span>
             <span>Joueur</span>
             <span>Score</span>
+            <span>Cartes</span>
         </div>
 
         <ul class="player-list">
@@ -32,6 +33,7 @@
                 <span>{{ index + 1}}</span>
                 <span>{{ player.pseudo }}</span>
                 <span>{{ player.score }}</span>
+                <span>{{ player.nbCards }}</span>
             </li>
         </ul>
         <div class="footer-scoreboard" v-if="actualSeason && !actualSeason.loading">
@@ -136,7 +138,7 @@ const reload = () => {
 .headers-list {
     grid-area: headers;
     display: grid;
-    grid-template-columns: 0.2fr 1fr 1fr;
+    grid-template-columns: 0.2fr 1.5fr 1fr 1fr;
     text-align: center;
     color: #ffffff; /* Nuance de blanc pour le texte des en-têtes */
     font-weight: bolder;
@@ -155,7 +157,7 @@ const reload = () => {
 
 .player-item {
     display: grid;
-    grid-template-columns: 0.2fr 1fr 1fr;
+    grid-template-columns: 0.2fr 1.5fr 1fr 1fr;
     font-size: 1.2rem;
     color: #9d9d9d;  /* Nuance de gris foncé pour le texte */
     padding: 0.5rem 0;

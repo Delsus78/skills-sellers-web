@@ -76,10 +76,10 @@ function globalKeyHandler(e) {
 <style scoped>
 .GlobalChat {
     display: grid;
-    grid-template-rows: 2fr 1fr 20fr 3fr;
+    grid-template-rows: 1fr 0.5fr 24fr 1fr;
     grid-template-areas: "title" "information" "messages" "textbox";
     padding: 1rem;
-    margin: 3rem;
+    margin: 1rem auto;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);  /* Effet de flou sur l'arrière-plan */
@@ -97,10 +97,16 @@ function globalKeyHandler(e) {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 0.6rem;
+}
+
+.GlobalChat .DivTitle {
+    margin-top: 0;
+    font-size: 1rem !important;
 }
 
 .header-information {
-    margin: 1rem auto;
+    margin: 0 auto;
     grid-area: information;
     display: flex;
     justify-content: space-between;
@@ -112,7 +118,6 @@ function globalKeyHandler(e) {
     background: rgba(0, 0, 0, 0.48);
     border-radius: 1rem;
     box-shadow: inset 0 0 1rem 0.5rem black;
-    padding: 1rem;
     overflow-y: auto; /* Permet le défilement vertical */
 }
 
@@ -142,7 +147,7 @@ function globalKeyHandler(e) {
     box-shadow: 0 0 0 3px rgba(0, 128, 0, 0.3); /* Cette couleur est juste un exemple. */
 }
 .GlobalChat .TextBoxDiv .TextBox::placeholder {
-    font-size: 2rem;
+    font-size: 1rem;
     color: rgba(100, 96, 96, 0.56); /* Ceci est un exemple de couleur grise semi-transparente. */
 }
 
@@ -164,7 +169,7 @@ function globalKeyHandler(e) {
 .message {
     display: flex;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.1rem 1rem;
 }
 
 .message-user {

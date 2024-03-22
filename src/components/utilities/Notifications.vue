@@ -53,7 +53,7 @@ const deleteNotification = (id) => {
     grid-template-rows: 15% 80% 5%;
     grid-template-areas: "title" "stats" "footer";
     padding: 1rem;
-    margin: 3rem;
+    margin: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
@@ -66,10 +66,15 @@ const deleteNotification = (id) => {
     align-items: center;
 }
 
+.Notifications_header .DivTitle {
+     margin-top: 0;
+     font-size: 1rem !important;
+ }
+
 .Notifications_header .delete {
     position: absolute;
-    right: 2rem;
-    top: 2.8rem;
+    right: 1rem;
+    top: 1rem;
     transition: 0.2s ease-in-out;
 }
 

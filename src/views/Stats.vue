@@ -3,8 +3,6 @@ import {storeToRefs} from "pinia";
 import {useUsersStore, useAuthStore, useNotificationStore, useAchievementsStore, useCosmeticStore} from "@/stores";
 import {useRoute} from "vue-router";
 import {computed, ref} from "vue";
-import Notifications from "@/components/utilities/Notifications.vue";
-import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {
     faCoins as moneyIcon,
     faRankingStar as rankIcon,
@@ -14,10 +12,10 @@ import {
     faEarth as showPlanetIcon,
     faArrowTrendUp as statIcon,
     faBurger as foodIcon,
-    faCubesStacked as creatiumIcon, faShield as satelliteIcon,
+    faCubesStacked as creatiumIcon, faShield as satelliteIcon, faRotateRight as homeIcon,
 } from "@fortawesome/free-solid-svg-icons";
 import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
-import {format, getClearRemainingTime} from "@/components/utilities/DateFormator";
+import {format} from "@/components/utilities/DateFormator";
 
 const route = useRoute();
 const userId = route.params.id;
@@ -37,8 +35,6 @@ const openedTab = ref("stats");
 const showPlanet = ref(false);
 
 usersStore.getAllUsers();
-usersStore.getStatsOfUser(userId);
-achievementsStore.getAchievementsOfUser(userId);
 cosmeticStore.getComseticsOfUser(userId);
 
 const achievementsData = computed(() => {
@@ -102,70 +98,74 @@ const isWarTimeoutInDate = computed(() => {
     return new Date(user.value.warTimeout) > new Date();
 });
 
+const openAchievements = () => {
+    achievementsStore.getAchievementsOfUser(userId);
+    openedTab.value = 'achievements';
+}
+
+const openStatistics = () => {
+    usersStore.getStatsOfUser(userId);
+    openedTab.value = 'stats';
+}
+
+const reload = () => {
+    usersStore.getStatsOfUser(userId);
+}
+
 </script>
 <template>
-    <div v-if="stats.loading || !user">
-      <p class="huge-text">Chargement des statistiques...</p>
-    </div>
-    <div v-else-if="achievements.loading">
-        Chargement des Achievements...
-    </div>
-    <div v-else-if="stats.error" class="huge-text text-danger">
-      Erreur lors du chargement des statistiques: {{stats.error}}
-    </div>
-    <div v-else-if="achievements.error" class="huge-text text-danger">
-        Erreur lors du chargement des achievements: {{stats.error}}
-    </div>
-    <div v-else class="Stats">
+    <div class="Stats">
         <div class="User_info bg-dark-blur">
-            <div class="war_time_out_display" v-if="user.warTimeout && isWarTimeoutInDate">
-                Termine le {{format(user.warTimeout, "DD MMMM YYYY HH:mm:ss Z")}}
-                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="26"/>
-            </div>
             <div class="User_header">
                 <h1 class="DivTitle">
                     {{ user?.pseudo ?? "Chargement..." }}
                 </h1>
-                <div class="user_resources">
-                    <span class="text food">
-                        {{ user.nourriture }}<svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
-                    </span>
-                    <span class="text or">
-                        {{ user.or }}<svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
-                    </span>
-                    <span class="text creatium">
-                        {{ user.creatium }} <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
-                    </span>
-                </div>
             </div>
         </div>
         <div class="Stats_content bg-dark-blur">
             <div class="Stats_header">
                 <div class="headersTitlesSelect">
                     <div class="headerStatistique" :style="{opacity: openedTab === 'stats' ? 1 : 0.5}">
-                        <h1 class="DivTitle" @click="openedTab = 'stats'">Statistiques</h1>
+                        <h1 class="DivTitle" @click="openStatistics">Statistiques</h1>
                     </div>
                     <div class="headerAchievements" :style="{opacity: openedTab === 'achievements' ? 1 : 0.5}">
-                        <h1 class="DivTitle" @click="openedTab = 'achievements'">Achievements</h1>
+                        <h1 class="DivTitle" @click="openAchievements">Achievements</h1>
                     </div>
                 </div>
 
                 <div v-if="openedTab === 'achievements'" class="headers-list">
-                    <span>Achievement</span>
+                    <div v-if="achievements.loading">
+                        Chargement des Achievements...
+                    </div>
+                    <div v-else-if="achievements.error" class="huge-text text-danger">
+                        Erreur lors du chargement des achievements: {{stats.error}}
+                    </div>
+                    <span v-else >Achievement</span>
+
                     <div style="display:flex; column-gap: 1rem;">
                         <span><svg-icon class="shadow-white" :fa-icon="statIcon" :size="26"/></span>
                         <span><svg-icon class="shadow-white" :fa-icon="giftIcon" :size="26"/></span>
                     </div>
                 </div>
                 <div v-if="openedTab === 'stats'" class="headers-list">
-                    <span>Statistique</span>
+                    <div v-if="stats.loading">
+                        Chargement des statistiques...
+                    </div>
+                    <div v-else-if="stats.error" class="huge-text text-danger">
+                        Erreur lors du chargement des statistiques: {{stats.error}}
+                    </div>
+                    <span v-else>Statistique</span>
                     <div style="display:flex; column-gap: 1rem;">
                         <span><svg-icon class="shadow-white" :fa-icon="statIcon" :size="26"/></span>
                         <span><svg-icon class="shadow-white" :fa-icon="rankIcon" :size="26"/></span>
                     </div>
                 </div>
             </div>
-            <ul v-if="openedTab === 'stats'" class="stats-list">
+
+            <div v-if="transformedStats.length === 0" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <svg-icon class="shadow-white" @click="reload" :fa-icon="homeIcon" :size="34" style="cursor: pointer;"/>
+            </div>
+            <ul v-else-if="openedTab === 'stats'" class="stats-list">
                 <li v-for="item in transformedStats" :key="item.key" class="stat-item" :class="{'legendaire-text': item.rank === 1}">
                     <span>{{ item.title }}</span>
                     <span class="stat-item-value">
@@ -187,22 +187,38 @@ const isWarTimeoutInDate = computed(() => {
                     </span>
                 </li>
             </ul>
-        </div >
-        <Notifications v-if='userId === authUser.id.toString()' class="Notifications"/>
-        <div v-else class="SendNotification bg-dark-blur">
-            <div class="SendNotification_header">
-                <h1 class="DivTitle">Envoyer un message</h1>
+        </div>
+        <div class="User_More_Info bg-dark-blur">
+            <div class="war_time_out_display" v-if="user.warTimeout && isWarTimeoutInDate">
+                Termine le {{format(user.warTimeout, "DD MMMM YYYY HH:mm:ss Z")}}
+                <svg-icon class="shadow-white" :fa-icon="satelliteIcon" :size="26"/>
             </div>
-
-            <div class="SendNotification_input">
-                <input class="TextBox" v-model="messageToSend" placeholder="Un truc à dire ?"/>
+            <div class="user_resources">
+                    <span class="text food">
+                        {{ user.nourriture }}<svg-icon class="shadow-black" :fa-icon="foodIcon" :size="18"/>
+                    </span>
+                <span class="text or">
+                        {{ user.or }}<svg-icon class="shadow-black" :fa-icon="moneyIcon" :size="18"/>
+                    </span>
+                <span class="text creatium">
+                        {{ user.creatium }} <svg-icon class="shadow-black" :fa-icon="creatiumIcon" :size="18"/>
+                    </span>
             </div>
-
-            <div class="SendNotification_button">
-                <div class="input_gold">
-                    10<svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
+            <div v-if='userId !== authUser.id.toString()'>
+                <div class="SendNotification_header">
+                    <h1 class="DivTitle">Envoyer un message</h1>
                 </div>
-                <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
+
+                <div class="SendNotification_input">
+                    <input class="TextBox" v-model="messageToSend" placeholder="Un truc à dire ?"/>
+                </div>
+
+                <div class="SendNotification_button">
+                    <div class="input_gold">
+                        10<svg-icon :fa-icon="moneyIcon" class="money_icon" :size="40"/>
+                    </div>
+                    <svg-icon class="shadow-white" :fa-icon="sendIcon" :size="36" @click="handleSend"/>
+                </div>
             </div>
         </div>
         <PlanetWithCosmetics class="planetBuilding" v-if="cosmeticsDisplayed != null" :style="{'z-index': showPlanet ? 100 : -1}"
@@ -365,7 +381,7 @@ const isWarTimeoutInDate = computed(() => {
     }
 }
 
-.Notifications {
+.User_More_Info {
     grid-column: 1;
     grid-row: 2 / 3;
     display: grid;
@@ -373,41 +389,15 @@ const isWarTimeoutInDate = computed(() => {
     margin: 3rem;
     border-radius: 1rem;
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
-    max-height: 35rem;
-    width: auto;
     z-index: 1;
 
     @media (max-width: 1023px) {
         grid-column: 1;
-        grid-row: 4;
+        grid-row: 3;
         margin: 0;
-        width: 100%;
         border-radius: 0;
     }
-}
 
-
-.SendNotification {
-    grid-column: 1;
-    grid-row: 2 / 3;
-    display: grid;
-    grid-template-rows: 15% 45% 40%;
-    grid-template-areas: "title" "message" "info";
-    padding: 1rem;
-    margin: 3rem;
-    border-radius: 1rem;
-    box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    z-index: 1;
-    max-height: 15rem;
-
-    @media (max-width: 1023px) {
-        grid-column: 1;
-        grid-row: 4;
-        margin: 0;
-        width: 100%;
-        border-radius: 0;
-    }
 }
 
 .SendNotification_header {
@@ -474,6 +464,8 @@ const isWarTimeoutInDate = computed(() => {
 .user_resources {
     display: flex;
     gap: 2rem;
+    justify-content: center;
+    align-items: center;
 }
 
 .war_time_out_display {
