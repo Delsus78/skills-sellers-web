@@ -1,3 +1,5 @@
+@import "images/hearts.gif";
+
 .legendaire::after {
     content:"";
     background: linear-gradient(45deg,
