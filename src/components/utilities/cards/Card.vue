@@ -104,6 +104,13 @@
                     <span class="little_title">Chance de réussir : </span>
                     <span class="value">{{ val.toFixed(2) }}% </span>
                 </p>
+                <p v-if="actionKey === 'isAuto'" class="clickable red" @click="autoModeSwitchSatellite();">
+                    <span class="little_title">Renvoyer automatiquement : </span>
+                    <span class="value">{{ val ? 'Oui' : 'Non' }}</span>
+                    <p class="discret">Si activé, le mode automatiquement consommera</p>
+                    <p class="discret">votre nombre de carte x2 d'or et 2 de nourriture</p>
+                    <p class="discret"> à chaque itération</p>
+                </p>
             </div>
             <div v-if="action" class="cancelAction red" @click="cancelAction();">Annuler l'action</div>
             <div v-else class="startAction">
@@ -256,7 +263,7 @@ const {
     }
 
 });
-const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick', 'decision', 'onWeaponClicked']);
+const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick', 'decision', 'onWeaponClicked', 'autoModeSwitchSatellite']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
 const pourcentageRemainingTime = ref(getPourcentageRemainingTime(action?.endTime));
 const tiltCard = ref(null);
@@ -324,6 +331,11 @@ function cancelAction() {
     else
         emit('cancelAction', action.id);
 }
+
+function autoModeSwitchSatellite() {
+    emit('autoModeSwitchSatellite', id, action.id);
+}
+
 </script>
 <style scoped>
 

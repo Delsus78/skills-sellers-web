@@ -43,6 +43,20 @@ export const useActionsStore = defineStore({
                     return {error: error};
                 });
         },
+        async postAutoModeSwitchSatellite(actionId, cardId) {
+            const { user } = useAuthStore();
+            let usedUrl = baseUrl + `${user.id}/satellite/switchAutoMode/${actionId}`;
+
+            return await fetchWrapper.post(usedUrl, {actionId})
+                .catch(error => {
+                    console.error(error);
+                    return {error};
+                }).then(response => {
+                    // refresh card from cardId
+                    useCardsStore().getUserCard(user.id, cardId);
+                    return response;
+                });
+        },
         async deleteAction(actionId) {
             const { user } = useAuthStore();
             let usedUrl = baseUrl + `${user.id}/actions/${actionId}`;

@@ -54,6 +54,7 @@
                       @switch-favorite="switchFavorite(card.id)"
                       @decision="setExplorationDecision"
                       @on-weapon-clicked="clickOnWeapon"
+                      @auto-mode-switch-satellite="autoModeSwitchSatellite"
                       @onClick="mainStore.toggleWeaponList(null)"/>
             </div>
         </div>
@@ -224,6 +225,10 @@ const changeWeaponOfCard = (cardId, weaponId) => {
 
 const clickOnWeapon = (cardId) => {
     mainStore.toggleWeaponList(cardId);
+}
+
+const autoModeSwitchSatellite = (cardId, actionId) => {
+    actionsStore.postAutoModeSwitchSatellite(actionId, cardId);
 }
 </script>
 <style scoped>
