@@ -2,14 +2,16 @@
 
 import {faRotateRight as homeIcon} from "@fortawesome/free-solid-svg-icons";
 import Cosmetic from "@/components/utilities/CosmeticMarket/Comsetic.vue";
-import {useCosmeticStore} from "@/stores";
-import {onBeforeMount, onMounted} from "vue";
+import {useCosmeticStore, useUsersStore} from "@/stores";
+import {onBeforeMount} from "vue";
 import {
-    faCoins as orIcon,
+    faCake as coinIcon
 } from "@fortawesome/free-solid-svg-icons";
 import {storeToRefs} from "pinia";
 import {router} from "@/helpers";
 const cosmeticStore = useCosmeticStore();
+const userStore = useUsersStore();
+const { actualUser: user } = storeToRefs(userStore);
 const { shop } = storeToRefs(cosmeticStore);
 
 onBeforeMount(() => {
@@ -29,6 +31,10 @@ const loadCosmeticShop = () => {
 <template>
     <div class="CosmeticMarket bg-dark-blur">
         <div class="header-market">
+            <div class="meethicColored cosmeticItem" style="flex-direction: row;column-gap: 1rem;">
+                <strong class="or">{{ user.comsmeticPoints }}</strong>
+                <svg-icon :fa-icon="coinIcon" class="or" :size="14"/>
+            </div>
             <h2 class="DivTitle">THE COSMITIC MARKET</h2>
             <svg-icon class="shadow-white" @click="reload" :fa-icon="homeIcon" :size="24"/>
         </div>
@@ -40,7 +46,7 @@ const loadCosmeticShop = () => {
                 })">
                 <Cosmetic :cosmetic-id="cosmetic.id" class="cosmeticImage"/>
                 <strong>{{cosmetic.name}}</strong>
-                <strong class="or">{{cosmetic.price}} <svg-icon :fa-icon="orIcon" class="or" :size="14"/></strong>
+                <strong class="or">{{cosmetic.price}} <svg-icon :fa-icon="coinIcon" class="or" :size="14"/></strong>
                 <span :class="{'bg-colored': true,
                     'legendaire': cosmetic.rarity === 3,
                     'epic': cosmetic.rarity === 2,
@@ -69,10 +75,18 @@ const loadCosmeticShop = () => {
     align-items: center;
 }
 
+.header-market .DivTitle{
+    margin-left: 2.5rem;
+}
+
 .header-market svg {
     position: absolute;
     top: 3.2rem;
     right: 3rem;
+}
+
+.header-market .cosmeticItem svg {
+    position: static;
 }
 
 .header-scoreboard svg:hover {
