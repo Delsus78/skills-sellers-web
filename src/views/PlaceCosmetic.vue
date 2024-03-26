@@ -139,9 +139,9 @@ const getCenterOfThePlanet = () => {
 const actionOnValidatationPosition = async (event) => {
     event.preventDefault();
     if (isBuyingPlacement.value) {
-        await cosmeticStore.buyCosmetic(cosmeticIdToPlace, cosmeticData.value.coordinateX, cosmeticData.value.coordinateY, cosmeticData.value.size);
+        await cosmeticStore.buyCosmetic(cosmeticIdToPlace, cosmeticData.value);
     } else {
-        await cosmeticStore.placeCosmetic(cosmeticEntityIdToPlace, cosmeticData.value.coordinateX, cosmeticData.value.coordinateY, cosmeticData.value.size);
+        await cosmeticStore.placeCosmetic(cosmeticEntityIdToPlace, cosmeticData.value);
     }
     await router.push('/cosmetic');
 }
