@@ -39,12 +39,17 @@ export const useCosmeticStore = defineStore({
                     return this.shop = {error};
                 });
         },
-        async buyCosmetic(cosmeticId, x, y, size) {
+        async buyCosmetic(cosmeticId, cosmeticData) {
             const { user } = useAuthStore();
 
             let usedUrl = baseUrl + `buy/${user.id}/${cosmeticId}`;
 
-            await fetchWrapper.post(usedUrl, {coordinateX: Math.round(x), coordinateY: Math.round(y), size: size})
+            await fetchWrapper.post(usedUrl, {
+                coordinateX: Math.round(cosmeticData.x),
+                coordinateY: Math.round(cosmeticData.y),
+                size: cosmeticData.size,
+                rotation: cosmeticData.rotation,
+                zIndex: cosmeticData.zIndex})
                 .catch(error => {
                     console.error(error);
                     return {error};
@@ -54,12 +59,17 @@ export const useCosmeticStore = defineStore({
             await useUsersStore().getUser(user.id);
             await this.getComseticsOfUser(user.id);
         },
-        async placeCosmetic(entityId, x, y, size) {
+        async placeCosmetic(entityId, cosmeticData) {
             const { user } = useAuthStore();
 
             let usedUrl = baseUrl + `place/${user.id}/${entityId}`;
-
-            await fetchWrapper.post(usedUrl, {coordinateX: Math.round(x), coordinateY: Math.round(y), size: size})
+            console.log(cosmeticData);
+            await fetchWrapper.post(usedUrl, {
+                coordinateX: Math.round(cosmeticData.coordinateX),
+                coordinateY: Math.round(cosmeticData.coordinateY),
+                size: cosmeticData.size,
+                rotation: cosmeticData.rotation,
+                zIndex: cosmeticData.zIndex})
                 .catch(error => {
                     console.error(error);
                     return {error};
