@@ -1,13 +1,18 @@
 <script setup>
-import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
 import {useAuthStore, useCosmeticStore} from "@/stores";
 import Cosmetic from "@/components/utilities/CosmeticMarket/Comsetic.vue";
 import {useRoute} from "vue-router";
-import {onBeforeMount, onMounted, onUnmounted, ref, watch} from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import PlanetWithCosmetics from "@/components/utilities/CosmeticMarket/PlanetWithCosmetics.vue";
-import ValidationButton from "@/components/utilities/ValidationButton.vue";
-import {faChevronLeft as leaveIcon} from "@fortawesome/free-solid-svg-icons";
+import {
+    faChevronLeft as leaveIcon,
+    faArrowUpWideShort as upIcon,
+    faArrowDownWideShort as downIcon,
+    faRotateRight as rotateIcon,
+    faUpRightAndDownLeftFromCenter as sizeIcon,
+    faClockRotateLeft as resetRotationIcon
+} from "@fortawesome/free-solid-svg-icons";
 import {router} from "@/helpers";
 const authStore = useAuthStore();
 const cosmeticStore = useCosmeticStore();
@@ -46,10 +51,13 @@ onUnmounted(() => {
 
 const centerOfThePlanetInTheScreen = ref({x: 0, y: 0});
 const isMousePress = ref(false);
+const isRotateMode = ref(false);
 const cosmeticData = ref({
     "coordinateX": 0,
     "coordinateY": 0,
-    "size": 1
+    "size": 1,
+    "zIndex": 5,
+    "rotation": 0
 });
 
 const refreshCosmetics = async () => {
@@ -69,11 +77,6 @@ const moveCosmetic = (e) => {
     const x = e.clientX;
     const y = e.clientY;
 
-    // if mouse is on the button, return
-    if (e.target.classList.contains('validate')) {
-        return;
-    }
-
     const actualX = x - centerOfThePlanetInTheScreen.value.x;
     const actualY = y - centerOfThePlanetInTheScreen.value.y;
 
@@ -88,11 +91,29 @@ const moveCosmetic = (e) => {
     cosmetic.style.top = centerOfThePlanetInTheScreen.value.y + cosmeticData.value.coordinateY + 'px';
 }
 const onMouseMove = function (event) {
+    // if mouse is on the button, return
+    if (event.target.classList.contains('validate')) {
+        return;
+    }
+
     if (isMousePress.value) {
         moveCosmetic(event);
     }
 };
 const onMouseWheel = function (event) {
+    if (isRotateMode.value) {
+        rotateCosmetic(event);
+    } else {
+        resizeCosmetic(event);
+    }
+};
+
+const rotateCosmetic = (event) => {
+    const delta = Math.sign(event.deltaY);
+    cosmeticData.value.rotation += delta * 5;
+}
+
+const resizeCosmetic = (event) => {
     const delta = Math.sign(event.deltaY);
     if (cosmeticData.value.size + delta * -1 < -5) {
         return;
@@ -101,8 +122,8 @@ const onMouseWheel = function (event) {
     }
     // transform into integer to avoid float precision
     cosmeticData.value.size += delta * -1;
-    return;
-};
+}
+
 const getCenterOfThePlanet = () => {
     const planet = document.querySelector('.cosmeticPlanet');
 
@@ -129,6 +150,10 @@ const handleCosmeticReplacementClick = (cosmeticId, entityId) => {
     router.push({path:'/cosmetic', query: {cosmeticId: cosmeticId, entityId: entityId}});
 }
 
+const moveZIndex = (number) => {
+    cosmeticData.value.zIndex += number;
+}
+
 </script>
 <template>
     <div class="placeCosmetic" v-if="cosmeticsDisplayed != null">
@@ -142,13 +167,21 @@ const handleCosmeticReplacementClick = (cosmeticId, entityId) => {
                           @click="handleCosmeticReplacementClick(cosmetic.cosmeticId, cosmetic.id)"/>
             </div>
         </div>
+        <div class="tools_btn or validate">
+            <svg-icon class="clickable" @click="moveZIndex(1)" :fa-icon="upIcon" :size="45"/>
+            <svg-icon class="clickable" @click="moveZIndex(-1)" :fa-icon="downIcon" :size="45"/>
+            <svg-icon class="clickable" @click="isRotateMode = !isRotateMode" v-if="isRotateMode" :fa-icon="rotateIcon" :size="45"/>
+            <svg-icon class="clickable red" @click="cosmeticData.rotation = 0" v-if="isRotateMode" :fa-icon="resetRotationIcon" :size="25"/>
+            <svg-icon class="clickable" @click="isRotateMode = !isRotateMode" v-if="!isRotateMode" :fa-icon="sizeIcon" :size="45"/>
+        </div>
         <Cosmetic :cosmetic-id="cosmeticIdToPlace"
                   class="cosmeticImage cosmeticImageToPlace"
                   v-if="cosmeticIdToPlace"
                   :style="{
           left: centerOfThePlanetInTheScreen.x + cosmeticData.coordinateX + 'px',
           top: centerOfThePlanetInTheScreen.y + cosmeticData.coordinateY + 'px',
-          transform: 'scale('+cosmeticData.size+')'}"/>
+          transform: 'scale('+cosmeticData.size+') rotate(' + cosmeticData.rotation + 'deg)',
+          zIndex: cosmeticData.zIndex}"/>
         <PlanetWithCosmetics id="planetWithCosmeticPlacement_001"
                              :height="850"
                              :width="850"
@@ -190,6 +223,19 @@ const handleCosmeticReplacementClick = (cosmeticId, entityId) => {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+}
+
+.tools_btn {
+    position: absolute;
+    bottom: 4rem;
+    right: 25%;
+    z-index: 102;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+
 }
 
 .leave {
