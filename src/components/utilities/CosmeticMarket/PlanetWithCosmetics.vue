@@ -54,7 +54,8 @@ const { cosmeticsDisplayed, playerPseudo, width, height } = defineProps({
                 :style="{
                     left: centerOfThePlanetInTheScreen.x + cosmetic.coordinateX + 'px',
                     top: centerOfThePlanetInTheScreen.y + cosmetic.coordinateY + 'px',
-                    transform: 'scale('+cosmetic.size+')'}"/>
+                    transform: 'scale('+cosmetic.size+') rotate(' + cosmetic.rotation + 'deg)',
+                    zIndex: cosmetic.zIndex}"/>
   </div>
 </template>
 
