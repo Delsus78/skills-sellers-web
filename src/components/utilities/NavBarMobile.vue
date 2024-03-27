@@ -67,7 +67,8 @@ const isChristmas = computed(() => {
     <div v-if="isMobileSize" class="navbar-mobile top">
         <div class="openNavBar" @click="unrollNavBar">
             <random-planet v-model="authUser.pseudo" class="planet" :width="250" :height="250"/>
-            <svg-icon class="menuIcon" :fa-icon="menuIcon" :size="70" />
+            <svg-icon :class="{menuIcon: !isUnrolled, menuIconActive: isUnrolled}"
+                      :fa-icon="menuIcon" :size="70" />
         </div>
 
         <div class="mobile-nav-items" :class="{hidden: !isUnrolled}">
@@ -203,6 +204,16 @@ const isChristmas = computed(() => {
     position: absolute;
     left: 0;
     right: 0;
+    margin: auto;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.navbar-mobile .openNavBar .menuIconActive {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 3rem;
     margin: auto;
     cursor: pointer;
     opacity: 0.5;
