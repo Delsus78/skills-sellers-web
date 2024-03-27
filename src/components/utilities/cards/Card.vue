@@ -408,6 +408,12 @@ function autoModeSwitchSatellite() {
     height: 39rem;
     margin: auto;
     z-index: 10;
+
+    @media (max-width: 1023px) {
+        scale: 0.7;
+        left: 1rem;
+        right: unset;
+    }
 }
 
 .little_title {
@@ -429,6 +435,29 @@ function autoModeSwitchSatellite() {
     display: grid;
     grid-template-areas: "title" "date" "infos";
     grid-template-rows: 10% 10% 80%;
+
+    @media (max-width: 1023px) {
+        bottom: unset;
+        top: 1rem;
+        right: 0;
+        left: unset;
+        scale: 0.6;
+        padding-bottom: 3rem;
+
+        .actionInfoText .title {
+            margin-top: 0;
+        }
+    }
+}
+
+.explorationInfo {
+    @media (max-width: 1023px) {
+        bottom: 4.3rem;
+        top: unset;
+        right:0;
+        left: unset;
+        scale: 0.6;
+    }
 }
 
 .actionInfo .value {
@@ -469,6 +498,10 @@ function autoModeSwitchSatellite() {
     border-radius: 15px;
     color:white;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+
+    @media (max-width: 1023px) {
+        scale: 0.6;
+    }
 }
 
 .emptyWeapon {

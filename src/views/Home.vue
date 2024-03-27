@@ -57,8 +57,11 @@ const reloadScoreboardPanel = () => {
     grid-template-columns: 1fr 3fr 1fr;
 
     @media (max-width: 1023px) {
+        width: 100%;
+        margin: 0;
         grid-template-columns: 1fr;
-        grid-template-rows: 6rem 50rem 50rem 50rem;
+        grid-template-rows: 6rem 20rem 50rem 50rem 40rem 30rem;
+        row-gap: 2rem;
     }
 }
 
@@ -68,6 +71,13 @@ const reloadScoreboardPanel = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 1023px) {
+        grid-column: 1;
+        width: 100%;
+        grid-row: 2;
+        transform: rotateY(0deg);
+    }
 }
 
 .WelcomeTitle {
@@ -103,9 +113,19 @@ a {
     width: auto;
 
     @media (max-width: 1023px) {
+        grid-column: 1;
+        grid-row: 4;
+        margin: 0;
         width: 100%;
-        grid-row: 1;
         transform: rotateY(0deg);
+    }
+}
+
+:deep(.CosmeticMarket .content) {
+    @media (max-width: 1023px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
     }
 }
 
@@ -115,8 +135,10 @@ a {
     width: 30rem;
 
     @media (max-width: 1023px) {
+        grid-column: 1;
         width: 100%;
-        grid-row: 2;
+        grid-row: 5;
+        margin: 0;
         transform: rotateY(0deg);
     }
 }
@@ -126,8 +148,10 @@ a {
     width: 34rem;
 
     @media (max-width: 1023px) {
+        grid-column: 1;
         width: 100%;
-        grid-row: 3;
+        grid-row: 6;
+        margin: 0;
         transform: rotateY(0deg);
     }
 }
@@ -137,8 +161,10 @@ a {
     width: 34rem;
 
     @media (max-width: 1023px) {
+        grid-column: 1;
         width: 100%;
         grid-row: 3;
+        margin: 0;
         transform: rotateY(0deg);
     }
 }

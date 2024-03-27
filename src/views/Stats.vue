@@ -232,7 +232,7 @@ const openStatistics = () => {
 
     @media (max-width: 1023px) {
         grid-template-columns: 1fr;
-        grid-template-rows: 4rem 5rem 50rem 50rem;
+        grid-template-rows: 4rem 5rem 5rem 50rem;
         row-gap: 2rem;
     }
 }
@@ -253,6 +253,7 @@ const openStatistics = () => {
         grid-column: 1;
         grid-row: 3;
         position: fixed;
+        transform: scale(0.3);
     }
 }
 
@@ -271,7 +272,7 @@ const openStatistics = () => {
 
     @media (max-width: 1023px) {
         grid-column: 1;
-        grid-row: 3;
+        grid-row: 4;
         margin: 0;
     }
 }
@@ -390,6 +391,7 @@ const openStatistics = () => {
         grid-row: 3;
         margin: 0;
         border-radius: 0;
+        max-height: 10rem;
     }
 
 }
@@ -490,6 +492,11 @@ const openStatistics = () => {
     display: flex;
     color: gold;
     font-size: 1.8em;
+
+    @media (max-width: 1023px) {
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
 .arrow-show-planet:hover {

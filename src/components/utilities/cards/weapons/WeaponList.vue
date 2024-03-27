@@ -171,6 +171,16 @@ const removeWeapon = () => {
     box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.2);
     border: 1px solid #ffffff;
     min-width: 45rem;
+
+    @media (max-width: 1023px) {
+        width: 100%;
+        min-width: unset;
+        left: 0;
+        top: 0;
+        grid-template-rows: 6rem 1fr;
+        row-gap: 2rem;
+        scale: 0.8;
+    }
 }
 
 
