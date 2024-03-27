@@ -45,8 +45,8 @@ export const useCosmeticStore = defineStore({
             let usedUrl = baseUrl + `buy/${user.id}/${cosmeticId}`;
 
             await fetchWrapper.post(usedUrl, {
-                coordinateX: Math.round(cosmeticData.x),
-                coordinateY: Math.round(cosmeticData.y),
+                coordinateX: Math.round(cosmeticData.coordinateX),
+                coordinateY: Math.round(cosmeticData.coordinateY),
                 size: cosmeticData.size,
                 rotation: cosmeticData.rotation,
                 zIndex: cosmeticData.zIndex})
