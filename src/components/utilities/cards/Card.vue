@@ -438,10 +438,10 @@ function autoModeSwitchSatellite() {
 
     @media (max-width: 1023px) {
         bottom: unset;
-        top: 1rem;
+        top: 0;
         right: 0;
         left: unset;
-        scale: 0.6;
+        scale: 0.5;
         padding-bottom: 3rem;
 
         .actionInfoText .title {
@@ -454,9 +454,9 @@ function autoModeSwitchSatellite() {
     @media (max-width: 1023px) {
         bottom: 4.3rem;
         top: unset;
-        right:0;
+        right: -4rem;
         left: unset;
-        scale: 0.6;
+        scale: 0.5;
     }
 }
 
@@ -500,7 +500,8 @@ function autoModeSwitchSatellite() {
     box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
 
     @media (max-width: 1023px) {
-        scale: 0.6;
+        scale: 0.5;
+        left: -2rem;
     }
 }
 
