@@ -104,10 +104,11 @@ const cancelWar = () => {
                         Bataille en cours
                     </span>
                     <div class="commun-text">
-                        <p>Vous êtes en guerre contre <strong class="red">{{registreInfo.war.registreTarget.name}}</strong></p>
+                        <p v-if="registreInfo.war.registreTarget">Vous êtes en guerre contre <strong class="red">{{registreInfo.war.registreTarget.name}}</strong></p>
                         <p>La bataille a été lancée <strong class="red">{{getFormattedRemainingTime(registreInfo.war.createdAt)}}</strong></p>
                         <p>Vous avez pour l'instant <strong class="red">{{registreInfo.war.userAllies.length}}</strong> alliés</p>
-                        <a v-if="authUser.id === registreInfo.war.userCreator.id" class="meethicColored" @click="cancelWar">Tu peux annuler ici ta guerre.</a>
+                        <a v-if="authUser.id === registreInfo.war.userCreator.id"
+                           v-if="registreInfo.war.registreTarget" class="meethicColored" @click="cancelWar">Tu peux annuler ici ta guerre.</a>
                     </div>
                 </div>
             </div>
