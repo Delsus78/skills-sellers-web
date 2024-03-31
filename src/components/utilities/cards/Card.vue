@@ -34,8 +34,8 @@
             </div>
         </div>
         <div class="card-weapon">
-            <div class="top-text">
-                <p v-if="weapon" class="weaponText">{{ weapon.power }} <svg-icon :fa-icon="weaponIcon" :size="25"/></p>
+            <div class="top-text" style="margin-top: 0.6rem;">
+                <p v-if="weapon" class="weaponText">{{ weapon.power }} <AffinityIcon :affinity-id="weapon.affinity" :size="24"/></p>
             </div>
         </div>
         <footer class="actionText" :class="{actif: action, 'shadow-black': action,'shadow-white': !action}">
@@ -138,7 +138,6 @@
         <svg-icon :fa-icon="weaponIcon" :size="25"/>
     </div>
 </template>
-
 <script setup>
 import Weapon from "@/components/utilities/cards/weapons/Weapon.vue";
 import {VanillaTilt} from "../VanillaTilt";
@@ -163,6 +162,7 @@ import ExplorationInfo from "@/components/utilities/cards/ExplorationInfo.vue";
 
 // show upgraded weapon
 import {useBattleStore, useCardsStore} from "@/stores";
+import AffinityIcon from "@/components/utilities/cards/weapons/AffinityIcon.vue";
 const cardsStore = useCardsStore();
 
 const onWeaponUpgradedClicked = async () => {
@@ -184,6 +184,7 @@ const {
     isSelected,
     hideFavorite,
     showSelection,
+    noInspection,
     weapon,
     power} = defineProps({
     id: {
@@ -260,8 +261,12 @@ const {
         type: Boolean,
         required: false,
         default: false
+    },
+    noInspection: {
+        type: Boolean,
+        required: false,
+        default: false
     }
-
 });
 const emit = defineEmits(['cancelAction', 'switchFavorite', 'onClick', 'decision', 'onWeaponClicked', 'autoModeSwitchSatellite']);
 const clearRemainingTime = ref(getClearRemainingTime(action?.endTime));
@@ -295,7 +300,6 @@ onUnmounted(() => {
 });
 
 function updateDates() {
-    // Votre logique pour mettre à jour les dates
     if (!action) return;
     clearRemainingTime.value = getClearRemainingTime(action?.endTime);
     pourcentageRemainingTime.value = getPourcentageRemainingTime(action?.endTime, action?.createdAt);
@@ -303,7 +307,7 @@ function updateDates() {
 
 function onClick() {
 
-    if (showSelection) {
+    if (showSelection || noInspection) {
         // Si l'événement onClick est défini par le parent, émettez-le
         emit('onClick', id);
     } else {
@@ -551,15 +555,11 @@ function autoModeSwitchSatellite() {
 
 .card-power {
     position: absolute;
-    display: flex;
-    align-items: end;
-    justify-content: center;
-    flex-direction: column;
     font-size: 1.5rem;
+
     font-weight: bold;
     font-family: "Big John", sans-serif;
-    filter: drop-shadow(0 0 0.1rem black);
-    transform: translateZ(30px) translateX(15.5rem) translateY(1.2rem);
+    transform: translateZ(30px) translateX(13.5rem) translateY(1.7rem);
 }
 
 .powerText {
@@ -569,14 +569,13 @@ function autoModeSwitchSatellite() {
 .card-weapon {
     position: absolute;
     display: flex;
-    align-items: end;
     justify-content: center;
     flex-direction: column;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     font-family: "Big John", sans-serif;
     filter: drop-shadow(0 0 0.1rem black);
-    transform: translateZ(30px) translateX(1.5rem) translateY(1rem);
+    transform: translateZ(30px) translateX(1.5rem) translateY(1.7rem);
 }
 
 .actif {
@@ -684,5 +683,9 @@ function autoModeSwitchSatellite() {
 .weaponText {
     color: black;
     filter: drop-shadow(0 0 4px var(--vt-c-red-2));
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+    line-height: 0.8;
 }
 </style>
