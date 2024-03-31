@@ -49,10 +49,24 @@ const changeSelectedCardId = (newSelectedCards) => {
 
 const selectAllCardsWithNoAction = () => {
     cards.value.forEach(card => {
-        if (card.action === null) {
+        if ((card.action === null) && !selectedCards.value.includes(card.id)) {
             selectedCards.value.push(card.id);
         }
     })
+    reestimateGame();
+}
+
+const selectAllCardsWithActionBoss = () => {
+    cards.value.forEach(card => {
+        if (card.action !== null && card.action.actionName.includes('boss') && !selectedCards.value.includes(card.id)) {
+            selectedCards.value.push(card.id);
+        }
+    })
+    reestimateGame();
+}
+
+const deselection = () => {
+    selectedCards.value = [];
     reestimateGame();
 }
 
@@ -78,15 +92,16 @@ const pourcentageToWin = computed(() => {
     const bossPower = game.bossCard?.power ?? 9999;
     let totalPlayerPower = 0;
     for (const pair in game.playersPower) {
-        console.log(pair);
         totalPlayerPower += game.playersPower[pair];
     }
 
     // adding power of selectedcards
     for (const card of selectedCards.value) {
         cardsStore.cards.forEach((c) => {
-            if (c.id === card) {
+            if (c.id === card && !c.action?.actionName.includes('boss')) {
                 totalPlayerPower += c.power;
+            } else if (c.id === card && c.action?.actionName.includes('boss')) {
+                totalPlayerPower -= c.power;
             }
         });
     }
@@ -99,15 +114,16 @@ const pourcentageToWinText = computed(() => {
     const bossPower = game.bossCard?.power ?? 9999;
     let totalPlayerPower = 0;
     for (const pair in game.playersPower) {
-        console.log(pair);
         totalPlayerPower += game.playersPower[pair];
     }
 
     // adding power of selectedcards
     for (const card of selectedCards.value) {
         cardsStore.cards.forEach((c) => {
-            if (c.id === card) {
+            if (c.id === card && !c.action?.actionName.includes('boss')) {
                 totalPlayerPower += c.power;
+            } else if (c.id === card && c.action?.actionName.includes('boss')) {
+                totalPlayerPower -= c.power;
             }
         });
     }
@@ -147,6 +163,12 @@ const pourcentageToWinText = computed(() => {
                     :power="game.bossCard.power"
                     noInspection hide-favorite  />
             </div>
+            <div class="powerList">
+                <p >Puissance infligée</p>
+                <p v-for="(key, val) in game.playersPower" :key="key" class="meethic" style="grid-column: 1;">
+                    {{ key }} : {{ val }}
+                </p>
+            </div>
             <div class="card-bg">
                 <img :src="game.bossCard.imageUrl" alt=""/>
             </div>
@@ -166,9 +188,11 @@ const pourcentageToWinText = computed(() => {
                 </p>
                 <div class="validate">
                     <div style="display: flex;">
-                        <button class="btn btn-primary" :disabled="buttonDisabled" @click="play">Valider</button>
                         <button class="btn btn-primary" @click="selectAllCardsWithNoAction">Selection rapide</button>
+                        <button class="btn btn-primary" @click="selectAllCardsWithActionBoss">Selection rapide des cartes contre le Boss</button>
+                        <button class="btn btn-primary" @click="deselection">Deselection</button>
                     </div>
+                    <button class="btn btn-primary" :disabled="buttonDisabled" @click="play">Valider</button>
                     <button class="btn btn-primary meethicColored" :disabled="buttonDisabled" @click="remove">Retirer de la bataille</button>
                     <div v-if="gameEstimation.error">
                         <p class="error shadow-white">{{ gameEstimation.error }}</p>
@@ -241,6 +265,27 @@ const pourcentageToWinText = computed(() => {
     z-index: -10000;
     opacity: 0.2;
     filter: blur(10px);
+}
+
+.powerList {
+    position: absolute;
+    left: 10%;
+    top: 30rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    justify-items: center;
+    font-size: 1.5em;
+    font-family: 'Ubuntu', sans-serif;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
+
+    @media (max-width: 1023px) {
+        top: 40rem;
+    }
+
 }
 
 .form_content {
