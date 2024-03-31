@@ -83,15 +83,15 @@ export const useGamesStore = defineStore({
                     console.error(error);
                     return this.game = {error};
                 });
-
+            if (response.bossCard) response.bossCard.imageUrl = await useCardsStore().getImage(response.bossCard.id);
             this.game = response;
         },
-        async postGameDay(gameName, bet, cardsIds){
+        async postGameDay(gameName, bet, cardsIds, params){
             const { user } = useAuthStore();
 
             this.gameResponse = { loading: true };
             let usedUrl = baseUrl + `/${user.id}/gameOfTheDay/play`;
-            let response = await fetchWrapper.post(usedUrl, {Name:gameName, bet, cardsIds})
+            let response = await fetchWrapper.post(usedUrl, {Name:gameName, bet, cardsIds, ...params})
                 .catch(error => {
                     console.error(error);
                     return this.gameResponse = {error};
@@ -114,6 +114,26 @@ export const useGamesStore = defineStore({
                     console.error(error);
                     return this.gameEstimation = {error};
                 });
+        },
+        async CancelGamePlay(gameName, cardsIds) {
+            const { user } = useAuthStore();
+
+            this.gameResponse = { loading: true };
+            let usedUrl = baseUrl + `/${user.id}/gameOfTheDay/cancel`;
+            let response = await fetchWrapper.post(usedUrl, {Name:gameName, CardsIds:cardsIds})
+                .catch(error => {
+                    console.error(error);
+                    return this.gameResponse = {error};
+                });
+
+            // refresh user ressources and cards
+            if (!response.error) {
+                await useUsersStore().getUser(user.id);
+                await useCardsStore().getAllCardsFromUser(user.id);
+                await this.getGameDay();
+            }
+
+            this.gameResponse = response;
         },
         async validateWordForWordleGame(gameName, word){
             const { user } = useAuthStore();

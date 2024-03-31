@@ -3,14 +3,19 @@ import {useActionsStore, useGamesStore} from "@/stores";
 import { storeToRefs } from "pinia";
 import Casino from "@/components/utilities/games/casino.vue";
 import MachineRepair from "@/components/utilities/games/machineRepair.vue";
+import Boss from "@/components/utilities/games/boss.vue";
 
 const gamesStore = useGamesStore();
 const actionsStore = useActionsStore();
 const { game } = storeToRefs(gamesStore);
 gamesStore.getGameDay();
 
-const play = (GameName, bet, cardIds) => {
-    gamesStore.postGameDay(GameName, bet, cardIds);
+const play = (GameName, bet, cardIds, params) => {
+    gamesStore.postGameDay(GameName, bet, cardIds, params);
+}
+
+const cancel = async (GameName, cardIds) => {
+    await gamesStore.CancelGamePlay(GameName, cardIds);
 }
 
 const estimate = async (GameName, bet, cardIds) => {
@@ -34,6 +39,8 @@ const estimate = async (GameName, bet, cardIds) => {
                 @play="play" @estimate="estimate"/>
         <machine-repair v-if="game?.name.toLowerCase() === 'machine'"
                 @play="play" @estimate="estimate"/>
+        <boss v-if="game?.name.toLowerCase().includes('boss')" :game="game"
+                @play="play" @estimate="estimate" @cancel="cancel"/>
     </div>
     <footer class="footer">
         <span></span>

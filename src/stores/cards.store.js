@@ -12,6 +12,7 @@ export const useCardsStore = defineStore({
         cards: {},
         card: {},
         imageCache: {},
+        weaponImageCache: {},
         weapons: {}
     }),
     actions: {
@@ -36,8 +37,8 @@ export const useCardsStore = defineStore({
             }
         },
         async getWeaponImage(weaponId) {
-            if (this.imageCache[1000 + weaponId]) { // les armes ont des id > 1000 pour le cache
-                return this.imageCache[1000 + weaponId];  // Retourner l'image du cache si elle est présente
+            if (this.weaponImageCache[weaponId]) { // les armes ont des id > 1000 pour le cache
+                return this.weaponImageCache[weaponId];  // Retourner l'image du cache si elle est présente
             }
 
             try {
@@ -48,7 +49,7 @@ export const useCardsStore = defineStore({
                             'max-age=3600');
 
                 const imageUrl = URL.createObjectURL(response);
-                this.imageCache = { ...this.imageCache, [1000 + weaponId]: imageUrl };  // Mettre en cache l'image
+                this.weaponImageCache = { ...this.weaponImageCache, [weaponId]: imageUrl };  // Mettre en cache l'image
                 return imageUrl;
             } catch (error) {
                 console.error(error);
@@ -81,20 +82,18 @@ export const useCardsStore = defineStore({
             let usedUrl = baseUrl + `Users/${id}/Cards/${cardId}`;
             return fetchWrapper.get(usedUrl)
                 .then(async card => {
-                    const response =
-                        await fetchWrapperJpeg
-                            .get(`${import.meta.env.VITE_API_URL}/Images/${card.id}`,
-                                null,
-                                'max-age=3600');
+                    card.imageUrl = await this.getImage(card.id);
 
-                    card.imageUrl = URL.createObjectURL(response);
+                    // get image if weapon
+                    if (card.weapon) {
+                        card.weapon.imageUrl = await this.getWeaponImage(card.weapon.weaponId);
+                    }
 
                     // refresh the card in cards list
                     let index = this.cards.findIndex(cardInList => cardInList.id === cardId);
                     if (index !== -1) {
                         this.cards[index] = card;
                     }
-
 
                     return card;
                 })

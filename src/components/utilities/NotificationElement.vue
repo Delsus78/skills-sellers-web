@@ -25,6 +25,12 @@ const emit = defineEmits(['deleteNotification']);
 const deleteNotification = () => {
     emit('deleteNotification', id);
 }
+
+function formatFightDescription(description) {
+    // change *! to <span class="red"> and !* to </span>
+    return description.replaceAll("*!", "<strong class='green'>").replaceAll("!*", "</strong>");
+}
+
 </script>
 
 <template>
@@ -36,7 +42,7 @@ const deleteNotification = () => {
           <p>{{ getFormattedRemainingTime(date) }}</p>
       </div>
       <div class="content">
-          <p>{{ content }}</p>
+          <p v-html="formatFightDescription(content)"/>
       </div>
       <div class="delete">
           <button @click="deleteNotification">X</button>
