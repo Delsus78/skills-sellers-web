@@ -55,4 +55,13 @@ export function getPourcentageRemainingTime(dateStr, startStr) {
     return 100 - percentage;  // Inverse le pourcentage
 }
 
-
+export function getSecondsBetweenNowAnd(dateStr) {
+    const now = moment();
+    const endDate = moment(dateStr);
+    const remainingTime = moment.duration(endDate.diff(now));
+    // format as 00:00 (mm:ss)
+    const totalSeconds = Math.floor(remainingTime.asSeconds());
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}

@@ -72,7 +72,7 @@ export const useNotificationStore = defineStore({
                 this.addNotification(notification);
 
                 // vue toast
-                toast.info(`<strong style="color: #d0de21;">${notification.title}</strong> : <br/> ${notification.message}`,
+                toast.info(`<strong style="color: #d0de21;">${notification.title}</strong> : <br/> ${formatFightDescription(notification.message)}`,
                     {
                         dangerouslyHTMLString: true,
                         icon: "⚔",
@@ -124,6 +124,10 @@ export const useNotificationStore = defineStore({
         // Ajouter un message à la liste (et conserver uniquement les 50 derniers messages)
         addNotification(notification) {
             this.notifications.push(notification);
+        },
+        formatFightDescription(description) {
+            // change *! to <span class="red"> and !* to </span>
+            return description.replaceAll("*!", "<strong class='green'>").replaceAll("!*", "</strong>");
         },
         getNotifications() {
             const { user} = useAuthStore();

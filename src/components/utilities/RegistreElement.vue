@@ -211,6 +211,8 @@ const emit = defineEmits(['interact']);
     font-weight: 300;
     margin-bottom: 1rem;
     text-align: center;
+    max-height: 5rem;
+    overflow-y: auto;
 }
 
 .buttons {
