@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import {useAuthStore, useUsersStore, useGiftStore, useMainStore} from "@/stores";
+import {useAuthStore, useUsersStore, useGiftStore, useMainStore, useBattleStore} from "@/stores";
 import RandomPlanet from "@/components/utilities/RandomPlanet.vue";
 import {storeToRefs} from "pinia";
 import {computed, ref} from 'vue';
@@ -22,15 +22,21 @@ import {
     faW as wordleIcon,
     faTree as noelIcon,
     faShield as satelliteIcon,
-    faBookAtlas as registreIcon, faBookDead as fightIcon, faPeopleArrows as playersRegistreIcon, faGun as weaponIcon
+    faBookAtlas as registreIcon,
+    faBookDead as fightIcon,
+    faPeopleArrows as playersRegistreIcon,
+    faGun as weaponIcon,
+    faSkullCrossbones as warInviteIcon
 } from "@fortawesome/free-solid-svg-icons";
 const authStore = useAuthStore();
 const usersStore = useUsersStore();
 const giftStore = useGiftStore();
 const mainStore = useMainStore();
+const battleStore = useBattleStore();
 const { user: authUser } = storeToRefs(authStore);
 const { actualUser: user } = storeToRefs(usersStore);
 const { isMobileSize } = storeToRefs(mainStore);
+const { invitedWar } = storeToRefs(battleStore);
 
 usersStore.getUser(authUser.value.id);
 
@@ -46,10 +52,6 @@ const openGiftCodePrompt = () => {
     if (code) {
         giftStore.enterGiftCode(code);
     }
-}
-
-const notAvailable = () => {
-    alert('Non disponible sur téléphone !');
 }
 
 const isUnrolled = ref(false);
@@ -72,6 +74,12 @@ const isChristmas = computed(() => {
         </div>
 
         <div class="mobile-nav-items" :class="{hidden: !isUnrolled}">
+            <RouterLink v-if="invitedWar?.isInvitationPending"
+                        to="/bataille?invitation=true" class="nav-item" v-tooltip:bottom.tooltip="'INVITATION A UNE GUERRE'">
+                <span class="meethicColored">
+                    <svg-icon :fa-icon="warInviteIcon" :size="40" />
+                </span>
+            </RouterLink>
             <RouterLink v-if="isChristmas"
                         to="/special" class="nav-item" v-tooltip:bottom.tooltip="'NOEL'">
                 <span class="epicColored">
@@ -181,7 +189,7 @@ const isChristmas = computed(() => {
     </div>
 
     <div class="version">
-        <span class="version-text prevent-select">Version 2.5</span>
+        <span class="version-text prevent-select">Version 2.6</span>
     </div>
 </template>
 

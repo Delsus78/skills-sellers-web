@@ -19,6 +19,7 @@
                 <option value="reparer">Réparer</option>
                 <option value="guerre">Guerre</option>
                 <option value="ameliorer">Améliorer</option>
+                <option value="satellite">En satellite</option>
                 <option value="!">Ne fais rien</option>
             </select>
             <select v-model="otherFilter">
@@ -129,7 +130,7 @@ const filteredList = computed(() => {
 
     if (competenceFilter.value) {
         if (competenceFilter.value === 'power')
-            result = result.sort((a, b) => b.competences.power - a.competences.power);
+            result = result.sort((a, b) => b.power - a.power);
         else
             result = result.sort((a, b) => {
                 const aCompetence = a.competences[competenceFilter.value.toLowerCase()];
