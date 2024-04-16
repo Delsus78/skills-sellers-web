@@ -9,6 +9,7 @@ import {
     getSecondsBetweenNowAnd
 } from "@/components/utilities/DateFormator";
 import InfoBulle from "@/components/utilities/InfoBulle.vue";
+import GlobalChat from "@/components/utilities/GlobalChat.vue";
 
 const gamesStore = useGamesStore();
 const blackJackStore = useBlackJackStore();
@@ -96,7 +97,7 @@ function updateDates() {
             Seed : {{ blackJackGame.seed }}
         </div>
 
-
+        <GlobalChat class="GlobalChat"/>
         <div v-if="blackJackGame" :key="updatedTime">
             <div class="bank">
                 <b-j-player :playerData="{name:'BANK',hand:blackJackGame.bankHand, state: blackJackGame.state}"
@@ -151,6 +152,19 @@ function updateDates() {
 <style scoped>
 .blackjack_content {
     margin-top: 5rem;
+}
+
+.GlobalChat {
+    position: fixed;
+    top: 6rem;
+    left: 0;
+    z-index: 100;
+    max-height: 50%;
+
+
+    @media (max-width: 1023px) {
+        display: none;
+    }
 }
 
 .title {
